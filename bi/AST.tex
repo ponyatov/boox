@@ -1,0 +1,59 @@
+\secly{\class{AST}: Абстрактный Символьный Тип /\class{Sym}/}
+
+\begin{lstlisting}[language=C++]
+// ============================================== ABSTRACT SYMBOLIC TYPE (AST)
+struct Sym {
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++,title=тип (класс) и значение элемента данных]
+// ---------------------------------------------------------------------------
+	string tag;							// data type / class
+	string val;							// symbol value
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++,title=конструкторы (токен используется в
+лексере)]
+// -------------------------------------------------------------- constructors
+	Sym(string,string);					// <T:V>
+	Sym(string);						// token
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++,
+title=AST может хранить (и обрабатывать) вложенные элементы]
+// --------------------------------------------------------- nest[]ed elements
+	vector<Sym*> nest;
+	void push(Sym*);
+	void pop();
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++,title=параметры (и поля класса)]
+// -------------------------------------------------------------- par{}ameters
+	map<string,Sym*> pars;
+	void par(Sym*);						// add parameter
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++,title=вывод дампа объекта в текстовом формате]
+// ------------------------------------------------------------------- dumping
+	virtual string dump(int depth=0);	// dump symbol object as text
+	virtual string tagval();			// <T:V> header string
+	string tagstr();					// <T:'V'> Str-like header string
+	string pad(int);					// padding with tree decorators
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++,title=вычисление объекта]
+// -------------------------------------------------------- compute (evaluate)
+	virtual Sym* eval();
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++,title=операторы]
+// ----------------------------------------------------------------- operators
+	virtual Sym* str();					// str(A)	string representation
+	virtual Sym* eq(Sym*);				// A = B	assignment
+	virtual Sym* inher(Sym*);			// A : B	inheritance
+	virtual Sym* member(Sym*);			// A % B,C	named member (class slot)
+	virtual Sym* at(Sym*);				// A @ B	apply
+	virtual Sym* add(Sym*);				// A + B	add
+	virtual Sym* div(Sym*);				// A / B	div
+	virtual Sym* ins(Sym*);				// A += B	insert
+};
+\end{lstlisting}

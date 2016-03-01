@@ -2,6 +2,8 @@
 \documentclass[oneside,12pt]{book}
 %% screen paper layout (A5 landscape)
 \usepackage[paperwidth=210mm,paperheight=148mm,margin=5mm]{geometry}
+%%% font setup for screen reading
+%\renewcommand{\familydefault}{\sfdefault}\normalfont
 %% hyperlinks pdf style
 \usepackage[unicode]{hyperref}
 %\usepackage[unicode,colorlinks=true,pdfborderstyle={/S/U/W 1}]{hyperref}
@@ -43,6 +45,21 @@
 
 %% MCU
 \newcommand{\cm}{Cortex-M}
+
+%% listings
+\usepackage{verbatim}
+\usepackage{listings}
+\lstset{
+basicstyle=\small,
+frame=single,
+numbers=left,numberstyle=\small,numbersep=1mm,
+tabsize=4,
+keywordstyle=\textbf,
+commentstyle=\textit
+}
+\newcommand{\lstx}[2]{\lstinputlisting[title=#1]{#2}}
+\newcommand{\lst }[3]{\lstinputlisting[title=#1,language=#3]{#2}}
+
 
 % misc
 %% typical macros
