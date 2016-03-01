@@ -1,0 +1,60 @@
+\secrel{Программирование в свободном синтаксисе: \prog{FSP}}\secdown
+
+\secrel{Типичная структура проекта FSP: \textit{lexical skeleton}}\secdown
+
+Скелет файловой структуры FSP-проекта = lexical skeleton = skelex 
+\bigskip
+
+\lstx{Создаем проект \prog{prog}\ из командной строки (\win):}{bi/fspskel.bat}
+Создали каталог проекта, сгенерили набор пустых файлов (см. далее), и
+запуститили батник-hepler который запустит \gvim.
+
+Для пользователей GitHub \verb|mkdir|\ надо заменить на 
+\begin{verbatim}
+git clone -o gh git@github.com:yourname/prog.git
+cd prog
+git gui &
+...
+\end{verbatim}
+
+\bigskip
+
+\begin{tabular}{l l l}
+\file{src.src} & & исходный текст программы на вашем скриптовом языке \\
+\file{log.log} & & лог работы ядра \bi\\
+\file{ypp.ypp} & \prog{flex} & парсер \ref{biypp}\\
+\file{lpp.lpp} & \prog{bison} & лексер \ref{bilpp}\\
+\file{hpp.hpp} & \cpp & заголовочные файлы \ref{bihpp}\\
+\file{cpp.cpp} & \cpp & код ядра \ref{bicpp}\\
+\file{Makefile} & \prog{make} & зависимости между файлами и команды сборки (для
+утилиты \prog{make})\\
+\file{bat.bat} & \win & запускалка \prog{gvim}\ \ref{bibat}\\
+\file{.gitignore} & \prog{git} & список масок временных и производных файлов
+\ref{bigit}\\
+\end{tabular}
+
+% \file{rc.rc} & \ref{rc} & windres 
+% 	& описание ресурсов: иконки приложения, меню,..\\
+% \file{logo.ico} && windres 
+% 	& логотип в .ico формате \\
+% \file{logo.png} &&
+% 	& логотип в .png (для github README) \\
+% \file{filetype.vim} & \ref{filetypevim} & (g)vim 
+% 	& привязка расширения файлов cкриптов \\
+% \file{syntax.vim} & \ref{syntaxvim} & (g)vim 
+% 	& синтаксическая подсветка для скриптов \\
+ 
+% \input{README.tex}
+% \input{makefile.tex}
+% 
+% \secrel{bat.bat}\label{bat}
+% 
+% \lstx{bat.bat}{script/bat.bat}
+% 
+% \secrel{rc.rc}
+% 
+% \lstx{rc.rc}{script/rc.rc}
+% 
+% \bigskip\fig{}{../icons/hedgehog.png}{scale=2}
+
+\secup

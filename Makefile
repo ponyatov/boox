@@ -1,6 +1,6 @@
 TEX = boox.tex header.tex intro.tex bib.tex
 
-TEX += bi/AST.tex
+TEX += bi/AST.tex bi/fspfiles.tex bi/fspskel.bat
 
 TEX += linux/build.tex linux/struc.tex
 
