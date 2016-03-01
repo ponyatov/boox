@@ -7,6 +7,10 @@
 %% hyperlinks pdf style
 \usepackage[unicode]{hyperref}
 %\usepackage[unicode,colorlinks=true,pdfborderstyle={/S/U/W 1}]{hyperref}
+% [nosep] option in lists/enums
+\usepackage{enumitem}
+% frame box
+\usepackage{framed}
 
 % Cyrillization
 \usepackage[T1,T2A]{fontenc}
@@ -31,14 +35,16 @@
 
 %% typical =objects
 \newcommand{\file}[1]{\textbf{#1}}
+\newcommand{\dir}[1]{\textbf{\textit{#1}}}
 \newcommand{\prog}[1]{\textbf{#1}}
 \newcommand{\class}[1]{\textbf{#1}}
 
 %% languages
-\newcommand{\cpp}{$C^{++}$}
+\newcommand{\cpp}{$C^+_+$}
 \newcommand{\py}{$Python$}
 \newcommand{\bi}{$bI$}
 \newcommand{\st}{$SmallTalk$}
+\newcommand{\lisp}{$Lisp$}
 
 %% OSes
 \newcommand{\linux}{$Linux$}
@@ -52,7 +58,7 @@
 \lstset{
 basicstyle=\small,
 frame=single,
-numbers=left,numberstyle=\small,numbersep=1mm,
+numbers=left,numberstyle=\small,numbersep=2mm,
 tabsize=4,
 keywordstyle=\textbf,
 commentstyle=\textit
