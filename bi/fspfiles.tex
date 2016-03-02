@@ -7,7 +7,7 @@
 
 \lstx{Создаем проект \prog{prog}\ из командной строки (\win):}{bi/fspskel.bat}
 Создали каталог проекта, сгенерили набор пустых файлов (см. далее), и
-запуститили батник-hepler который запустит \gvim.
+запуститили батник-hepler который запустит \vim.
 
 Для пользователей GitHub \verb|mkdir|\ надо заменить на 
 \begin{verbatim}
@@ -28,21 +28,55 @@ git gui &
 \file{cpp.cpp} & \cpp & код ядра \ref{bicpp}\\
 \file{Makefile} & \prog{make} & зависимости между файлами и команды сборки (для
 утилиты \prog{make})\\
-\file{bat.bat} & \win & запускалка \prog{gvim}\ \ref{bibat}\\
+\file{bat.bat} & \win & запускалка \prog{\vim}\ \ref{bibat}\\
 \file{.gitignore} & \prog{git} & список масок временных и производных файлов
 \ref{bigit}\\
 \end{tabular}
 
+\secrel{Настройки \vim}
+
+При использовании редактора/IDE \prog{\vim}\ удобно настроить сочетания клавиш и
+подсветку \emph{синтаксиса вашего скриптовго языка}\ так, как вам удобно. Для
+этого нужно создать несколько файлов конфигурации .vim: по 2 файла\note{(1)
+привязка расширения файла и (2) подсветка синтаксиса}\ для каждого диалекта
+скрипт-языка\note{если вы пользуетесь сильно отличающимся синтаксисом, но
+скорее всего через какое-то время практики FSP у вас выработается один диалект
+для всех программ, соответсвующий именно вашим вкусам в синтаксисе, и в этом
+случае его нужно будет описать только в файлах ~/.vim/(ftdetect|syntax).vim}, и
+привязать их к расширениям через dot-файлы \vim\ в вашем домашнем каталоге.
+Подробно конфигурирование \vim\ см. \ref{vim}. \bigskip 
+
+\begin{tabular}{l l l}
+filetype.vim & \vim & привязка расширений файлов (.src .log) к настройкам \vim
+\\
+syntax.vim & \vim & синтаксическая подсветка для скриптов \\
+~/.vimrc & \linux & настройки для пользователя \\
+~/vimrc & \win &\\
+~/.vim/ftdetect/src.vim & \linux & привязка команд к расширению .src \\
+~/vimfiles/ftdetect/src.vim & \win & \\
+~/.vim/syntax/src.vim & \linux & синтаксис к расширению .src \\
+~/vimfiles/syntax/src.vim & \win &\\
+\end{tabular}
+
+\secrel{Дополнительные файлы}
+
+\begin{tabular}{l l l}
+README.md & github & описание проекта для репоитория github \\
+logo.png & github & логотип \\
+logo.ico & \win & \\
+rc.rc & \win & описание ресурсов: логотип, иконки приложения, меню,.. \\
+\end{tabular}
+
 % \file{rc.rc} & \ref{rc} & windres 
-% 	& описание ресурсов: иконки приложения, меню,..\\
+% 	& \\
 % \file{logo.ico} && windres 
 % 	& логотип в .ico формате \\
 % \file{logo.png} &&
 % 	& логотип в .png (для github README) \\
 % \file{filetype.vim} & \ref{filetypevim} & (g)vim 
-% 	& привязка расширения файлов cкриптов \\
+% 	& файлов cкриптов \\
 % \file{syntax.vim} & \ref{syntaxvim} & (g)vim 
-% 	& синтаксическая подсветка для скриптов \\
+% 	&  \\
  
 % \input{README.tex}
 % \input{makefile.tex}
