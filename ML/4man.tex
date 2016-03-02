@@ -1,55 +1,89 @@
-\secrel{Основы Standard ML \copyright\ Michael P. Fourman}\secdown
+\secrel{Основы Standard ML \copyright\ Michael P.
+Fourman}\label{fourmanru}\secdown
 
 \url{http://homepages.inf.ed.ac.uk/mfourman/teaching/mlCourse/notes/L01.pdf}
 
 \secrel{Введение}
 
-\ml\ обозначает “MetaLanguage”: МетаЯзык. У Robin Milnerа была идея создания
+\ml\ обозначает “MetaLanguage”: МетаЯзык. У Robin Milner была идея создания
 языка программирования, специально адаптированного для написания приложений для
-обработки логических формул и доказательств. Этот язык должен быть метаязыком
-для манипуляции объектами, представляющими формулы на логическом объектном
-языке.
+обработки логических формул и доказательств. Этот язык должен быть
+\emph{метаязыком}\ для манипуляции объектами, представляющими формулы на
+логическом \emph{объектном языке}.
 
 Первый \ml\ был метаязыком вспомогательного пакета автоматических доказательств
 Edinburgh LCF. Оказалось что метаязык Милнера, с некоторыми дополнениями и
 уточнениями, стал инновационным и универсальным языком программирования общего
-назначения. Today there are many languages that adopt many or all of Milner’s
-innovations. Standard ML (SML) is the most direct descendant of the original,
-CAML is another, Haskell is a more-distant relative. In this note, we introduce
-the SML language, and see how it can be used to compute some interesting results
-with very little programming effort.
+назначения. Standard ML (SML) является наиболее близким потомком оригинала,
+другой\ --- CAML, Haskell является более дальним родственником. В этой статье мы
+представляем язык SML, и рассмотрим, как он может быть использован для
+вычисления некоторых интересных результатов с очень небольшим усилием по
+программированию.
 
-In the beginning, you were told that a program is a sequence of instructions
-to be executed by a computer. This is not true! Giving a sequence of
-instructions is just one way of programming a computer. A program is a text
-specifying a computation. The degree to which this text can be viewed as a
-sequence of instructions varies from programming language to programming
-language. In these notes we will write programs in the language ML, which
-is not quite so explicit as languages such as C and Pascal about the steps
-needed to perform a desired computation. In many ways, ML is simpler than
-Pascal and C. However, you may take some time to appreciate this.
+Для начала, вы считаете, что программа представляет собой последовательность
+команд, которые будут выполняться компьютером. Это неверно\,! Предоставление
+последовательности инструкций является лишь одним из способов программирования
+компьютера. Точнее сказать, что \emph{программа\ --- это текст
+\term{спецификации вычисления}}. Степень, в которой этот текст можно
+рассматривать как последовательность инструкций, изменяется в разных языках
+программирования. В этих заметках мы будем писать программы на языке \ml,
+который не является столь явно императивным, как такие языки, как Си и Паскаль,
+в описании мер, необходимых для выполнения требуемого вычисления. Во многих
+отношениях \ml\ \emph{проще}\ чем Паскаль и Си. Тем не менее, вам может
+потребоваться некоторое время, чтобы оценить это.
 
-ML is primarily a functional language: most ML programs are best viewed
-as specifying the values we want to compute, without explicitly describing
-the primitive steps used to achieve this. In particular, we will not generally
-describe (or be concerned with) the way values stored in particular memory
-locations change as the program executes. This will allow us to concentrate
-on the organisation of data and computation, without becoming mired in
-detailed housekeeping.
+\ml\ в первую очередь функциональный язык: большинство программ на \ml\  лучше
+всего рассматривать как спецификацию \emph{значения}, которое мы хотим
+вычислить, без явного описания примитивных шагов, необходимых для достижения
+этой цели. В частности, мы не будем описывать, и вообще беспокоиться о способе,
+каким значения, хранимые где-то в памяти, изменяются по мере выполнения
+программы. Это позволит нам сосредоточиться на \emph{организации}\ данных и
+вычислений, не втягиваясь в детали внутренней работы самого вычислителя.
 
-ML programs are fundamentally different from those you have become
-accustomed to write in a traditional imperative language. It will not be
-fruitful to begin by trying to translate between ML and the more-familiar
-paradigm — resist this temptation!
+В этом программирование на \ml\ коренным образом отличается от тех приемов,
+которыми вы привыкли пользоваться в привычном императивном языке.
+\emph{Попытки транслировать ваши программисткие привычки на \ml\ неплодотворны\
+--- сопротивляйтесь этому искушению\,!}
 
-We begin this chapter with a quick introduction to a small fragment of
-ML. We then use this to investigate some functions that will be useful later
-on. Finally, we give an overview of some important aspects of ML.
+Мы начнем этот раздел с краткого введения в небольшой фрагмент на \ml. Затем мы
+используем этот фрагмент, чтобы исследовать некоторые функции, которые будут
+полезны в дальнейшем. Наконец, мы сделаем обзор некоторых важных аспектов \ml.
 
-It is strongly recommended that you try some examples on the computer
-as you read this text.\note{User input is terminated with a semicolon, “;”. In most systems, this must be followed
-by <return>, to tell the system to send the line to ML. The examples have been run using
-Abstract Hardware Limited’s Poly/ML system. The Poly/ML prompt is > — or, if input
-is incomplete, \#.}
+\emph{Крайне важно}\ пробовать эти примеры на компьютере, когда вы читаете этот
+текст.\note{Пользовательский ввод завершается точкой с запятой ``;''.
+В большинстве систем, ``;'' должна завершаться нажатием [Enter]/[Return], чтобы
+сообщить системе, что надо послать строку в \ml. Эти примеры тестировались на
+системе Abstract Hardware Limited’s Poly/ML. В \prog{Poly/ML}\ запрос ввода
+символ >\ или, если ввод неполон\ --- \#.}
+
+
+\bigskip
+\paragraph{Примечение переводчика}
+Для целей обучения очень удобно использовать онлайн среды, не требующие
+установки программ, и достуные в большинстве браузеров на любых мобильных
+устройствах. В качестве рекомендуемых online реализаций Standrard ML можно
+привести следующие:
+
+\begin{description}
+\item{CloudML}\ \url{https://cloudml.blechschmidt.saarland/}\\ описан в
+\href{https://blog.blechschmidt.saarland/cloudml-online-standard-ml-editor-and-interpreter/}{блогпосте
+B. Blechschmidt}\ как онлайн-интерпретатор диалекта
+\href{http://mosml.org/}{Moscow ML}
+
+\item{TutorialsPoint SML/NJ}
+\url{http://www.tutorialspoint.com/execute_smlnj_online.php}
+
+\item{Moscow ML}\ (\emph{offline})\ \url{http://mosml.org/}\ реализация
+Standart ML
+\begin{itemize}[nosep]
+  \item Сергей Романенко, Келдышевский институт прикладной математики,
+РАН, Москва
+\item Claudio Russo, Niels Kokholm, Ken Friis Larsen, Peter Sestoft
+\item используется движок и некоторые идеи из Caml Light
+\copyright\ Xavier Leroy, Damien Doligez.
+\item порт на MacOS \copyright\ Doug Currie.
+\end{itemize} 
+ 
+\end{description}
 
 \secup

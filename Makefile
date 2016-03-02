@@ -6,6 +6,8 @@ TEX += linux/build.tex linux/struc.tex
 
 TEX += ML/4man.tex
 
+TEX += ML/gilmore.tex
+
 LATEX = pdflatex -halt-on-error
 boox.pdf: $(TEX) Makefile
 	$(LATEX) $< && $(LATEX) $<
