@@ -1,0 +1,55 @@
+\secrel{Основы Standard ML \copyright\ Michael P. Fourman}\secdown
+
+\url{http://homepages.inf.ed.ac.uk/mfourman/teaching/mlCourse/notes/L01.pdf}
+
+\secrel{Введение}
+
+\ml\ обозначает “MetaLanguage”: МетаЯзык. У Robin Milnerа была идея создания
+языка программирования, специально адаптированного для написания приложений для
+обработки логических формул и доказательств. Этот язык должен быть метаязыком
+для манипуляции объектами, представляющими формулы на логическом объектном
+языке.
+
+Первый \ml\ был метаязыком вспомогательного пакета автоматических доказательств
+Edinburgh LCF. Оказалось что метаязык Милнера, с некоторыми дополнениями и
+уточнениями, стал инновационным и универсальным языком программирования общего
+назначения. Today there are many languages that adopt many or all of Milner’s
+innovations. Standard ML (SML) is the most direct descendant of the original,
+CAML is another, Haskell is a more-distant relative. In this note, we introduce
+the SML language, and see how it can be used to compute some interesting results
+with very little programming effort.
+
+In the beginning, you were told that a program is a sequence of instructions
+to be executed by a computer. This is not true! Giving a sequence of
+instructions is just one way of programming a computer. A program is a text
+specifying a computation. The degree to which this text can be viewed as a
+sequence of instructions varies from programming language to programming
+language. In these notes we will write programs in the language ML, which
+is not quite so explicit as languages such as C and Pascal about the steps
+needed to perform a desired computation. In many ways, ML is simpler than
+Pascal and C. However, you may take some time to appreciate this.
+
+ML is primarily a functional language: most ML programs are best viewed
+as specifying the values we want to compute, without explicitly describing
+the primitive steps used to achieve this. In particular, we will not generally
+describe (or be concerned with) the way values stored in particular memory
+locations change as the program executes. This will allow us to concentrate
+on the organisation of data and computation, without becoming mired in
+detailed housekeeping.
+
+ML programs are fundamentally different from those you have become
+accustomed to write in a traditional imperative language. It will not be
+fruitful to begin by trying to translate between ML and the more-familiar
+paradigm — resist this temptation!
+
+We begin this chapter with a quick introduction to a small fragment of
+ML. We then use this to investigate some functions that will be useful later
+on. Finally, we give an overview of some important aspects of ML.
+
+It is strongly recommended that you try some examples on the computer
+as you read this text.\note{User input is terminated with a semicolon, “;”. In most systems, this must be followed
+by <return>, to tell the system to send the line to ML. The examples have been run using
+Abstract Hardware Limited’s Poly/ML system. The Poly/ML prompt is > — or, if input
+is incomplete, \#.}
+
+\secup
