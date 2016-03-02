@@ -1,4 +1,6 @@
-TEX = boox.tex header.tex intro.tex bib.tex
+TEX = boox.tex header.tex intro.tex 
+
+TEX += bib/bib.tex
 
 TEX += bi/AST.tex bi/fspfiles.tex bi/fspskel.bat
 

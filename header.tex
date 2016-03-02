@@ -7,6 +7,11 @@
 %% hyperlinks pdf style
 \usepackage[unicode,colorlinks=true]{hyperref}
 %,pdfborderstyle={/S/U/W 1}
+%% graphics
+\usepackage[pdftex]{graphicx}
+\newcommand{\fig}[3]{\includegraphics[#3]{#2}\textbf{#1}}
+\newcommand{\bibfig}[1]{\includegraphics[height=0.3\textheight]{#1}}
+%\newcommand{\figx}[2]{\includegraphics[#1]{#2}}
 % [nosep] option in lists/enums
 \usepackage{enumitem}
 % frame box
