@@ -14,6 +14,10 @@ TEX += vim/vim.tex
 
 TEX += misc/fazli.tex
 
+TEX += kumar/kumar.tex
+
+TEX += gnubogo/gnubogo.tex
+
 LATEX = pdflatex -halt-on-error
 boox.pdf: $(TEX) Makefile
 	$(LATEX) $< && $(LATEX) $<
