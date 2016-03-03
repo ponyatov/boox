@@ -1,0 +1,7 @@
+#!/bin/sh
+arm-none-eabi-as -o $1.o $1.s
+arm-none-eabi-ld -Ttext=0x0 -o $1.elf $1.o
+arm-none-eabi-objcopy -O binary $1.elf $1.bin
+dd if=/dev/zero of=flash.bin bs=4K count=4K
+dd if=$1.bin of=flash.bin bs=4K conv=notrunc
+qemu-system-arm -M connex -pflash flash.bin -nographic -serial /dev/null
