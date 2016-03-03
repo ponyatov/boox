@@ -2,7 +2,9 @@ TEX = boox.tex ../texheader/mini.tex intro.tex
 
 TEX += ../bib/bib.tex
 
-TEX += bi/AST.tex bi/fspfiles.tex bi/fspskel.bat
+TEX += bi/dyntypes.tex bi/AST.tex 
+TEX += bi/fspfiles.tex bi/fspskel.bat bi/make.tex bi/Makefile
+TEX += bi/scalar.tex bi/composite.tex bi/functional.tex
 
 TEX += linux/build.tex linux/struc.tex
 
