@@ -1,8 +1,41 @@
-\secrel{Embedded Programming with the GNU Toolchain\
+\secrel{Embedded-программирование с использованием \gnut\
 \cite{kumar}}\label{kumaru}\secdown \copyright\ Vijay Kumar B.\\
 \cp{http://bravegnu.org/gnu-eprog/}
 
-\secrel{1. Introduction}
+\secrel{Введение}
+
+GNU toolchain широко используется при разработки программного обеспечения для
+встраиваемых систем. Этот тип разработки ПО также называют
+\termdef{низкоуровневым программированием}, \termdef{standalone}{standalone}\
+или \termdef{bare metal}{bare metal}\ программированием (на Си и \cpp).
+Написание низкоуровневого кода на \cpp\ добавляет программисту новых проблем,
+требующих глубокого понимания инструмента разработчика\ --- \gnut.
+Руководства разработчика \gnut\ предоставляют отличную информацию по
+инструментарию, но с точки зрения самого \gnut, чем с точки зрения решаемой
+проблемы. Поэтому было написано это руководство, в котором будут описаны
+типичные проблемы, с которыми сталкивается начинающий разработчик.
+
+Этот учебник стремится занять свое место, объясняя использование \gnut\ с точки
+зрения практического использования. Надеемся, что его будет достаточно для
+разработчиков, собирающихся освоить и использовать \gnut\ в их embedded
+проектах.
+
+В иллюстративных целях была выбрана встроенная система на базе процессорного
+ядра ARM, которая эмулируется в пакете \prog{Qemu}. С таким подходом вы сможете
+освоить \gnut\ с комфортом на вашем рабочем компьютере, без необходимости
+вкладываться в ``физическое''\ железо, и бороться со сложностями с его запуском.
+Учебник не стремиться обучить работе с архитектурой ARM, для этого вам нужно
+будет воспользоваться дополнительными книгами или онлайн-учебниками типа:
+
+\begin{itemize}[nosep]
+  \item ARM Assembler\ \url{http://www.heyrick.co.uk/assembler/}
+  \item ARM Assembly Language Programming\
+  \url{http://www.arm.com/miscPDFs/9658.pdf}
+\end{itemize}
+
+Но для удобства читателя, некоторое множество часто используемых ARM-инструкций
+описано в приложении \ref{kumarB}.
+
 \secrel{2. Setting up the ARM Lab}\secdown
 \secrel{2.1. Qemu ARM}
 \secrel{2.2. Installing Qemu in Debian}
@@ -46,7 +79,7 @@
 \secup
 \secrel{15. Tutorial Copyright}
 \secrel{A. ARM Programmer’s Model}
-\secrel{B. ARM Instruction Set}
+\secrel{B. ARM Instruction Set}\label{kumarB}
 \secrel{C. ARM Stacks}
  
 \secup 
