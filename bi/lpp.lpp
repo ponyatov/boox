@@ -1,0 +1,38 @@
+%{
+#include "hpp.hpp"
+%}
+%option noyywrap
+%option yylineno
+S [\-\+]?
+N [0-9]+
+%%
+#[^\n]*				{}				/* line comment */
+
+															/* == numbers == */
+{S}{N}				TOC(Sym,NUM)	/* integer */
+{S}{N}\.{N}			TOC(Sym,NUM)	/* floating point */
+{S}{N}[eE]{S}{N}	TOC(Sym,NUM)	/* exponential */
+
+[a-zA-Z0-9_.]+		TOC(Sym,SYM)	/* symbol */
+
+\(					TOC(Sym,SYM)							/* == brackets == */
+\)					TOC(Sym,SYM)
+\[					TOC(Sym,SYM)	/* [list] */
+\]					TOC(Sym,SYM)
+\{					TOC(Sym,SYM)	/* {lambda} */
+\}					TOC(Sym,SYM)
+															/* == operators == */
+\=					TOC(Sym,SYM)	/* assign */
+\@					TOC(Sym,SYM)	/* apply */
+\:					TOC(Sym,SYM)	/* inherit */
+\~					TOC(Sym,SYM)	/* quote */
+
+\+					TOC(Sym,SYM)	/* arithmetics */
+\-					TOC(Sym,SYM)
+\*					TOC(Sym,SYM)
+\/					TOC(Sym,SYM)
+\^					TOC(Sym,SYM)
+															/* == drop == */
+[ \t\r\n]+			{}				/* spaces */
+.					{}				/* undetected chars */
+%%
