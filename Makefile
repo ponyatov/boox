@@ -16,7 +16,7 @@ TEX += misc/fazli.tex
 
 TEX += kumar/kumar.tex 
 TEX += kumar/add.objdump kumar/add.s kumar/add.disasm 
-TEX += kumar/arrsum.s
+TEX += kumar/arrsum.s kumar/strlen.s
 
 TEX += gnubogo/gnubogo.tex
 
