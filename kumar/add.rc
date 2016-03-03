@@ -4,3 +4,4 @@ arm-none-eabi-ld -Ttext=0x0 -o add.elf add.o
 arm-none-eabi-objcopy -O binary add.elf add.bin
 dd if=/dev/zero of=flash.bin bs=4K count=4K
 dd if=add.bin of=flash.bin bs=4K conv=notrunc
+qemu-system-arm -M connex -pflash flash.bin -nographic -serial /dev/null

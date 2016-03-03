@@ -392,11 +392,11 @@ system\_reset & перезапуск \\
 инструкции размером w=32 бита:
 
 \begin{verbatim}
-% (qemu) xp /4iw 0x0
-% 0x00000000:  mov        r0, #5  ; 0x5
-% 0x00000004:  mov        r1, #4  ; 0x4
-% 0x00000008:  add        r2, r1, r0
-% 0x0000000c:  b  0xc
+(qemu) xp /4wi 0x0
+0x00000000:  e3a00005      mov  r0, #5  ; 0x5
+0x00000004:  e3a01004      mov  r1, #4  ; 0x4
+0x00000008:  e0812000      add  r2, r1, r0
+0x0000000c:  eafffffe      b    0xc
 \end{verbatim}
 
 \secup
