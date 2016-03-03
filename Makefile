@@ -1,6 +1,6 @@
-TEX = boox.tex header.tex intro.tex 
+TEX = boox.tex ../texheader/mini.tex intro.tex 
 
-TEX += bib/bib.tex
+TEX += ../bib/bib.tex
 
 TEX += bi/AST.tex bi/fspfiles.tex bi/fspskel.bat
 
