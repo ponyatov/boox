@@ -1,0 +1,13 @@
+
+add.o:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <start>:
+   0:	e3a00005 	mov	r0, #5
+   4:	e3a01004 	mov	r1, #4
+   8:	e0812000 	add	r2, r1, r0
+
+0000000c <stop>:
+   c:	eafffffe 	b	c <stop>

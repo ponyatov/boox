@@ -14,7 +14,7 @@ TEX += vim/vim.tex
 
 TEX += misc/fazli.tex
 
-TEX += kumar/kumar.tex
+TEX += kumar/kumar.tex kumar/add.objdump kumar/add.disasm
 
 TEX += gnubogo/gnubogo.tex
 
