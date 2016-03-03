@@ -12,6 +12,8 @@ TEX += ML/gilmore.tex
 
 TEX += vim/vim.tex
 
+TEX += misc/fazli.tex
+
 LATEX = pdflatex -halt-on-error
 boox.pdf: $(TEX) Makefile
 	$(LATEX) $< && $(LATEX) $<
