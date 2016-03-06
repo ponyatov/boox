@@ -1,6 +1,4 @@
-
 add.o:     file format elf32-littlearm
-
 
 Disassembly of section .text:
 
