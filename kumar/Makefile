@@ -50,4 +50,3 @@ clean:
 #emulation: $(APP).flash
 #	qemu-system-$(ARCH) -M connex -pflash $< \
 #		-nographic -serial /dev/null
-#
