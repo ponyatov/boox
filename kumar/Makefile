@@ -1,32 +1,53 @@
-# APPlication name, you can change it in make command line parameters
-# to compile other onefile program with same makefile
-APP = add
+
+O = add.o arrsum.o strlen.o
+O += summain.o sumsub.o
+
+ELF = add.elf arrsum.elf strlen.elf
+
+BIN = add.bin arrsum.bin strlen.bin
+
+FLASH = add.flash arrsum.flash strlen.flash
 
 # some std.variables widely used in Linux source builds:
-# architecture
+# архитекутра: arm mips avr i386 x86_64
 ARCH = arm
-# target system triplet
+# триплет целевой системы: avr-none-elf i486-none-elf i686-linux-uclibc ...
 TARGET = $(ARCH)-none-eabi-
 
-# std. toolchain commands
+# стандартные переменные с командами GNU toolchain
 AS = $(TARGET)as
 LD = $(TARGET)ld
 CC = $(TARGET)gcc
 CXX = $(TARGET)g++
 OBJDUMP = $(TARGET)objdump
+OBJCOPY = $(TARGET)objcopy
+NM = $(TARGET)nm
 
-# FlashROM size of target system, in 4K block
+# шаблонные правила 
+## FlashROM size of target system, in 4K block
 FLASHBLOCKS = 4K
-emulation: $(APP).flash
-	qemu-system-$(ARCH) -M connex -pflash $< \
-		-nographic -serial /dev/null
-
-$(APP).flash: $(APP).bin
+%.flash: %.bin
 	dd if=/dev/zero of=$@ bs=4K count=$(FLASHBLOCKS)
 	dd if=$< of=$@ bs=4K conv=notrunc
-$(APP).bin: $(APP).elf
+%.bin: %.elf
 	$(OBJCOPY) -O binary $< $@
-$(APP).elf: $(APP).o	
-	$(LD) -o $(APP).elf $(APP).o
-$(APP).o: $(APP).s
-	$(AS) -o $(APP).o $(APP).s
+%.elf: %.o	
+	$(LD) $(LDFLAGS) -o $@ $<
+%.o: %.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+.PHONY: all
+all: $(FLASH)
+
+.PHONY: clean
+clean:
+	rm -f *.o *.elf *.bin *.flash
+
+## APPlication name, you can change it in make command line parameters
+## to compile other onefile program with same makefile
+#APP = add
+#
+#emulation: $(APP).flash
+#	qemu-system-$(ARCH) -M connex -pflash $< \
+#		-nographic -serial /dev/null
+#
