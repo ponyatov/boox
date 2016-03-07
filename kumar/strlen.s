@@ -12,7 +12,7 @@ start:  ldr   r0, =str          @ r0 = &str
 loop:   ldrb  r2, [r0], #1      @ r2 = *(r0++)
         add   r1, r1, #1        @ r1 += 1
         cmp   r2, #nul          @ if (r1 != nul)
-        bne   loop              @    goto loop
+        bne   loop              @ goto loop
 
         sub   r1, r1, #1        @ r1 -= 1
 stop:   b stop
