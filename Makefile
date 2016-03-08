@@ -27,6 +27,8 @@ TEX += gnubogo/gnubogo.tex
 
 TEX += cross/cross.tex
 
+TEX += gcc/gcc.tex
+
 LATEX = pdflatex -halt-on-error
 boox.pdf: $(TEX) Makefile
 	$(LATEX) $< && $(LATEX) $<
