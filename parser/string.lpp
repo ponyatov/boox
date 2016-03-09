@@ -1,0 +1,17 @@
+%{
+#include "hpp.hpp"
+string LexString;	/* string parser buffer */
+%}
+%option noyywrap
+%option yylineno
+%x lexstring
+%%
+#[^\n]*				{}
+
+\"					{BEGIN(lexstring); LexString="";}
+<lexstring>\"		{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR;}
+<lexstring>\n		{LexString+=yytext[0];}
+<lexstring>.		{LexString+=yytext[0];}
+
+[a-zA-Z0-9_.]+		TOC(Sym,SYM)
+%%

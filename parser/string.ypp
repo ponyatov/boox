@@ -1,0 +1,11 @@
+%{
+#include "hpp.hpp"
+%}
+%defines %union { Sym*o; }		/* use universal bI abstract type */
+%token <o> SYM STR NUM			/* symbol 'string' number */
+%type <o> ex scalar				/* expression scalar */
+%%
+REPL : | REPL ex { cout << $2->tagval(); } ;
+scalar : SYM | STR | NUM ;
+ex : scalar ; 
+%%

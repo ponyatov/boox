@@ -1,6 +1,5 @@
 *.exe
 *.log
-minimal.src
-comment.src
+*.src
 lex.yy.c
 ypp.tab.?pp

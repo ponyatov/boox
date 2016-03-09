@@ -1,0 +1,21 @@
+%{
+#include "hpp.hpp"
+%}
+%defines %union { Sym*o; }		/* use universal bI abstract type */
+%token <o> SYM STR NUM			/* symbol 'string' number */
+%token <o> LB RB LQ RQ LC RC	/* brackets: () [] {} */
+%token <o> ADD SUB MUL DIV POW	/* arithmetic operators: + - * / ^ */
+%token <o> EQ AT TILD COLON		/* bi specific operators: = @ ~ : */
+%type <o> ex scalar				/* expression scalar */
+%type <o> bracket operator
+%%
+REPL : | REPL ex { cout << $2->dump(); } ;
+scalar : SYM | STR | NUM ;
+ex : scalar | operator ;
+bracket : LB | RB | LQ | RQ | LC | RC ;
+operator :
+	bracket
+	| ADD | SUB | MUL | DIV | POW
+	| EQ | AT | TILD | COLON
+;   
+%%

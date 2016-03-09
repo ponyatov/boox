@@ -1,0 +1,36 @@
+%{
+#include "hpp.hpp"
+string LexString;	/* string parser buffer */
+%}
+%option noyywrap
+%option yylineno
+%x lexstring
+%%
+#[^\n]*				{}				/* # line comment */
+
+\"					{BEGIN(lexstring); LexString="";}
+<lexstring>\"		{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR;}
+<lexstring>\n		{LexString+=yytext[0];}
+<lexstring>.		{LexString+=yytext[0];}
+
+[a-zA-Z0-9_.]+		TOC(Sym,SYM)	/* symbol */
+
+\(					TOC(Op,LB)		/* brackets */
+\)					TOC(Op,RB)
+\[					TOC(Op,LQ)
+\]					TOC(Op,RQ)
+\{					TOC(Op,LC)
+\}					TOC(Op,RC)
+
+\+					TOC(Op,ADD)		/* typical arithmetic operators */
+\-					TOC(Op,SUB)
+\*					TOC(Op,MUL)
+\/					TOC(Op,DIV)
+\^					TOC(Op,POW)
+									/* bI language specific */
+\=					TOC(Op,EQ)		/* assign */
+\@					TOC(Op,AT)		/* apply */
+\~					TOC(Op,TILD)	/* quote */
+\:					TOC(Op,COLON)	/* inheritance */
+
+%%

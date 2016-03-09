@@ -11,7 +11,16 @@ ypp.tab.cpp: $(APP).ypp
 lex.yy.c: $(APP).lpp
 	flex -o $@ $<
 	
+.PHONY: src
+src: minimal.src comment.src string.src ops.src brackets.src 
+	
 minimal.src: ../bi/cpp.cpp
 	head -n11 $< > $@
 comment.src: ../bi/cpp.cpp
+	head -n11 $< > $@
+string.src: ../bi/cpp.cpp
 	head -n11 $< > $@	
+ops.src: ../bi/cpp.cpp
+	head -n5 $< > $@	
+brackets.src: ../bi/cpp.cpp
+	head -n5 $< > $@

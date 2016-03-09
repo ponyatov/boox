@@ -33,6 +33,9 @@ TEX += gcc/gcc.tex
 TEX += parser/parser.tex 
 TEX += parser/minimal.tex parser/minimal.lpp parser/minimal.ypp parser/minimal.mk
 TEX += parser/comment.tex parser/comment.lpp
+TEX += parser/string.tex parser/string.lpp
+TEX += parser/brackets.tex parser/brackets.ypp parser/brackets.lpp
+TEX += parser/ops.lpp parser/ops.ypp parser/brackets.lpp parser/brackets.ypp
 
 LATEX = pdflatex -halt-on-error
 boox.pdf: $(TEX) Makefile
