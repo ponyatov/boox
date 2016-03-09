@@ -40,17 +40,4 @@ Science, правда к ним еще придется добавить PTR: б
 до момента, когда в очередном форке \bi\ не появится возможность наследовать
 любые объекты.
 
-\secrel{\cpp\ интерфейс анализатора}
-
-\begin{verbatim}
-extern int yylex();             // получить код следующиго токена, и yylval.o 
-extern int yylineno;            // номер текущей строки файла исходника
-extern char* yytext;            // текст распознанного токена, asciiz
-#define TOC(C,X) { yylval.o = new C(yytext); return X; }
-
-extern int yyparse();           // отпарсить весь текущий входной поток токенов
-extern void yyerror(string);    // callback вызывается при синтаксической ошибке
-#include "ypp.tab.hpp"
-\end{verbatim}
-
 \secup

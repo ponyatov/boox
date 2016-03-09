@@ -1,4 +1,4 @@
-\secrel{Makefile}
+\secrel{Makefile}\label{bimake}
 
 Для сборки проекта используем команду \prog{make}\ или \prog{ming32-make}\ для
 \win/\mingw. Прописываем в \file{Makefile}\ зависимости:
@@ -27,10 +27,10 @@
 \item{\file{hpp.hpp}} заголовочные файлы также используем из \bi\ \ref{bi}:
 содержат декларации динамических типов и интерфейс лексического анализатора,
 которые подходят для всех проектов
-\item{ypp.tab.cpp ypp.tab.hpp} \cpp\ код синтаксического парсера, генерируемый
-утилитой \prog{bison}\ \ref{parser}
-\item{lex.yy.c} код лексического анализатора, генерируемый утилитой \prog{flex}\
-\ref{flex}
+\item{\file{ypp.tab.cpp}\ \file{ypp.tab.hpp}} \cpp\ код синтаксического парсера,
+генерируемый утилитой \prog{bison}\ \ref{biparser}
+\item{\file{lex.yy.c}} код лексического анализатора, генерируемый утилитой
+\prog{flex}\ \ref{bilexer}
 \item{\var{CXXFLAGS}\verb| += gnu++11|} добавляем опцию диалекта \cpp,
 необходимую для компиляции ядра \bi
 \end{description}

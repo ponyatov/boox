@@ -4,7 +4,7 @@ void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
 int main() { return yyparse(); }
 
 Sym::Sym(string T, string V) { tag=T; val=V; }
-Sym::Sym(string V):Sym("",V) {}
+Sym::Sym(string V):Sym("sym",V) {}
 
 string Sym::tagval() { return "<"+tag+":"+val+">"; }
 string Sym::tagstr() { return "<"+tag+":'"+val+"'>"; }

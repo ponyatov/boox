@@ -1,0 +1,6 @@
+*.exe
+*.log
+minimal.src
+comment.src
+lex.yy.c
+ypp.tab.?pp

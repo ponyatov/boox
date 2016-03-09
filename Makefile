@@ -30,6 +30,10 @@ TEX += cross/cross.tex
 
 TEX += gcc/gcc.tex
 
+TEX += parser/parser.tex 
+TEX += parser/minimal.tex parser/minimal.lpp parser/minimal.ypp parser/minimal.mk
+TEX += parser/comment.tex parser/comment.lpp
+
 LATEX = pdflatex -halt-on-error
 boox.pdf: $(TEX) Makefile
 	$(LATEX) $< && $(LATEX) $<

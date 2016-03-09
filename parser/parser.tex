@@ -1,0 +1,33 @@
+\secrel{Синтаксический анализ текстовых данных}\label{syntax}\secdown
+
+\secrel{Универсальный \file{Makefile}}\label{lexmake}
+
+Универсальный Makefile сделан на базе \ref{bimake}, с добавлением переменной
+\var{APP}\ указывающий какой пример парсера следуует скомпилировать и выполнить.
+
+Для хранения (и возможной обработки) отпарсенных данных используем ядро языка
+\bi\ \ref{bicore}\ --- используем файлы \file{../bi/hpp.hpp}\ и
+\file{../bi/cpp.cpp}. Ядро \emph{очень компактно}, но умеет работать со
+скалярными, составными и функциональными данными, и содержит минимальную
+реализацию \term{ядра динамического языка}.
+
+\lstx{Универсальный \file{Makefile}}{parser/minimal.mk}
+
+\secrel{\cpp\ интерфейс синтаксического анализатора}\label{lexinterface}
+
+\begin{verbatim}
+extern int yylex();             // получить код следующиго токена, и yylval.o 
+extern int yylineno;            // номер текущей строки файла исходника
+extern char* yytext;            // текст распознанного токена, asciiz
+#define TOC(C,X) { yylval.o = new C(yytext); return X; }
+
+extern int yyparse();           // отпарсить весь текущий входной поток токенов
+extern void yyerror(string);    // callback вызывается при синтаксической ошибке
+#include "ypp.tab.hpp"
+\end{verbatim}
+
+\input{parser/minimal}
+
+\input{parser/comment}
+
+\secup
