@@ -22,6 +22,7 @@ TEX += kumar/add.objdump kumar/add.s kumar/add.disasm
 TEX += kumar/arrsum.s kumar/strlen.s
 TEX += kumar/summain.s kumar/sumsub.s
 TEX += kumar/2.mk kumar/Makefile
+TEX += ../gnu-eprog/sections.png
 
 TEX += gnubogo/gnubogo.tex
 
