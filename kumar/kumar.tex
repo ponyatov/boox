@@ -832,8 +832,75 @@ $ arm-none-eabi-nm -n sum-data.elf
 
 \secrel{Анализ объектного/исполняемого файла утилитой \prog{objdump}}
 
+Более подробную информацию даст утилита \prog{objdump}:
+
+\begin{verbatim}
+$ arm-none-eabi-as -o sum-data.o sum-data.s
+$ arm-none-eabi-ld -T sum-data.lds -o sum-data.elf sum-data.o
+$ arm-none-eabi-objdump sum-data.elf
+\end{verbatim}
+
+\lstv{sum-data.objdump}{../gnu-eprog/code/sum-data.objdump}
+
+\begin{enumerate}
+\item указание на архитектуру, 
+
+\item для которой предназначен исполняемый файл
+
+\item стартовый адрес в секции \var{.text}, по умолчанию
+\addr{0x0}\note{обязателен и фиксирован для прошивок микроконтроллеров, т.к. на
+него перескакивает аппаратный сброс}
+
+\item \termdef{ABI}{ABI}\ --- соглашения о передаче 
+
+\item параметров в регистрах/стеке (для Си кода) 
+
+\item приведена подробная информация о секциях
+
+\item \var{.text}\ секция кода
+
+\item \var{.data}\ секция данных
+
+\item служебная информация
+
+\item столбец \var{Size}\ указывает размер секции в байтах (hex)
+
+\item \var{VMA}\note{Virtual Memory Address}\ указывает адрес размещения
+сегмента
+
+\item \var{Algn}\ (Align) автоматическое выравнивание содержимого сегмента в
+памяти, в степени двойки \verb|2**n|: код выравнивается кратно \verb|2**2=4|\
+байтам, данные не выравниваются \verb|2**0=1| 
+
+\item Флаг \var{ALLOC}\ (Allocate) указывает что при загрузке программы под этот 
+сегмент должна быть выделена память.
+
+\item \var{LOAD}\ указывает что содержимое сегмента должно загружаться из
+исполняемого файла в память при использовании ОС, а для микроконтроллеров
+указывает программатору что сегмент нужно прошивать.
+
+\item \var{READONLY}\ сегмент с константными неизменяемыми данными, которые
+могут быть размещены в ROM, а при использовании ОС область памяти должна быть
+помечена в таблице системы защиты памяти как R/O. Отсутствие флага
+\var{READONLY}\ + наличие \var{LOAD}\ указывает что данные должны загружаться
+\emph{только в ОЗУ}.
+
+\item сегмент кода
+
+\item сегмент данных
+
+\item таблица символов
+
+\item дизассемблированный код из секций, помеченных флагом \var{CODE}:
+\var{.text}
+ 
+\end{enumerate}
+
 \secup
-\secrel{8. Data in RAM, Example}\secdown
+\secrel{Данные в RAM, пример}\secdown
+
+
+
 \secrel{8.1. RAM is Volatile!}
 \secrel{8.2. Specifying Load Address}
 \secrel{8.3. Copying .data to RAM}
