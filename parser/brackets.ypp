@@ -7,15 +7,20 @@
 %token <o> ADD SUB MUL DIV POW	/* arithmetic operators: + - * / ^ */
 %token <o> EQ AT TILD COLON		/* bi specific operators: = @ ~ : */
 %type <o> ex scalar				/* expression scalar */
-%type <o> bracket operator
+%type <o> operator
 %%
 REPL : | REPL ex { cout << $2->dump(); } ;
 scalar : SYM | STR | NUM ;
-ex : scalar | operator ;
-bracket : LB | RB | LQ | RQ | LC | RC ;
+ex : 
+	 ex ex					{ $$=$1; $$->push($2); }
+	| scalar | operator
+	| LB ex RB				{ $$=new Sym("()"); $$->push($2); }
+	| LB  RB				{ $$=new Sym("()"); }
+	| LQ ex RQ				{ $$=new Sym("[]"); $$->push($2); }
+	| LC ex RC				{ $$=new Sym("{}"); $$->push($2); }
+;
 operator :
-	bracket
-	| ADD | SUB | MUL | DIV | POW
+	ADD | SUB | MUL | DIV | POW
 	| EQ | AT | TILD | COLON
 ;   
 %%
