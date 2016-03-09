@@ -27,10 +27,17 @@ string LexString;	/* string parser buffer */
 \*					TOC(Op,MUL)
 \/					TOC(Op,DIV)
 \^					TOC(Op,POW)
+
+\>					TOC(Op,GR)		/* logic*/
+\<					TOC(Op,LS)
+
 									/* bI language specific */
 \=					TOC(Op,EQ)		/* assign */
 \@					TOC(Op,AT)		/* apply */
 \~					TOC(Op,TILD)	/* quote */
 \:					TOC(Op,COLON)	/* inheritance */
+
+									/* C++ specific */
+\;					TOC(Op,SCOLON)
 
 %%

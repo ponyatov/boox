@@ -6,6 +6,7 @@
 %token <o> LB RB LQ RQ LC RC	/* brackets: () [] {} */
 %token <o> ADD SUB MUL DIV POW	/* arithmetic operators: + - * / ^ */
 %token <o> EQ AT TILD COLON		/* bi specific operators: = @ ~ : */
+%token <o> SCOLON GR LS
 %type <o> ex scalar				/* expression scalar */
 %type <o> operator
 %%
@@ -22,5 +23,6 @@ ex :
 operator :
 	ADD | SUB | MUL | DIV | POW
 	| EQ | AT | TILD | COLON
+	| SCOLON | GR | LS
 ;   
 %%
