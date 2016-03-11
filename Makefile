@@ -7,6 +7,8 @@ TEX += bi/parser.tex bi/ypp.ypp bi/lpp.lpp
 TEX += bi/fspfiles.tex bi/fspskel.bat bi/make.tex bi/Makefile
 TEX += bi/scalar.tex bi/composite.tex bi/functional.tex
 
+TEX += bi/DLR.tex
+
 TEX += linux/build.tex linux/struc.tex
 
 TEX += ML/4man.tex
