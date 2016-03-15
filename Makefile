@@ -48,9 +48,12 @@ SRC += parser/brackets.log
 
 LATEX = pdflatex -halt-on-error
 work.pdf: work.tex $(TEX) $(SRC) Makefile
-	$(LATEX) $< && $(LATEX) $<
+	$(LATEX) $< && makeindex work && $(LATEX) $<
 boox.pdf: $(TEX) $(SRC) Makefile
-	$(LATEX) $< && $(LATEX) $<
+	$(LATEX) $< && makeindex boox && $(LATEX) $<
+.PHONY: clean
+clean:
+	rm -f *.aux *.out *.toc *.idx *.log *.ind *.ilg	
 
 parser/%.log: parser/%.src
 	touch $@
