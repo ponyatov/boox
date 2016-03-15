@@ -10,9 +10,9 @@
   \item[\prog{Maxima}] \cite{maxima} символьная математика, аналог
   \prog{MathCAD}
   \item[\prog{Octave}] \cite{octave} численная математика, аналог \prog{MATLAB}
-  \item[\prog{GNUPLOT}] \cite{gnuplot} простейшее средство построения 3D/3D
+  \item[\gnuplot] \cite{gnuplot} простейшее средство построения 3D/3D
   графиков
-  \item[WoflramAlpha] \url{http://www.wolframalpha.com/}\ бесплатная on-line
+  \item[\wolfram] \url{http://www.wolframalpha.com/}\ бесплатная on-line
   система символьной математики и база знаний
   \item[\py] скриптовый язык программирования, в последнее время получил широкое
   применение в области численных методов, анализа данных и автоматизации,
@@ -84,7 +84,16 @@ $B(x_2)$ в отношении $\lambda$, находится по формуле
 
 \paragraph{1.}
 
-Построить на прямой точки $A(3)$, $B(-2)$, $C(0)$, $D(\sqrt{2})$, $E(-3.5)$. 
+Построить на прямой точки $A(3)$, $B(-2)$, $C(0)$, $D(\sqrt{2})$, $E(-3.5)$.
+
+\bigskip\wolfram\bigskip\\
+\verb|number line {3 , -2 , 0 , sqrt[2] , -3.5}|
+\fig{}{math/danko/w111.png}{width=0.5\textwidth}
+
+\bigskip\gnuplot
+\begin{verbatim}
+plot '-' 3 , -2 , 0 , sqrt(2) , -3.5
+\end{verbatim}
 
 \secup
 
