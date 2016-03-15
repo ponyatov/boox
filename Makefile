@@ -39,6 +39,9 @@ TEX += parser/string.tex parser/string.lpp
 TEX += parser/brackets.tex parser/brackets.ypp parser/brackets.lpp
 TEX += parser/ops.lpp parser/ops.ypp parser/brackets.lpp parser/brackets.ypp
 
+TEX += math/math.tex
+TEX += math/danko/danko.tex
+
 LATEX = pdflatex -halt-on-error
 boox.pdf: $(TEX) Makefile
 	$(LATEX) $< && $(LATEX) $<
