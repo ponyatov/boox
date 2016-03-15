@@ -42,6 +42,17 @@ TEX += parser/ops.lpp parser/ops.ypp parser/brackets.lpp parser/brackets.ypp
 TEX += math/math.tex
 TEX += math/danko/danko.tex
 
+SRC = parser/minimal.log
+SRC += parser/comment.log parser/string.log parser/ops.log
+SRC += parser/brackets.log
+
 LATEX = pdflatex -halt-on-error
-boox.pdf: $(TEX) Makefile
+work.pdf: work.tex $(TEX) $(SRC) Makefile
 	$(LATEX) $< && $(LATEX) $<
+boox.pdf: $(TEX) $(SRC) Makefile
+	$(LATEX) $< && $(LATEX) $<
+
+parser/%.log: parser/%.src
+	touch $@
+parser/%.src:
+	touch $@

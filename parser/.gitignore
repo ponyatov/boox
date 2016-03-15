@@ -1,4 +1,5 @@
 *.exe
 *.log
+*.src
 lex.yy.c
 ypp.tab.?pp
