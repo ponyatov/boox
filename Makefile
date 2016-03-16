@@ -46,10 +46,12 @@ SRC = parser/minimal.log
 SRC += parser/comment.log parser/string.log parser/ops.log
 SRC += parser/brackets.log
 
+FIG = math/danko/Makefile math/danko/g_1_1_1.pdf
+
 LATEX = pdflatex -halt-on-error
-work.pdf: work.tex $(TEX) $(SRC) Makefile
+work.pdf: work.tex $(TEX) $(SRC) $(FIG) Makefile
 	$(LATEX) $< && makeindex work && $(LATEX) $<
-boox.pdf: $(TEX) $(SRC) Makefile
+boox.pdf: boox.tex $(TEX) $(SRC) $(FIG) Makefile
 	$(LATEX) $< && makeindex boox && $(LATEX) $<
 .PHONY: clean
 clean:
@@ -59,3 +61,6 @@ parser/%.log: parser/%.src
 	touch $@
 parser/%.src:
 	touch $@
+
+math/danko/%.pdf: math/danko/%.plot
+	cd math/danko ; make
