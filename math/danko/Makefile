@@ -1,7 +1,10 @@
-PNG = g_1_1_1.png
+FIG = g_1_1_1.pdf m_1_1_1.pdf
 
 .PHONY: all
-all: $(PNG) 
+all: $(FIG) 
 
-%.png: %.plot
+%.pdf: %.plot
 	gnuplot $<
+%.pdf: %.mac
+	maxima < $<
+	

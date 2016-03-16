@@ -48,7 +48,7 @@ SRC += parser/brackets.log
 
 FIG = math/danko/Makefile math/danko/g_1_1_1.pdf
 
-MAC = math/danko/m_1_1_1.mac math/danko/m_1_1_1.maclog
+MAC = math/danko/m_1_1_1.pdf
 
 LATEX = pdflatex -halt-on-error
 work.pdf: work.tex $(TEX) $(SRC) $(FIG) $(MAC) Makefile
@@ -66,3 +66,6 @@ parser/%.src:
 
 math/danko/%.pdf: math/danko/%.plot
 	cd math/danko ; make
+math/danko/%.pdf: math/danko/%.mac
+	cd math/danko ; make
+	
