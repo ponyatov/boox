@@ -48,10 +48,12 @@ SRC += parser/brackets.log
 
 FIG = math/danko/Makefile math/danko/g_1_1_1.pdf
 
+MAC = math/danko/m_1_1_1.mac math/danko/m_1_1_1.maclog
+
 LATEX = pdflatex -halt-on-error
-work.pdf: work.tex $(TEX) $(SRC) $(FIG) Makefile
+work.pdf: work.tex $(TEX) $(SRC) $(FIG) $(MAC) Makefile
 	$(LATEX) $< && makeindex work && $(LATEX) $<
-boox.pdf: boox.tex $(TEX) $(SRC) $(FIG) Makefile
+boox.pdf: boox.tex $(TEX) $(SRC) $(FIG) $(MAC) Makefile
 	$(LATEX) $< && makeindex boox && $(LATEX) $<
 .PHONY: clean
 clean:
