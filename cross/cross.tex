@@ -177,14 +177,16 @@ em\linux,
 \prog{cclibs0}, так как есть зависимость от библиотек \prog{isl0}\ и
 \prog{cloog0}}.
 
-Из важных опций можно указать
-
 \begin{description}
 \item[\var{--target}] триплет целевой системы, например \var{i386-pc-elf}
 \item[\var{CFG\_ARCH CFG\_CPU}] задаются в файлах \file{arch/\$(ARCH).mk}\ и
 \file{cpu/\$(CPU).mk}, и определяют опции сборки \prog{binutils/gcc} для
 конкретного процессора\note{например \var{--without-fpu}\ для
 \file{cpu/i486sx.mk}}
+\item[\var{--with-sysroot}] каталог где должны храниться файлы для целевой
+системы: откомпилированные библиотеки и каталог \file{include}
+\item[\var{--with-native-system-header-dir}] имя каталога с
+\file{include}-файлами, относительно \file{sysroot}
 \end{description}
 
 \lst{arch/i386.mk}{cross/arch/i386.mk}{make}
