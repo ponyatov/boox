@@ -221,13 +221,24 @@ em\linux,
 \lstx{Файлы \prog{binutils0}\ с 
 \var{TARGET}-префиксами и типовые скрипты линкера}{cross/crossbinutils.txt}
 
-\secrel{\prog{gcc0}}
+\secrel{\prog{gcc00}: сборка stand-alone компилятора \ci}
+
+Сборка кросс-компилятора \ci\ выполняется в два этапа
+
+\begin{description}
+  \item[\prog{gcc00}] минимальный \prog{gcc}\ необходимый для сборки libc\
+  \ref{libc}
+  \item[\prog{newlib}] сборка станадртной библиотеки \ci
+  \item[\prog{gcc0}] пересборка полного кросс-компилятора \ci/\cpp
+\end{description} 
 
 \lst{mk/gcc.mk}{cross/mk/gcc.mk}{make}
 
-\secup
-
 \secrel{Сборка стандартной библиотеки \prog{newlib} (libc)}
+
+\secrel{\prog{gcc0}: пересборка компилятора \ci/\cpp}
+
+\secup
 
 \secrel{Поддерживаемые платформы}\secdown
 \secrel{\prog{i386}: ПК и промышленные PC104}

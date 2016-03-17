@@ -1,8 +1,14 @@
-CFG_GCC0 = $(CFG_BINUTILS0) $(WITH_CCLIBS0) --enable-lanuages="c" \
-	--disable-bootstrap --disable-threads \
-	--disable-shared --without-headers --with-newlib		
+CFG_GCC00 = $(CFG_BINUTILS0) --disable-bootstrap \
+	--disable-threads --disable-shared --without-headers --with-newlib \
+	--enable-languages="c"
 
-.PHONY: gcc0
-gcc0: $(SRC)/$(GCC)/README
+CFG_GCC0 = $(CFG_BINUTILS0) --disable-bootstrap \
+	--with-newlib \
+	--enable-languages="c,c++"
+
+.PHONY: gcc00
+gcc00: $(SRC)/$(GCC)/README
 	rm -rf $(TMP)/$(GCC) && mkdir -p $(TMP)/$(GCC) && cd $(TMP)/$(GCC) &&\
-	$(SRC)/$(GCC)/$(BCFG) $(CFG_GCC0) && $(MAKE) && $(INSTALL)-strip
+	$(SRC)/$(GCC)/$(BCFG) $(CFG_GCC00)
+	cd $(TMP)/$(GCC) && $(MAKE) all-gcc && $(INSTALL)-gcc
+	cd $(TMP)/$(GCC) && $(MAKE) all-target-libgcc && $(INSTALL)-target-libgcc
