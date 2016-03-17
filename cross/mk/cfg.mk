@@ -5,8 +5,10 @@ CFG_ALL = --disable-nls --disable-werror \
 # [B]uild host configure
 BCFG = configure $(CFG_ALL) --prefix=$(TC)
 
+XPATH = PATH=$(TC)/bin:$(PATH)
+
 # [T]arget configure
-TCFG = configure $(CFG_ALL) --prefix=$(ROOT)
+TCFG = configure $(CFG_ALL) --prefix=$(ROOT) CC=$(TARGET)-gcc
 
 # get cpu cores
 CPU_CORES ?= $(shell grep processor /proc/cpuinfo |wc -l)
