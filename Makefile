@@ -28,7 +28,8 @@ TEX += ../gnu-eprog/sections.png
 
 TEX += gnubogo/gnubogo.tex
 
-TEX += cross/cross.tex
+TEX += cross/cross.tex cross/Makefile
+SRC += cross/mk/dirs.mk cross/fstab.txt
 
 TEX += gcc/gcc.tex
 
@@ -42,13 +43,17 @@ TEX += parser/ops.lpp parser/ops.ypp parser/brackets.lpp parser/brackets.ypp
 TEX += math/math.tex
 TEX += math/danko/danko.tex
 
-SRC = parser/minimal.log
+SRC += parser/minimal.log
 SRC += parser/comment.log parser/string.log parser/ops.log
 SRC += parser/brackets.log
 
 FIG = math/danko/Makefile math/danko/g_1_1_1.pdf math/danko/o_1_1_1.pdf
 
 MAC = math/danko/m_1_1_1.pdf
+
+TEX += os86/os86.tex
+
+SRC += os86/Makefile 
 
 LATEX = pdflatex -halt-on-error
 work.pdf: work.tex $(TEX) $(SRC) $(FIG) $(MAC) Makefile

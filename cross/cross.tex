@@ -1,5 +1,88 @@
 \secrel{Сборка кросс-компилятора \gnut\ из исходных
-текстов}\label{cross}\secdown \secrel{Настройка целевой платформы}\secdown
+текстов}\label{cross}\secdown
+
+Если вам по каким-то причинам не подходит одна из типовых сборок
+кросс-компиляторов, поставляемых в виде готовых бинарных пакетов из репозитория
+вашего дистрибутива \linux, \gnut\ можно легко скопилировать \emph{из исходных
+текстов}\ и установить в систему, даже имея только пользовательские права
+доступа.
+
+\bigskip
+Сборка \gnut\ из исходников может понадобиться, если вы хотите:
+\begin{itemize}[nosep]
+  \item самую свежую или какую-то конкретную версию \gnut
+  \item опции компиляции: малораспространенный \var{target}-процессор,
+  \emph{нетиповой формат файлов объектного кода}\note{например для i386
+  может понадобится сборка кросс-компилятора с
+  \var{--target=i486-none-elf}\ \ref{os86}\ или \var{i686-linux-uclibc}\ вместо
+  типовой компиляции для \linux\ типа \var{i486-linux-gnu}}\ или
+  экспериментальные оптимизаторы, не включенные в бинарные пакеты из
+  дистрибутива \linux
+  \item полпроцента ускорения работы компилятора благодаря жесткой оптимизации
+  его машинного кода точно под ваш рабочий компьютер
+  (\verb|-march=native -mtune=native -O3|)
+\end{itemize}
+
+\bigskip
+При сборке используется утилита \prog{make}\ \ref{make}, которой можно передать
+набор переменных конфигурирования. В таблице перечислен набор переменных
+конфигурирования сборки с указанием их значения по умолчанию\note{также
+приведены часто используемые варианты значения}\ и имя mk-файла, где оно
+задано:
+
+\bigskip
+\begin{tabular}{l l l l}
+\var{HW} & \verb|x86| & \verb|Makefile| & \var{qemu vmware virtualpc}\\
+	&&&\var{x86 pc686 amd64}\\
+	&&&\var{cortexM avr8}\\
+\var{CPU} & \verb|i386| & \verb|hw/$(HW).mk| &\\
+\var{ARCH} & \verb|i386| & \verb|cpu/$(CPU).mk| &\\
+\underline{\var{TARGET}} & \verb|$(CPU)-pc-elf| & \verb|hw/$(HW).mk| &
+\var{i686-linux-uclibc x86\_64-linux-gnu}\\
+	&&&\var{i386-pc-elf arm-none-eabi avr-none-elf}\\
+\end{tabular}
+
+\secly{Каталоги}
+
+Командной \verb|make dirs|\ создается набор вспомогательных каталогов:
+
+\bigskip
+\begin{tabular}{l l l}
+\var{TC} & \verb|$(CWD)/tc| & каталог установки кросс-компилятора \\
+\var{ROOT} & \verb|$(CWD)/root| & каталог файловой системы для целевого
+em\linux\\
+\hline
+\var{CWD} & \verb|$(CURDIR)| & текущий каталог \\
+\var{GZ} & \verb|$(CWD)/gz| & архивы исходных текстов GNU Toolchain, загрузчика,
+и библиотек\\
+\var{SRC} & \verb|$(CWD)/src| & каталог для распаковки исходников \\
+\var{TMP} & \verb|$(CWD)/tmp| & каталог для out-of-tree сборки GNU toolchain \\
+\end{tabular}
+\bigskip
+
+\lst{mk/dirs.mk}{cross/mk/dirs.mk}{make}
+
+\secly{Сборка в ОЗУ на ramdiskе}
+
+Если у вас есть админские права и достаточный объем RAM, после выполнения
+\verb|make dirs|\ рекомендуется примонировать на каталоги \var{SRC} и \var{TMP}
+файловую систему tmpfs\ --- это значительно ускорит компиляцию, т.к. все
+временные файлы будут хранится только в ОЗУ:
+
+\lstx{/etc/fstab}{cross/fstab.txt}
+
+Если вы прописали монтирвание \term{ramdisk}ов в \file{e/tc/fstab}, или
+сделали \verb|mount -t tmpfs|\ вручную, может оказаться нужным запускать
+\prog{make} с явным указанием значений переменных SRC/TMP:
+
+\begin{verbatim}
+make blablabla SRC=/home/yourlogin/src TMP=/home/yourlogin/tmp
+\end{verbatim}
+
+
+
+\secrel{Настройка целевой платформы}\secdown
+
 \secrel{\prog{arm-none-eabi}: процессоры ARM \cm x}\label{crossarm}
 \secrel{\prog{i486-none-elf}: ПК и промышленные PC104 без
 базовой ОС}\label{crossx86}
@@ -13,3 +96,4 @@ x86}\label{crosslin86}
 \secrel{\prog{binutils0}}
 \secrel{\prog{gcc0}}
 \secup
+
