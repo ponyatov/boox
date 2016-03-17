@@ -137,6 +137,71 @@ user@bs$ make APP=cross HW=x86 GZ=/home/user/gz gz
 
 \lst{mk/gz.mk}{cross/mk/gz.mk}{make}
 
+\secly{Макро-правила для автоматической распаковки исходников}
+
+\lst{mk/src.mk}{cross/mk/src.mk}{make}
+
+\secly{Общие параметры для \prog{./configure}}
+
+\lst{mk/cfg.mk}{cross/mk/cfg.mk}{make}
+
+\secrel{Сборка кросс-компилятора}\secdown
+
+Для пакетов кросс-компилятора существуют два варианта сборки пакетов:
+
+\begin{description}
+
+\item[Пакеты с 0 в конце имени] задают сборку программ, которые будут
+выполняться на \var{BUILD}-компьютере, и компилировать код для \var{TARGET}-системы, т.е. это
+простейший вариант кросс-компиляции.
+
+\item[Пакеты без 0], которые могут появиться в будущем\ --- \emph{относятся
+только к сборке em\linux}, собирают кросс-компилятор \termdef{канадским
+крестом}{канадский крест}:
+
+\begin{itemize}[nosep]
+\item пакет собирается на \var{BUILD}-системе\ --- ваш рабочий компьютер,
+\item выполняется на \var{HOST}-системе\ --- например PC104 или роутер с
+em\linux,
+\item и компилирует код для \var{TARGET}-микропроцессора\ --- модуль
+ввода/вывода на USB, подключенный к PC104)
+\end{itemize}
+ 
+\end{description}
+
+\secrel{\prog{binutils0}: ассемблер и линкер}
+
+Чтобы побыстрее получить результат, который можно сразу потестировать, соберем
+сначала кросс-\prog{bintuils}, а потом все что относится к \ci шному
+компилятору\note{на самом деле \prog{binutils0}\ надо собирать после
+\prog{cclibs0}, так как есть зависимость от библиотек \prog{isl0}\ и
+\prog{cloog0}}.
+
+Из важных опций можно указать
+
+\begin{description}
+\item[\var{--target}] триплет целевой системы, например \var{i386-pc-elf}
+\item[\var{CFG\_ARCH CFG\_CPU}] задаются в файлах \file{arch/\$(ARCH).mk}\ и
+\file{cpu/\$(CPU).mk}, и определяют опции сборки \prog{binutils/gcc} для
+конкретного процессора\note{например \var{--without-fpu}\ для
+\file{cpu/i486sx.mk}}
+\end{description}
+
+\lst{arch/i386.mk}{cross/arch/i386.mk}{make}
+\lst{cpu/i386.mk}{cross/cpu/i386.mk}{make}
+\lst{mk/bintuils.mk}{cross/mk/binutils.mk}{make}
+
+\lstx{Файлы \prog{binutils0}\ с 
+\var{TARGET}-префиксами и типовые скрипты линкера}{cross/crossbinutils.txt}
+
+\secrel{\prog{cclibs0}: сборка библиотек поддержки \prog{gcc}}
+\secrel{\prog{gmp0}: библиотека целых чисел произвольной точности}
+
+\secrel{\prog{gcc0}}
+\secup
+
+\secrel{Сборка стандартной библиотеки \prog{newlib} (libc)}
+
 \secrel{Поддерживаемые платформы}\secdown
 \secrel{\prog{i386}: ПК и промышленные PC104}
 \lst{arch/i386.mk}{cross/arch/i386.mk}{make}
@@ -155,9 +220,6 @@ user@bs$ make APP=cross HW=x86 GZ=/home/user/gz gz
 \lst{hw/x86.mk}{cross/hw/x86.mk}{make}
 \secup
 
-\secrel{\prog{cclibs0}: сборка библиотек поддержки \prog{gcc}}
-\secrel{\prog{binutils0}}
-\secrel{\prog{gcc0}}
 \secup
 
 \secrel{Porting The GNU Tools To Embedded Systems}\label{portingnu}

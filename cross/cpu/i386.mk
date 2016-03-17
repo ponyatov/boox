@@ -1,2 +1,2 @@
 ARCH = i386
-CPU = i386
+CFG_CPU = --with-cpu=i386 --with-tune=i386 --without-fpu
