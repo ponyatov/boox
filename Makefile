@@ -29,7 +29,7 @@ TEX += ../gnu-eprog/sections.png
 TEX += gnubogo/gnubogo.tex
 
 TEX += cross/cross.tex cross/Makefile
-SRC += cross/mk/dirs.mk cross/fstab.txt
+SRC += cross/mk/dirs.mk cross/fstab.txt cross/mk/pack_cross.mk
 
 TEX += gcc/gcc.tex
 

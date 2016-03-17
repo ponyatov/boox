@@ -42,13 +42,28 @@
 	&&&\var{i386-pc-elf arm-none-eabi avr-none-elf}\\
 \end{tabular}
 
-\secly{Каталоги}
+\secly{Подготовка \var{BUILD}-системы: необходимое ПО}
+
+Для сборки необходимо установить следующие пакеты:
+
+\begin{verbatim}
+sudo apt install gcc g++ make flex bison m4 bc bzip2 xz-utils libncurses-dev 
+\end{verbatim}
+
+\secly{\prog{dirs}: создание структуры каталогов}
+
+\begin{verbatim}
+user@bs:~/boox/cross$ make dirs
+mkdir -p
+    /home/user/boox/cross/gz /home/user/boox/cross/src /home/user/boox/cross/tmp
+    /home/user/boox/cross/toolchain /home/user/boox/cross/root
+\end{verbatim}
 
 Командной \verb|make dirs|\ создается набор вспомогательных каталогов:
 
 \bigskip
 \begin{tabular}{l l l}
-\var{TC} & \verb|$(CWD)/tc| & каталог установки кросс-компилятора \\
+\var{TC} & \verb|$(CWD)/toolchain| & каталог установки кросс-компилятора \\
 \var{ROOT} & \verb|$(CWD)/root| & каталог файловой системы для целевого
 em\linux\\
 \hline
@@ -71,7 +86,7 @@ em\linux\\
 
 \lstx{/etc/fstab}{cross/fstab.txt}
 
-Если вы прописали монтирвание \term{ramdisk}ов в \file{e/tc/fstab}, или
+Если вы прописали монтирование \term{ramdisk}ов в \file{/etc/fstab}, или
 сделали \verb|mount -t tmpfs|\ вручную, может оказаться нужным запускать
 \prog{make} с явным указанием значений переменных SRC/TMP:
 
@@ -79,19 +94,35 @@ em\linux\\
 make blablabla SRC=/home/yourlogin/src TMP=/home/yourlogin/tmp
 \end{verbatim}
 
+\secly{Пакеты системы кросс-компиляции}
+
+\begin{description}
+\item[\gnut] \ \\\lstx{mk/pack\_cross.mk}{cross/mk/pack_cross.mk}{make}
+\item[\prog{newlib}] стандартная библиотека \prog{libc}\\
+\end{description}
+
+\secly{\prog{gz}: загрузка исходного кода для пакетов}
 
 
-\secrel{Настройка целевой платформы}\secdown
 
-\secrel{\prog{arm-none-eabi}: процессоры ARM \cm x}\label{crossarm}
-\secrel{\prog{i486-none-elf}: ПК и промышленные PC104 без
-базовой ОС}\label{crossx86}
-\secrel{\prog{arm-linux-uclibc}: SoCи Cortex-A, PXA270,..}\label{crosslinarm}
-\secrel{\prog{i686-linux-uclibc}: микроLinux для платформы
-x86}\label{crosslin86}
+\secrel{Поддерживаемые платформы}\secdown
+\secrel{\prog{i386}: ПК и промышленные PC104}
+\lst{arch/i386.mk}{cross/arch/i386.mk}{make}
+\secrel{\prog{x86\_64}: серверные системы}
+\lst{arch/x86\_64.mk}{cross/arch/x86_64.mk}{make}
+\secrel{\prog{AVR}: Atmel AVR Mega}
+\lst{arch/avr.mk}{cross/arch/avr.mk}{make}
+\secrel{\prog{arm}: процессоры ARM \cm x}\label{crossarm}
+\lst{arch/arm.mk}{cross/arch/arm.mk}{make}
+\secrel{\prog{armhf}: SoCи Cortex-A, PXA270,..}
+\lst{arch/armhf.mk}{cross/arch/armhf.mk}{make}
 \secup
-\secrel{\prog{dirs}: создание структуры каталогов}
-\secrel{\prog{gz}: загрузка архивов исходных текстов компилятора}
+
+\secrel{Целевые аппаратные системы}\secdown
+\secrel{\prog{x86}: типовой компьютер на процессоре i386+}
+\lst{hw/x86.mk}{cross/hw/x86.mk}{make}
+\secup
+
 \secrel{\prog{cclibs0}: сборка библиотек поддержки \prog{gcc}}
 \secrel{\prog{binutils0}}
 \secrel{\prog{gcc0}}

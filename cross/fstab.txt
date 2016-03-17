@@ -1,2 +1,2 @@
-tmpfs /home/ponyatov/src tmpfs auto,uid=yourlogin,gid=yourgroup 0 0
-tmpfs /home/ponyatov/tmp tmpfs auto,uid=yourlogin,gid=yourgroup 0 0
+tmpfs /home/user/src tmpfs auto,uid=yourlogin,gid=yourgroup 0 0
+tmpfs /home/user/tmp tmpfs auto,uid=yourlogin,gid=yourgroup 0 0
