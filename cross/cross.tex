@@ -32,15 +32,29 @@
 
 \bigskip
 \begin{tabular}{l l l l}
+\var{APP} & \verb|cross| & \verb|Makefile| & приложение: условное
+имя проекта\\&&&(только латиница, буквы a-z)\\
 \var{HW} & \verb|x86| & \verb|Makefile| & \var{qemu vmware virtualpc}\\
 	&&&\var{x86 pc686 amd64}\\
 	&&&\var{cortexM avr8}\\
 \var{CPU} & \verb|i386| & \verb|hw/$(HW).mk| &\\
 \var{ARCH} & \verb|i386| & \verb|cpu/$(CPU).mk| &\\
-\underline{\var{TARGET}} & \verb|$(CPU)-pc-elf| & \verb|hw/$(HW).mk| &
+\var{TARGET} & \verb|$(CPU)-pc-elf| & \verb|hw/$(HW).mk| &
 \var{i686-linux-uclibc x86\_64-linux-gnu}\\
 	&&&\var{i386-pc-elf arm-none-eabi avr-none-elf}\\
 \end{tabular}
+
+\secly{\var{APP}/\var{HW}: приложение/платформа}
+
+Для сборки необходимо выбрать имя проекта\note{только латиница, буквы a-z}\ и
+аппаратную платформу, для которой будет настраиваться пакет кросс-компилятора.
+
+Особенно это важно для варианта сборки, когда собирается не только
+кросс-компилятор, но и базовая ОС\ --- минимальная \linux-система из ядра,
+libc и дополнительных прикладных библиотек. В этом случае \prog{APP/HW}
+используются для формирования имен файлов ядра \verb|$(APP)$(HW).kernel|,
+названия и состава загрузочного образа \verb|$(APP)$(HW).rootfs|, и внутренних
+настроек.
 
 \secly{Подготовка \var{BUILD}-системы: необходимое ПО}
 
@@ -63,10 +77,14 @@ mkdir -p
 
 \bigskip
 \begin{tabular}{l l l}
-\var{TC} & \verb|$(CWD)/toolchain| & каталог установки кросс-компилятора \\
-\var{ROOT} & \verb|$(CWD)/root| & каталог файловой системы для целевого
+\var{TC} & \verb|$(CWD)/$(APP)$(ROOT).cross| & каталог установки
+кросс-компилятора \\
+\var{ROOT} & \verb|$(CWD)/$(APP)$(ROOT)| & каталог файловой системы для целевого
 em\linux\\
 \hline
+\end{tabular}
+
+\begin{tabular}{l l l}
 \var{CWD} & \verb|$(CURDIR)| & текущий каталог \\
 \var{GZ} & \verb|$(CWD)/gz| & архивы исходных текстов GNU Toolchain, загрузчика,
 и библиотек\\
@@ -91,7 +109,7 @@ em\linux\\
 \prog{make} с явным указанием значений переменных SRC/TMP:
 
 \begin{verbatim}
-make blablabla SRC=/home/yourlogin/src TMP=/home/yourlogin/tmp
+make blablabla SRC=/home/user/src TMP=/home/user/tmp
 \end{verbatim}
 
 \secly{Пакеты системы кросс-компиляции}
@@ -103,7 +121,21 @@ make blablabla SRC=/home/yourlogin/src TMP=/home/yourlogin/tmp
 
 \secly{\prog{gz}: загрузка исходного кода для пакетов}
 
+\begin{verbatim}
+user@bs$ make APP=cross HW=x86 GZ=/home/user/gz gz
+\end{verbatim}
 
+В примере команды показано два обязательных параметра \var{APP/HW}\note{по ним
+могут закачиваться дополнительные файлы исходников, зависящие от платформы\ ---
+например исходник загрузчика или бинарные файлы (блобы) драйверов от
+производителя железки}\ и необязательный \var{GZ}: поскольку я собираю
+кросс-компиляторы для нескольких целевых платформ, я создал каталог
+\verb|$(HOME)/gz|\ и загружаю туда архивы исходников \emph{для всех проектов
+сразу}\note{а не в /gz каждого проекта, нет смысла дублировать исходники
+\gnut\ одной и той же версии}. Более простой способ\ -- просто сделать симлинк
+\verb|ln -s ~/gz project/gz|\ и не переопределять переменную \verb|GZ|\ явно.
+
+\lst{mk/gz.mk}{cross/mk/gz.mk}{make}
 
 \secrel{Поддерживаемые платформы}\secdown
 \secrel{\prog{i386}: ПК и промышленные PC104}
@@ -128,3 +160,16 @@ make blablabla SRC=/home/yourlogin/src TMP=/home/yourlogin/tmp
 \secrel{\prog{gcc0}}
 \secup
 
+\secrel{Porting The GNU Tools To Embedded Systems}\label{portingnu}
+
+Embed With GNU
+
+Porting The GNU Tools To Embedded Systems
+
+Spring 1995
+
+Very *Rough* Draft
+
+Rob Savoye - Cygnus Support
+
+\url{http://ieee.uwaterloo.ca/coldfire/gcc-doc/docs/porting\_toc.html}

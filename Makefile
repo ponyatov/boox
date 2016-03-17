@@ -30,6 +30,7 @@ TEX += gnubogo/gnubogo.tex
 
 TEX += cross/cross.tex cross/Makefile
 SRC += cross/mk/dirs.mk cross/fstab.txt cross/mk/pack_cross.mk
+SRC += cross/mk/gz.mk
 
 TEX += gcc/gcc.tex
 
