@@ -169,6 +169,31 @@ em\linux,
  
 \end{description}
 
+\secrel{\prog{cclibs0}: библиотеки поддержки \prog{gcc}}
+
+Для сборки \gnut\ необходим набор нескольких библиотек, причем \emph{успешность
+сборки сильно зависит от их версий}, поэтому библиотеки \emph{нужно собрать из
+исходников}, а не использовать девелоперские пакеты из дистрибутива
+\var{BUILD}-\linux.
+
+\bigskip\noindent
+Библиотеки чисел произвольной точности:
+\begin{description}[nosep]
+\item[\prog{gmp0}] целых 
+\item[\prog{gmfr0}] с плавающей точкой
+\item[\prog{gmc0}] комплексных
+\end{description}
+
+\bigskip\noindent
+Библиотеки для работы с графами (нужны для компилятора оптимизатора
+\prog{Graphite})
+\begin{description}[nosep]
+\item[cloog0] polyhedral оптимизации
+\item[isl0] манипуляция наборами целочисленных точек
+\end{description}
+
+\lst{mk/cclibs.mk}{cross/mk/cclibs.mk}{make}
+
 \secrel{\prog{binutils0}: ассемблер и линкер}
 
 Чтобы побыстрее получить результат, который можно сразу потестировать, соберем
@@ -196,10 +221,10 @@ em\linux,
 \lstx{Файлы \prog{binutils0}\ с 
 \var{TARGET}-префиксами и типовые скрипты линкера}{cross/crossbinutils.txt}
 
-\secrel{\prog{cclibs0}: сборка библиотек поддержки \prog{gcc}}
-\secrel{\prog{gmp0}: библиотека целых чисел произвольной точности}
-
 \secrel{\prog{gcc0}}
+
+\lst{mk/gcc.mk}{cross/mk/gcc.mk}{make}
+
 \secup
 
 \secrel{Сборка стандартной библиотеки \prog{newlib} (libc)}

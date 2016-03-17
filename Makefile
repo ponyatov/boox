@@ -32,6 +32,7 @@ TEX += cross/cross.tex cross/Makefile
 SRC += cross/mk/dirs.mk cross/fstab.txt cross/mk/pack_cross.mk
 SRC += cross/mk/gz.mk cross/mk/src.mk cross/mk/cfg.mk
 SRC += cross/mk/binutils.mk cross/crossbinutils.txt
+SRC += cross/mk/cclibs.mk cross/mk/gcc.mk
 
 TEX += gcc/gcc.tex
 

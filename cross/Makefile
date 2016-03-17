@@ -10,4 +10,6 @@ include mk/pack_cross.mk
 include mk/gz.mk
 include mk/src.mk
 include mk/cfg.mk
+include mk/cclibs.mk
 include mk/binutils.mk
+include mk/gcc.mk
