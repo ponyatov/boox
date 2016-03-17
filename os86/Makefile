@@ -1,5 +1,7 @@
+TODO = gz 
+TODO = dirs binutils0
 .PHONY: cross0
 cross0:
-	cd ../cross; echo $(MAKE) cross0 \
-		APP=bare HW=x86 \
-		TC=$(CURDIR)/toolchain
+	cd ../cross; $(MAKE) $(TODO) \
+		CWD=$(CURDIR) GZ=$(HOME)/L/gz SRC=$(HOME)/L/src TMP=$(HOME)/L/tmp \
+		APP=bare HW=x86
