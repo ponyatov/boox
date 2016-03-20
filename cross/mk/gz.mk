@@ -1,7 +1,7 @@
 WGET = -wget -N -P $(GZ) -t2 -T2
 
 .PHONY: gz
-gz: gz_cross gz_libs
+gz: gz_cross gz_libs gz_$(ARCH)
 
 .PHONY: gz_cross
 gz_cross:
@@ -17,3 +17,6 @@ gz_cross:
 gz_libs:
 	$(WGET) ftp://sourceware.org/pub/newlib/$(NEWLIB).tar.gz
 	
+.PHONY: gz_i386
+gz_i386:
+	$(WGET) https://www.kernel.org/pub/linux/utils/boot/syslinux/$(SYSLINUX).tar.xz

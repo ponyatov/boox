@@ -19,6 +19,9 @@ CLOOG_VER	= 0.18.1
 # standard C/POSIX library libc (newlib)
 NEWLIB_VER	= 2.3.0.20160226
 
+# loader for i386 target
+SYSLINUX_VER = 6.03
+
 # packages
 BINUTILS	= binutils-$(BINUTILS_VER)
 GCC 		= gcc-$(GCC_VER)
@@ -28,3 +31,4 @@ MPC 		= mpc-$(MPC_VER)
 ISL			= isl-$(ISL_VER)
 CLOOG		= cloog-$(CLOOG_VER)
 NEWLIB		= newlib-$(NEWLIB_VER)
+SYSLINUX	= syslinux-$(SYSLINUX_VER)
