@@ -1,4 +1,5 @@
-WITH_CCLIBS0 = --with-gmp=$(TC) --with-mpfr=$(TC) --with-mpc=$(TC)
+WITH_CCLIBS0 = --with-gmp=$(TC) --with-mpfr=$(TC) --with-mpc=$(TC) \
+	--without-ppl --without-cloog
 #	--with-isl=$(TC) --with-cloog=$(TC)
 	
 CFG_CCLIBS0 = $(WITH_CCLIBS0) --disable-shared
