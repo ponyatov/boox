@@ -25,7 +25,6 @@ mpc0: $(SRC)/$(MPC)/README
 	$(SRC)/$(MPC)/$(BCFG) $(CFG_MPC0) && $(MAKE) && $(INSTALL)-strip
 
 CFG_CLOOG0 = --with-gmp-prefix=$(TC) $(CFG_CCLIBS00)
- 
 .PHONY: cloog0
 cloog0: $(SRC)/$(CLOOG)/README
 	rm -rf $(TMP)/$(CLOOG) && mkdir $(TMP)/$(CLOOG) && cd $(TMP)/$(CLOOG) &&\
