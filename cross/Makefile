@@ -14,3 +14,4 @@ include mk/cclibs.mk
 include mk/binutils.mk
 include mk/gcc.mk
 include mk/libc.mk
+include mk/boot.mk

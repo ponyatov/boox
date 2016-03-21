@@ -1,8 +1,10 @@
-CFG_GCC00 = $(CFG_BINUTILS0) --disable-bootstrap \
+CFG_GCC_DISABLE = 
+
+CFG_GCC00 = $(CFG_BINUTILS0) $(CFG_GCC_DISABLE) \
 	--disable-threads --disable-shared --without-headers --with-newlib \
 	--enable-languages="c"
 
-CFG_GCC0 = $(CFG_BINUTILS0) --disable-bootstrap \
+CFG_GCC0 = $(CFG_BINUTILS0) $(CFG_GCC_DISABLE) \
 	--with-newlib \
 	--enable-languages="c,c++"
 
