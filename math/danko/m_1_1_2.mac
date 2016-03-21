@@ -1,0 +1,6 @@
+m_1_1_2 (x1,x2,lambda) := (x1+lambda*x2)/(1+lambda);
+A : -3 ;
+B : 7 ;
+lambda : 1/4 ;
+
+C = m_1_1_2(A,B,lambda);

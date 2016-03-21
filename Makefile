@@ -51,6 +51,7 @@ SRC += parser/comment.log parser/string.log parser/ops.log
 SRC += parser/brackets.log
 
 FIG = math/danko/Makefile math/danko/g_1_1_1.pdf math/danko/o_1_1_1.pdf
+FIG += math/danko/m_1_1_2.log math/danko/o_1_1_2.log
 
 MAC = math/danko/m_1_1_1.pdf
 
@@ -76,6 +77,10 @@ math/danko/%.pdf: math/danko/%.plot
 	cd math/danko ; make
 math/danko/%.pdf: math/danko/%.mac
 	cd math/danko ; make
+math/danko/%.log: math/danko/%.mac
+	cd math/danko ; make
 math/danko/%.pdf: math/danko/%.m
+	cd math/danko ; make
+math/danko/%.log: math/danko/%.m
 	cd math/danko ; make
 	
