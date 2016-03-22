@@ -42,7 +42,36 @@
 \bigskip
 Также этот раздел можно использовать как пример использования системы верстки
 \LaTeX\ для научных публикаций\ --- смотрите \emph{исходные тексты}\ файла
-\url{https://github.com/ponyatov/boox/tree/master/math/danko}\file{/danko.tex}. 
+\url{https://github.com/ponyatov/boox/tree/master/math/danko}\file{/danko.tex}.
+
+\secly{Запуск \maxima\ и \octave\ в пакетном режиме}
+
+При запуске \maxima/\octave\ выводится информация о программе и license
+disclaimer. При их использовании в автоматическом режиме\note{например в файлах
+Makefile \ref{make}}\ требуется блокировать лишний вывод опцией \var{-q}. Как
+пример можно привести набор правил для \prog{make}:
+
+\begin{verbatim}
+%.pdf: %.plot
+    gnuplot $<
+%.pdf: %.mac
+    maxima -q < $<
+%.log: %.mac
+    maxima -q < $< > $@
+%.pdf: %.m Makefile
+    octave -q $< && pdfcrop o$@ $@
+%.log: %.m Makefile
+    octave -q $< > $@
+\end{verbatim}
+
+\begin{description}
+\item[\var{\$@}] \emph{левая} часть make-правила
+\item[\var{\$<}] \emph{первый элемент} правой части правила
+\item[\var{\&\&}] выполнить следующую команду только если предыдущая вернула код
+успешного выполнения \verb|exit(0)|
+\item[\prog{pdfcrop} <in> <out>] \prog{octave} выводит графики в полный
+лист A4, \prog{pdfcrop} выполняет обрезку
+\end{description}
 
 \secrel{Аналитическая геометрия на плоскости}\secdown
 
@@ -78,7 +107,7 @@ $B(x_2)$ в отношении $\lambda$, находится по формуле
 
 В частности, при $\lambda=1$ получается формула для координаты середины отрезка:
 
-\begin{equation}
+\begin{equation}\label{danko3}
 \bar x = \frac{x_1+x_2}{2}
 \end{equation}
 
@@ -94,8 +123,8 @@ $B(x_2)$ в отношении $\lambda$, находится по формуле
 \end{equation*}
 
 \wolfram\\
-\verb|solve x-x1=a;x2-x=b;x2-x1=a+b;lambda=a/b for x|\\
-\verb|Reduce[{x-x1==a, x2-x==b, x2-x1==a+b, lambda==a/b},{x}]|
+\verb|solve x-x1=a ; x2-x=b ; x2-x1=a+b ; lambda=a/b for x|\\
+\verb|Reduce[{ x-x1==a, x2-x==b, x2-x1==a+b, lambda==a/b },{x}]|
 
 % \lstx{\maxima}{math/danko/m_1_1_x.mac}
 
@@ -104,7 +133,7 @@ $B(x_2)$ в отношении $\lambda$, находится по формуле
 Построить на прямой точки $A(3)$, $B(-2)$, $C(0)$, $D(\sqrt{2})$, $E(-3.5)$.
 
 \bigskip\wolfram\bigskip\\
-\verb|number line -3,2,0,sqrt(2),-3.5|
+\verb|number line 3,-2,0,sqrt(2),-3.5|
 \fig{}{math/danko/w_1_1_1.png}{width=0.5\textwidth}
 
 \noindent
@@ -180,10 +209,10 @@ C(\bar x) = \frac{1-3 \cdot 5}{1-3} = C(7)
 \paragraph{4.} Найти расстояние между точками
 
 \begin{enumerate}
-  \item M(3) N(-5)
+  \item $M(3)$ $N(-5)$
    
   \py\\\verb|abs( (-5) - (3) )|\\\verb|8|
-  \item P(-5.5) Q(-2.5)
+  \item $P(-5.5)$ $Q(-2.5)$
   
   \py
   \begin{verbatim}
@@ -195,7 +224,15 @@ distance( -5.5 , -2.5 )
 \end{verbatim}
 \end{enumerate}
 
-\paragraph{5.}
+\paragraph{5.} Найти координаты середины отрезка, если известны его
+концы\note{используем формулу \ref{danko3}}:
+\begin{enumerate}
+  \item $A(-6)$ $B(7)$
+  \item $C(-5)$ $D(0.5)$
+\end{enumerate}
+
+\lstx{\octave}{math/danko/o_1_1_5.m}
+\lstv{}{math/danko/o_1_1_5.log}
 
 \secup
 
