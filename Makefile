@@ -53,7 +53,7 @@ SRC += parser/brackets.log
 FIG = math/danko/Makefile math/danko/g_1_1_1.pdf math/danko/o_1_1_1.pdf
 FIG += math/danko/m_1_1_2.log math/danko/o_1_1_2.log
 
-MAC = math/danko/m_1_1_1.pdf
+MAC = math/danko/m_1_1_1.pdf math/danko/m_1_1_3.pdf math/danko/m_1_1_x.log
 
 TEX += os86/os86.tex
 
