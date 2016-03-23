@@ -11,6 +11,11 @@ TEX += bi/DLR.tex
 
 TEX += linux/build.tex linux/struc.tex
 
+TEX += warren/warren.tex warren/intro.tex warren/unification.tex
+TEX += warren/resolution.tex warren/prolog.tex
+TEX += warren/design.tex warren/conclusion.tex
+TEX += warren/appendixA.tex warren/appendixB.tex
+
 TEX += ML/4man.tex
 
 TEX += ML/gilmore.tex
