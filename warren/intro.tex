@@ -27,14 +27,14 @@ terms\note{David H. D. Warren поделился в частной беседе 
 трансформируемый и оптимизируемый проект.
 
 Стиль пошагового улучшения фактически был использован в публикации David Maier и
-David S. Warren\note{Это другой человек, а не разработчик WAM, которого она
-вдохновила на исследования. В свою очередь достаточно интересно что David H. D.
-Warren позже работал над параллельной архитектурой реализации \prolog а,
-поддерживая некоторые идеи, независимо предложенные David S.
+David S. Warren\note{Это другой человек, а не разработчик WAM, работа которого
+вдохновила S.Warren на исследования. В свою очередь достаточно интересно что
+David H. D. Warren позже работал над параллельной архитектурой реализации
+\prolog а, поддерживая некоторые идеи, независимо предложенные David S.
 Warren.}\ \cite{MW88}. В этой работе можно найти описание техник компиляции
-\prolog а похожие на принципы WAM.\note{chap.10} Тем не менее мы считаем что эта
-похвальная попытка все еще страдает от нескольких недостатков, если его
-рассматривать как окончательный учбеник.
+\prolog а похожие на принципы WAM\note{chap.9}. Тем не менее мы считаем что
+эта похвальная попытка все еще страдает от нескольких недостатков, если его
+рассматривать как окончательный учебник.
 Прежде всего эта работа описывает собственный достаточно близкий вариант WAM, но
 строго говоря не ее саму. Так что описаны не все особенности WAM.
 Более того, объяснения ограничены иллюстративными примерами, и редко четко и
@@ -54,6 +54,28 @@ Warren.}\ \cite{MW88}. В этой работе можно найти описа
 даже включили техники компиляции \prolog а. Более важно, что их книга была
 первой доступной официальной публикацией, содержащей реальный учебник по
 техникам WAM.
+
+After the preliminary version of this book had been completed, another recent
+publication containing a tutorial on the WAM was brought to this author’s
+attention. It is a book due to Patrice Boizumault \cite{Boi88} whose Chapter 9
+is devoted to explaining the WAM. There again, its author does not use a gradual
+presentation of partial \prolog\ machines. Besides, it is written in French\ ---
+a somewhat restrictive trait as far as its readership is concerned. Still,
+Boizumault’s book is very well conceived, and contains a detailed discussion
+describing an explicit implementation technique for the \var{freeze}
+meta-predicate\note{chap.10}.
+
+Even more recently, a formal verification of the correctness of a slight
+simplification of the WAM was carried out by David Russinoff \cite{Rus89}. That
+work deserves justified praise as it methodically certifies correctness of most
+of the WAM with respect to \prolog’s SLD resolution semantics. However, it is
+definitely not a tutorial, although Russinoff defines most of the notions he
+uses in order to keep his work self-contained. In spite of this effort,
+understanding the details is considerably impeded without working familiarity
+with the WAM as a prerequisite. At any rate, Russinoff’s contribution is
+nevertheless a \emph{premi\`ere} as he is the first to establish rigorously
+something that had been taken for granted thus far. Needless to say, that report
+is not for the fainthearted.
  
 \secrel{1.2 Этот учебник 5 }\secdown
 
