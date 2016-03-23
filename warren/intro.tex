@@ -124,6 +124,32 @@ compiler design for more conventional programming languages. As a stand-alone
 work, it could be a quick reference for the computer professional in need of
 direct access to WAM concepts.
 
+Our style of teaching the WAM makes a special effort to consider carefully each
+feature of the WAM design in isolation by introducing separately and
+incrementally distinct aspects of Prolog. This allows us to explain as limpidly
+as possible specific principles proper to each. We then stitch and merge the
+different patches into larger pieces, introducing independent optimizations one
+at a time, converging eventually to the complete WAM design as described in
+\cite{War83} or as overviewed in \cite{War88}. Thus, in \ref{warren2}, we
+consider unification alone. Then, we look at flat resolution (that is, Prolog
+without backtracking) in \ref{warren3}. Following that, we turn to disjunctive
+definitions and backtracking in \ref{warren4}. At that point, we will have a
+complete, albeit na\"ive, design for pure Prolog. In \ref{warren5}, this
+first-cut design will be subjected to a series of transformations aiming at
+optimizing its performance, the end product of which is the full WAM. We have
+also prepared an index for quick reference to most critical concepts used in the
+WAM, something without which no (real) tutorial could possibly be complete.
+
+It is expected that the reader already has a basic understanding of the
+operational semantics of \prolog\ --- in particular, of unification and
+backtracking. Nevertheless, to make this work also profitable to readers lacking
+this background, we have provided a quick summary of the necessary \prolog\
+notions in \ref{warrenA}. As for notation, we implicitly use the syntax of
+so-called Edinburgh Prolog (see, for instance, \cite{CM84}), which we also
+recall in that appendix. Finally, \ref{warrenB} contains a recapitulation of all
+explicit definitions implementing the full WAM instruction set and its
+architecture so as to serve as a complete and concise summary.
+
 \secrel{1.2.2 Organization of presentation 6}
 
 \secup
