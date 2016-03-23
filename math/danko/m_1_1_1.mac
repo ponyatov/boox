@@ -10,5 +10,5 @@ plot2d([discrete,dat],\
   [x,-5,+5],[y,0,1],\
   [style,impulses],[ytics,false],\
   [xlabel,false],[ylabel,false],\
-  [gnuplot_term,pdf],\
+  [gnuplot_term,"pdf size 5,1"],\
   [gnuplot_out_file,"./m_1_1_1.pdf"]);

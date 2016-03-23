@@ -1,5 +1,6 @@
-set terminal png size 640,64
+set terminal pdf
 set output 'g_1_1_1.pdf'
+set size ratio .02
 unset key
 unset ytics
 set xtics 1
