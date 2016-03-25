@@ -1,0 +1,38 @@
+%{
+#include "hpp.hpp"
+string LexString;
+%}
+%x lexstring
+
+%option noyywrap
+%option yylineno
+
+S [\+\-]?
+N [0-9]+
+%%
+#[^\n]*				{}
+
+'				{BEGIN(lexstring); LexString="";}
+<lexstring>'	{BEGIN(INITIAL); yylval.o = new Str(LexString); return STR; }
+<lexstring>\\t	{LexString+='\t';}
+<lexstring>\\n	{LexString+='\n';}
+<lexstring>\n	{LexString+=yytext[0];}
+<lexstring>.	{LexString+=yytext[0];}
+
+{S}{N}[eE]{S}{N}	TOC(Num,NUM)
+{S}{N}\.{N}			TOC(Num,NUM)
+{S}{N}				TOC(Int,NUM)
+0x[0-9A-F]+			TOC(Hex,NUM)
+0b[01]+				TOC(Bin,NUM)
+
+[a-zA-Z0-9_.?]+		TOC(Sym,SYM)
+
+\(					TOC(Sym,LP)
+\)					TOC(Sym,RP)
+\[					TOC(Sym,LQ)
+\]					TOC(Sym,RQ)
+\{					TOC(Sym,LC)
+\}					TOC(Sym,RC)
+
+[ \t\r\n]+			{}
+%%
