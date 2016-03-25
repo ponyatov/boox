@@ -47,7 +47,9 @@ string Num::tagval() { ostringstream os;
 Hex::Hex(string V):Sym("hex",V) {}
 Bin::Bin(string V):Sym("bin",V) {}
 
-List::List():Sym("","") {}
+List::List():Sym("[","]") {}
+
+Cons::Cons(Sym*A,Sym*B):Sym("","") { push(A); push(B); }
 
 Op::Op(string V):Sym("op",V) {}
 

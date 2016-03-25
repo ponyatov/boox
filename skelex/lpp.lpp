@@ -34,5 +34,13 @@ N [0-9]+
 \{					TOC(Sym,LC)
 \}					TOC(Sym,RC)
 
+\=					TOC(Op,EQ)
+\@					TOC(Op,AT)
+\~					TOC(Op,TILD)
+\%					TOC(Op,PERC)
+
+\,					TOC(Op,COMMA)
+\:					TOC(Op,COLON)
+
 [ \t\r\n]+			{}
 %%

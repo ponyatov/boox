@@ -31,6 +31,7 @@ struct Hex: Sym { Hex(string); };
 struct Bin: Sym { Bin(string); };
 
 struct List: Sym { List(); };
+struct Cons: Sym { Cons(Sym*,Sym*); };
 
 struct Op: Sym { Op(string); };
 

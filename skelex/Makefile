@@ -1,8 +1,8 @@
 include skelex.mk
 
-YPP = ypp/head.ypp ypp/union.ypp cr.cr ypp/tokscalars.ypp 
+YPP = ypp/head.ypp ypp/union.ypp cr.cr ypp/tokscalars.ypp  
 YPP += ypp/brackets.ypp ypp/ops.ypp 
-YPP += cr.cr ypp/type.ypp cr.cr
+YPP += cr.cr ypp/type.ypp cr.cr ypp/oprio.ypp cr.cr
 YPP += lpp/pp.lpp ypp/repl.ypp ypp/scalar.ypp ypp/ex.ypp 
 YPP += ypp/list.ypp ypp/lambda.ypp
 YPP += lpp/pp.lpp
@@ -14,7 +14,7 @@ LPP = lpp/head.lpp lpp/xstring.lpp cr.cr lpp/yywrap.lpp lpp/lineno.lpp cr.cr
 LPP += lpp/xnum.lpp lpp/pp.lpp
 LPP += lpp/comment.lpp cr.cr lpp/string.lpp cr.cr lpp/num.lpp cr.cr 
 LPP += lpp/sym.lpp cr.cr
-LPP += lpp/brackets.lpp cr.cr  
+LPP += lpp/brackets.lpp cr.cr lpp/ops.lpp cr.cr 
 LPP += lpp/spaces.lpp lpp/pp.lpp
 	
 lpp.lpp: $(LPP) Makefile

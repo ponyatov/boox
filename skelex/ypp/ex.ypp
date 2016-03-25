@@ -2,5 +2,6 @@ ex : scalar
 	| LP ex RP			{ $$=$2; }
 	| LQ list RQ		{ $$=$2; }
 	| LC lambda RC		{ $$=$2; }
+	| ex COMMA ex		{ $$=new Cons($1,$3); }
 	| TILD ex			{ $$=$1; $$->push($2); }
 ;

@@ -1,15 +1,14 @@
-# nested lists of scalar types
+# core scalar and composite types
 
-[						# numbers
-	[						# integers
-		[ -01 00 +002 ]		
+[						# numbers /nested list/
+	[						# integers /list/
+		-01 , 00 , +002			# int's /linked cons/
 		0x12AF					# machine hex
 		0b1101					# binary string
 	]
-	[						# floating numbers
-		-01.230					# point
+							# floating numbers /cons/
+		-01.230	,				# point
 		-04e+05					# exponential
-	]
 ]
 symbol 'string
 can\tbe

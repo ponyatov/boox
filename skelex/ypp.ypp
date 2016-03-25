@@ -12,6 +12,8 @@
 
 %type <o> ex scalar list lambda		/* expression scalar [list] {la:mbda} */
 
+%right COMMA
+
 %%
 REPL : | REPL ex { cout << $2->eval()->dump(); } ;
 scalar : SYM | NUM | STR ;
@@ -19,6 +21,7 @@ ex : scalar
 	| LP ex RP			{ $$=$2; }
 	| LQ list RQ		{ $$=$2; }
 	| LC lambda RC		{ $$=$2; }
+	| ex COMMA ex		{ $$=new Cons($1,$3); }
 	| TILD ex			{ $$=$1; $$->push($2); }
 ;
 list :					{ $$= new List(); }
