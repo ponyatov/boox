@@ -94,6 +94,19 @@ bat.bat & \win & helper запуска \vim \\
 \lstx{правила лексера помещаются между}{skelex/lpp/pp.lpp}
 
 \subsecly{\file{hpp.hpp}: хедеры}
+
+\lst{\ }{skelex/hpp/head.hpp}{C++}
+все остальное находится между препроцессорными ``скобками'',
+блокирующими многократное включение кода
+\lst{\ }{skelex/hpp/foot.hpp}{C++}
+
+\lst{\var{\#include}}{skelex/hpp/include.hpp}{C++}
+
+\lst{универсальный тип: Abstract Symbolic Type}{skelex/hpp/sym.hpp}{C++}
+
+
+\lst{интерфейс к лексеру/парсеру}{skelex/hpp/lex.hpp}{C++}
+
 \subsecly{\file{cpp.cpp}: ядро интерпретатора}
 
 \secly{Операторы}\label{lexops}

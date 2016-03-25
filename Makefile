@@ -22,6 +22,7 @@ TEX += skelex/ypp/head.ypp skelex/ypp/tokscalars.ypp skelex/ypp/scalar.ypp
 TEX += skelex/ypp/brackets.ypp skelex/ypp/ops.ypp skelex/ypp/type.ypp
 TEX += skelex/lpp/head.lpp skelex/lpp/yywrap.lpp skelex/lpp/lineno.lpp
 TEX += skelex/lpp/pp.lpp
+TEX += skelex/hpp/sym.hpp
 
 TEX += ML/4man.tex
 

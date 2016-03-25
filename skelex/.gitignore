@@ -2,3 +2,5 @@ ypp.ypp
 lpp.lpp
 hpp.hpp
 cpp.cpp
+ypp.tab.?pp
+lex.yy.c
