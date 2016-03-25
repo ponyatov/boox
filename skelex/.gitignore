@@ -1,9 +1,5 @@
 src.src
 log.log
-ypp.ypp
-lpp.lpp
-hpp.hpp
-cpp.cpp
 exe.exe
 ypp.tab.?pp
 lex.yy.c
