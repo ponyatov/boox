@@ -1,0 +1,4 @@
+ex : scalar
+	| LP ex RP		{ $$=$2; }
+	| TILD ex		{ $$=$1; $$->push($2); }
+;
