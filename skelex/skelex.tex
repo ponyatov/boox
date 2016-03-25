@@ -73,6 +73,12 @@ bat.bat & \win & helper запуска \vim \\
 
 \lstx{правила парсера помещаются между}{skelex/lpp/pp.lpp}
 
+\lstx{REPL-цикл интерпретатора}{skelex/ypp/repl.ypp}
+
+\lstx{скаляры}{skelex/ypp/scalar.ypp}
+
+\lstx{выражения}{skelex/ypp/ex.ypp}
+
 \subsecly{\file{lpp.lpp}: лексер}
 
 Весь код между \verb|%{...%}| будет скопирован в выходной сгенерированный файл
@@ -104,10 +110,19 @@ bat.bat & \win & helper запуска \vim \\
 
 \lst{универсальный тип: Abstract Symbolic Type}{skelex/hpp/sym.hpp}{C++}
 
+\lst{глобальная среда (таблица символов)}{skelex/hpp/env.hpp}{C++}
 
 \lst{интерфейс к лексеру/парсеру}{skelex/hpp/lex.hpp}{C++}
 
 \subsecly{\file{cpp.cpp}: ядро интерпретатора}
+
+\lst{\ }{skelex/cpp/hpp.cpp}{C++}
+\lst{обработка ошибок синтаксического анализатора}{skelex/cpp/error.cpp}{C++}
+\lst{функция \var{main()}}{skelex/cpp/main.cpp}{C++}
+\lst{конструкторы AST}{skelex/cpp/sym.cpp}{C++}
+\lst{дамп AST}{skelex/cpp/dump.cpp}{C++}
+\lst{вычисление AST}{skelex/cpp/eval.cpp}{C++}
+\lst{глобальная таблица символов}{skelex/cpp/env.cpp}{C++}
 
 \secly{Операторы}\label{lexops}
 
