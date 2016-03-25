@@ -1,0 +1,1 @@
+%token <o> SYM NUM STR			/* symbol number 'string' */

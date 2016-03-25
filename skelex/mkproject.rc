@@ -1,0 +1,5 @@
+git clone -o gh git@github.com:user/lexprogram.git
+cd lexprogram
+touch src.src log.log ypp.ypp lpp.lpp hpp.hpp cpp.cpp Makefile .gitignore
+gvim -p src.src log.log ... Makefile .gitignore >> bat.bat
+bat.bat

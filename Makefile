@@ -16,6 +16,13 @@ TEX += warren/resolution.tex warren/prolog.tex
 TEX += warren/design.tex warren/conclusion.tex
 TEX += warren/appendixA.tex warren/appendixB.tex
 
+TEX += skelex/skelex.tex skelex/mkproject.rc skelex/bat.bat
+TEX += skelex/Makefile skelex/git.ignore skelex/skelex.mk
+TEX += skelex/ypp/head.ypp skelex/ypp/tokscalars.ypp skelex/ypp/scalar.ypp
+TEX += skelex/ypp/brackets.ypp skelex/ypp/ops.ypp skelex/ypp/type.ypp
+TEX += skelex/lpp/head.lpp skelex/lpp/yywrap.lpp skelex/lpp/lineno.lpp
+TEX += skelex/lpp/pp.lpp
+
 TEX += ML/4man.tex
 
 TEX += ML/gilmore.tex
