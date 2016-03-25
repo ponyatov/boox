@@ -1,1 +1,1 @@
-%type <o> ex scalar /* expression scalar [list] {la:mbda} <vector> */
+%type <o> ex scalar list lambda		/* expression scalar [list] {la:mbda} */

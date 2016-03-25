@@ -1,0 +1,3 @@
+list :					{ $$= new List(); }
+	| list ex			{ $$=$1; $$->push($2); }
+;

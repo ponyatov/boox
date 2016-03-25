@@ -1,4 +1,6 @@
 ex : scalar
-	| LP ex RP		{ $$=$2; }
-	| TILD ex		{ $$=$1; $$->push($2); }
+	| LP ex RP			{ $$=$2; }
+	| LQ list RQ		{ $$=$2; }
+	| LC lambda RC		{ $$=$2; }
+	| TILD ex			{ $$=$1; $$->push($2); }
 ;
