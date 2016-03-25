@@ -1,0 +1,16 @@
+# nested lists of scalar types
+
+[						# numbers
+	[						# integers
+		[ -01 00 +002 ]		
+		0x12AF					# machine hex
+		0b1101					# binary string
+	]
+	[						# floating numbers
+		-01.230					# point
+		-04e+05					# exponential
+	]
+]
+symbol 'string
+can\tbe
+	multilined'

@@ -1,0 +1,6 @@
+\(					TOC(Sym,LP)
+\)					TOC(Sym,RP)
+\[					TOC(Sym,LQ)
+\]					TOC(Sym,RQ)
+\{					TOC(Sym,LC)
+\}					TOC(Sym,RC)

@@ -1,0 +1,5 @@
+{S}{N}				TOC(Sym,NUM)
+{S}{N}\.{N}			TOC(Sym,NUM)
+{S}{N}[eE]{S}{N}	TOC(Sym,NUM)
+0x[0-9A-F]+			TOC(Sym,NUM)
+0b[01]+				TOC(Sym,NUM)

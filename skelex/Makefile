@@ -9,7 +9,11 @@ YPP += lpp/pp.lpp
 ypp.ypp: $(YPP) Makefile
 	cat $(YPP) > $@
 	
-LPP = lpp/head.lpp lpp/yywrap.lpp lpp/lineno.lpp lpp/pp.lpp lpp/pp.lpp
+LPP = lpp/head.lpp lpp/xstring.lpp cr.cr lpp/yywrap.lpp lpp/lineno.lpp cr.cr 
+LPP += lpp/xnum.lpp lpp/pp.lpp
+LPP += lpp/comment.lpp cr.cr lpp/num.lpp cr.cr lpp/sym.lpp cr.cr
+LPP += lpp/brackets.lpp cr.cr  
+LPP += lpp/spaces.lpp lpp/pp.lpp
 	
 lpp.lpp: $(LPP) Makefile
 	cat $(LPP) > $@
@@ -27,7 +31,7 @@ CPP += cr.cr cpp/env.cpp
 cpp.cpp: $(CPP) Makefile
 	cat $(CPP) > $@
 	
-SRC += src/comment.src
+SRC += src/comment.src src/coretypes.src
 
 src.src: $(SRC) Makefile
 	cat $(SRC) > $@	

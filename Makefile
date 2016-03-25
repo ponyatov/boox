@@ -23,6 +23,12 @@ TEX += skelex/ypp/brackets.ypp skelex/ypp/ops.ypp skelex/ypp/type.ypp
 TEX += skelex/lpp/head.lpp skelex/lpp/yywrap.lpp skelex/lpp/lineno.lpp
 TEX += skelex/lpp/pp.lpp
 TEX += skelex/hpp/sym.hpp
+TEX += skelex/src/comment.src skelex/src/coretypes.src
+
+TEX += skelex/comment.log skelex/coretypes.log
+
+skelex/%.log: skelex/src/%.src skelex/exe.exe 
+	skelex/exe.exe < $< > $@
 
 TEX += ML/4man.tex
 
