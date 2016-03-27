@@ -30,9 +30,11 @@ hpp.hpp: $(HPP) Makefile
 	
 CPP = cpp/hpp.cpp cpp/error.cpp cpp/main.cpp
 CPP += cr.cr cpp/sym.cpp cr.cr cpp/dump.cpp cr.cr cpp/eval.cpp
-CPP += cr.cr cpp/string.cpp cr.cr cpp/num.cpp cr.cr cpp/list.cpp cr.cr
-CPP += cpp/func.cpp cr.cr
-CPP += cr.cr cpp/env.cpp
+CPP += cr.cr cpp/string.cpp cr.cr cpp/num.cpp cr.cr
+CPP += cpp/list.cpp cr.cr
+CPP += cpp/cons.cpp cr.cr
+CPP += cpp/op.cpp cr.cr cpp/fn.cpp cr.cr cpp/lambda.cpp cr.cr
+CPP += cpp/env.cpp
 
 cpp.cpp: $(CPP) Makefile
 	cat $(CPP) > $@

@@ -4,5 +4,5 @@ Sym* Sym::eval() {
 		(*it) = (*it)->eval();
 	return this; }
 
-Sym* Sym::assign(Sym*o) { env[val]=o; return o; }
-Sym* Sym::apply(Sym*o) { push(o); return this; }
+Sym* Sym::eq(Sym*o) { env[val]=o; return o; }
+Sym* Sym::at(Sym*o) { push(o); return this; }
