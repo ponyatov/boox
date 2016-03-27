@@ -22,7 +22,7 @@ lpp.lpp: $(LPP) Makefile
 	
 HPP = hpp/head.hpp cr.cr hpp/include.hpp cr.cr hpp/sym.hpp cr.cr hpp/env.hpp
 HPP += cr.cr hpp/string.hpp cr.cr hpp/num.hpp cr.cr hpp/list.hpp cr.cr
-HPP += hpp/func.hpp
+HPP += hpp/op.hpp hpp/fn.hpp hpp/lambda.hpp
 HPP += cr.cr hpp/lex.hpp cr.cr hpp/foot.hpp
 
 hpp.hpp: $(HPP) Makefile

@@ -79,6 +79,10 @@ bat.bat & \win & helper запуска \vim \\
 
 \lstx{выражения}{skelex/ypp/ex.ypp}
 
+\lstx{списки}{skelex/ypp/list.ypp}
+
+\lstx{лямбда-определения}{skelex/ypp/lambda.ypp}
+
 \subsecly{\file{lpp.lpp}: лексер}
 
 Весь код между \verb|%{...%}| будет скопирован в выходной сгенерированный файл
@@ -125,7 +129,9 @@ bat.bat & \win & helper запуска \vim \\
 
 \lst{композиты}{skelex/hpp/list.hpp}{C++}
 
-\lst{функционалы}{skelex/hpp/func.hpp}{C++}
+\lst{функционалы: оператор}{skelex/hpp/op.hpp}{C++}
+\lst{встроенные функции}{skelex/hpp/fn.hpp}{C++}
+\lst{лямбда-фукнции}{skelex/hpp/lambda.hpp}{C++}
 
 \lst{интерфейс к лексеру/парсеру}{skelex/hpp/lex.hpp}{C++}
 
@@ -144,7 +150,9 @@ bat.bat & \win & helper запуска \vim \\
 
 \lst{композиты}{skelex/cpp/list.cpp}{C++}
 
-\lst{функционалы}{skelex/cpp/func.cpp}{C++}
+\lst{функционалы: оператор}{skelex/cpp/op.cpp}{C++}
+\lst{встроенная функция}{skelex/cpp/fn.cpp}{C++}
+\lst{лямбда-функция}{skelex/cpp/lambda.cpp}{C++}
 
 \lst{глобальная таблица символов}{skelex/cpp/env.cpp}{C++}
 
@@ -203,7 +211,7 @@ bat.bat & \win & helper запуска \vim \\
 \end{tabular}
 
 \noindent\begin{tabular}{l l l}
-\verb|A%B| & member & вложить $B$ как член $A$ \\
+-фукнци-фукнциии\verb|A%B| & member & вложить $B$ как член $A$ \\
 &&чаще всего используется в определении (добавлении) членов класса\\
 \verb|A:B| & inherit & наследовать $B$ от $A$ \\
 &&если $A$ составное, выполняется множественное наследование в порядке

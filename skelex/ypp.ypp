@@ -10,7 +10,8 @@
 %token <o> ADD SUB MUL DIV POW		/* + - * / ^	*/
 %token <o> LL GG					/* < > 			*/
 
-%type <o> ex scalar list lambda		/* expression scalar [list] {la:mbda} */
+%type <o> ex scalar					/* expression scalar */
+%type <o> list lambda				/* [list] {la:mbda} */
 
 %right COMMA
 

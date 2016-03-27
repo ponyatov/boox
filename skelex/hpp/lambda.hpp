@@ -1,0 +1,1 @@
+struct Lambda: Sym { Lambda(); };

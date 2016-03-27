@@ -34,10 +34,8 @@ struct List: Sym { List(); };
 struct Cons: Sym { Cons(Sym*,Sym*); };
 
 struct Op: Sym { Op(string); };
-
 typedef Sym*(*FN)(Sym*);
 struct Fn: Sym { Fn(string,FN); FN fn; };
-
 struct Lambda: Sym { Lambda(); };
 
 extern int yylex();
