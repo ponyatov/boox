@@ -2,6 +2,18 @@
 \@					TOC(Op,AT)
 \~					TOC(Op,TILD)
 \%					TOC(Op,PERC)
+\|					TOC(Op,PIPE)
 
-\,					TOC(Op,COMMA)
 \:					TOC(Op,COLON)
+\.					TOC(Op,DOT)
+\,					TOC(Op,COMMA)
+
+\+					TOC(Op,ADD)
+\-					TOC(Op,SUB)
+\*					TOC(Op,MUL)
+\/					TOC(Op,DIV)
+\^					TOC(Op,POW)
+
+\<					TOC(Op,LL)
+\!					TOC(Op,EX)
+\>					TOC(Op,GG)
