@@ -1,98 +1,104 @@
 \secly{Введение}
 
 \prolog\ --- язык декларативного логического программирования. Детально
-рассматривая его имя, получаем что это сокращение от \emph{pro}gramming in
-\emph{log}ic: логическое программирование.
+рассматривая его имя, получаем что это сокращение от \textsc{pro}gramming in
+\textsc{log}ic: логическое программирование. Наследие \prolog а включает
+исследования в области \term{автоматического доказательства теорем} и других
+\term{дедуктивных систем}, разработанных в 1960-70хх гг. \term{Механизм вывода}
+\prolog а базируется на принципе разрешения Робинсона (1965) и механизмах вывода
+ответов, приложенных Грином (1968). Эти идеи используются вместе с продедурами
+линейного разрешения. Процедуры точного целевого линейное разрешения, такие как
+методы Kowalski / Kuehner (1971) и Kowalski (1974), дали толчок к разработке
+систем логического программирования общего назначения. ``Первым'' \prolog ом был
+``Марсельский \prolog'', реализация которого основана на работе Colmerauer
+(1970). Первым делательным описанием языка \prolog\ было руководство к
+интерпретатору Marseille Prolog (Roussel, 1975). Другим сильным влиянием на
+природу этого первого \prolog а была адаптация этого интерпретатора к задачам
+\term{обработки натуральных языков}.
 
-The name itself, \prolog, is short for PROgramming in LOGic. Prolog's heritage includes the
-research on theorem provers and other automated deduction systems developed in
-the 1960s and 1970s. The inference mechanism of Prolog is based upon Robinson's
-resolution principle (1965) together with mechanisms for extracting answers
-proposed by Green (1968). These ideas came together forcefully with the advent
-of linear resolution procedures. Explicit goal-directed linear resolution
-procedures, such as those of Kowalski and Kuehner (1971) and Kowalski (1974),
-gave impetus to the development of a general purpose logic programming system.
-The "first" Prolog was "Marseille Prolog" based on work by Colmerauer (1970).
-The first detailed description of the Prolog language was the manual for the
-Marseille Prolog interpreter (Roussel, 1975). The other major influence on the
-nature of this first Prolog was that it was designed to facilitate natural
-language processing.
+\prolog\ является наиболее часто упоминаемым примеров языков программирования
+четвертого поколения, которые поддерживают парадигму \emph{декларативного
+программирования}. Японский проект Fifth-Generation Computer
+Project\note{компьютерный проект пятого поколения}, анонсированный в 1981,
+применял \prolog\ как язык разработки, и сосредоватчивал значительные усилия на
+языке и его возможностях. Программы в этом учебнике написаны на ``стандартном''
+\prolog е Эдинбургского университета\note{University of Edinburgh Prolog}, как
+это сделано к классической книге по \prolog у под авторством Clocksin и Mellish
+(1981,1992). Другой заметной версией \prolog а является семейство реализаций
+\prolog II, которые являются ответсвлениями Марсельского \prologа. Справочник
+Giannesini, et.al. (1986) использует версию \prolog II. Есть некоторые различия
+бежду этими двумя вариантами \prolog а; часть различий в синтаксисе, и часть в
+семантике. Тем не менее, студенты изучавшие одну из версий, впоследствии могут
+легко адаптировать к другой.
 
-Prolog is the major example of a fourth generation programming language
-supporting the declarative programming paradigm. The Japanese Fifth-Generation
-Computer Project, announced in 1981, adopted Prolog as a development language,
-and thereby focused considerable attention on the language and its capabilities.
-The programs in this tutorial are written in "standard" (University of)
-Edinburgh Prolog, as specified in the classic Prolog textbook by authors
-Clocksin and Mellish (1981,1992). The other major kind of Prolog is the PrologII
-family of Prologs which are the descendants of Marseille Prolog. The reference
-to Giannesini, et.al. (1986) uses a version of PrologII. There are differences
-between these two varieties of Prolog; part of the difference is syntax, and
-part is semantics. However, students who learn either kind of Prolog can easily
-adapt to the other kind.
+Цель этого учебника\ --- помочь изучить самые необходимые, базовые концепции
+языка \prolog. Примеры программ были особенно аккуратно выбраны для иллюстрации
+программирования искуственного интлеллекта на \prolog е. \lisp\ и \prolog\
+наиболее часто используемые языки символьного программирования для приложений
+искуственного интеллекта. Они часто упоминаются как великолепные языки для
+``исследовательского'' и ``прототипного программирования''.
 
-This tutorial is intended to be used to help learn the essential, basic concepts
-of Prolog. The sample programs have been especially chosen to help promote the
-use of Prolog programming in an artificial intelligence course. Lisp and Prolog
-are the most frequently used symbolic programming languages for artificial
-intelligence. They are widely regarded as excellent languages for "exploratory"
-and "prototype programming".
+Раздел \ref{fish1} рассматривает среду программирования на \prolog е для
+начинающих.
 
-Chapter 1 explains the Prolog programming environment for the beginner.
+Раздел \ref{fish2} объясняет синтаксис \prolog а и многие аспекты
+программирования на нем через реализацию аккуратно выборанных программ-примеров.
+Эти примеры организованы так, чтобы студент обучался через реализацию
+\prolog-программ ``сверху вниз'' в декларативном стиле.
+Были приняты меры к рассмотрению техник программирования на \prolog е, которые
+очень важны для курса искуственного интеллекта. Фактически, \emph{этот учебник
+может служить удобным, маленьким, кратким введением в применение \prolog а в
+приложениях искуственного интеллекта}. Аспекты семантики языка \prolog\
+рассмотриваются с самого начала с точки зрения концепции дерева условий
+программы, которое используется для определения последовательностей спецификаций
+\prolog-программы в абстрактном виде. Автор надеется что этот подход позволит
+рассмотреть базовые принципы формальной верификации программ при
+программировании на \prolog е. Последняя секция этого раздела приводит пример,
+который показывает что \prolog\ может быть эффективно использован для
+аккуратной, точной спецификации программных систем, несмотря на его репутацию
+трудно документируемого языка, так что \prolog\ легко использовать как средство
+прототипирования.
 
-Chapter 2 explains Prolog syntax and many essentials of Prolog programming
-through the use of carefully chosen sample programs. The sample programs are
-arranged to guide the student through the development of Prolog programs that
-are constructed in a top-down, declarative fashion. Care has been taken to cover
-Prolog programming techniques that are very useful in an artificial intelligence
-course. In fact, this primer can serve as a convenient, small, concise Prolog
-introduction for such a course. Semantic issues have been addressed by
-introducing early the concept of a program clause tree that is used to define in
-an abstract way what are supposed to be the consequences of a Prolog program
-specification. The author believes this to be a viable way to promote the basic
-semantic issues of software verification for Prolog programming. The last
-section of this chapter introduces an example that shows that Prolog can be
-effectively used to give careful, precise specifications of systems, contrary to
-its usual reputation as being hard to document because it is easy to use as an
-exploratory programming tool.
+Раздел \ref{fish3}\ рассматривает работу внутренних механизмов \prolog-движка.
+Раздел \ref{fish3}\ рекомендуется просмотреть сразу после того, как студент
+изучил 2-3 примера программ из раздела \ref{fish2}. Последняя секция этого
+радела рассматривает \term{мета-интерпретаторы \prolog а}.
 
-Chapter 3 explains the operation of the underlying inference engine of Prolog.
-Chapter 3 should be first read after the student has studied two or three of the
-sample programs in Chapter 2. The last section in this chapter introduces Prolog
-meta-interpreters.
+Раздел \ref{fish4}\ дает краткий обзор основных встроенных предикатов, многие из
+которых используются в разделе \ref{fish2}..
 
-Chapter 4 gives an outlined view of the major built-in predicates of Prolog,
-many of which are exemplified in Chapter 2.
+Раздел \ref{fish5}\ рассматривает разработку программ A*-поиска на \prolog е.
+Раздел \ref{fish53}\ содержит программу $\alpha\beta$-поиска для игры 
+tic tac toe.
 
-Chapter 5 gives an outline for developing A* search programs in prolog.  Section
-5.3 has an $\alpha\beta$ search program for the game of tic tac toe.
+Раздел \ref{fish6}\ представляет уникальное и обширное описание логического
+мета-интерпретатора для нормальных логических баз правил.\note{Замечание от
+9/4/2006: Я значительно отредактировал этот раздел, и обновил все ссылки на
+секции.}
 
-Chapter 6 presents a unique and extensive presentation of a logic
-meta-interpreter for normal logical rulebases.\note{Note 9/4/2006: I have
-edited this chapter heavily, and the section links are all new.}
+Раздел \ref{fish7}\ предствляет введение во встроенный в \prolog\ генератор
+парсеров грамматики, и дает общий обзор приемов, с помощью которых \prolog\
+может быть использован для разбора выражений натурального языка (английского).
+Также эта секция описывает построение программных интерфейсов, использующих
+идеоматически-простые натуральные языки.
 
-Chapter 7 gives an introduction to Prolog's built-in grammar parser generator,
-and a brief overview of how Prolog can be used to parse English (natural
-language) sentences. Also, there is a section covering the construction of
-simple idiomatic natural language interfaces to programs.
+Раздел \ref{fish8}\ показывает приемы реализации различных \prolog-прототипов.
+Новый раздел \ref{fish84}\ раскрывает интерактивную связку между машиной вывода
+\prolog а и Java GUI для игры tic tac toe. Рассмотренная простая модель связки
+легко адаптируемая и применима.
 
-Chapter 8 shows how to implement varios prolog prototypes. A new section (§8.4)
-develops an interactive connection between prolog (inference engine) and Java
-(GUI) to play tic tac toe. The simple connection model is quite widely adaptable
-and applicable.
+Ранние версии частей этого учебника датируются 1988 годом. Вводный материал
+изначально использовался для объяснения работы интерпретатора \prolog а,
+разработанного автором\note{сейчас недоступен}\ для применения в учебном
+процессе. Автор надеется что вводный материал, собранный в форме этого учебника,
+может быть очень полезным для студентов, которые хотят быстрое, но при этом
+хорошо сбалансированное, введение в программирование на \prolog е.
 
-Earlier versions of portions of this tutorial date back to 1988. The
-introductory material was originally used to help explain a Prolog interpreter
-developed by the author (no longer available) for use in his courses. The author
-believes that the introductory material, gathered together in the form given
-here might be very useful for the student who wants a quick, but well-tailored,
-introduction to Prolog.
+Для дальнейшего изучения \prolog а можно посоветовать книги
+Clocksin и Mellish (1981,1992), O'Keefe (1990), Clocksin (1997, 2003),
+или Sterling и Shapiro (1986).
 
-For fuller treatments of Prolog the student is advised to see the textbooks by
-Clocksin and Mellish (1981,1992), by O'Keefe (1990), by Clocksin (1997, 2003),
-or by Sterling and Shapiro (1986).
+Подробные заметки по истории \prolog\ и обработке натуральных языков с его
+использованием содержатся в работе Pereira and Shieber (1987).
 
-For excellent historical notes regarding Prolog and natural language processing
-using Prolog the text by Pereira and Shieber (1987) is recommended.
-
-\copyright\ Pomona, California\\ 1988-2015
+\copyright\ Помона, Калифорния\\ 1988-2015
