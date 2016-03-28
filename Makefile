@@ -10,10 +10,13 @@ TEX += bi/scalar.tex bi/composite.tex bi/functional.tex
 TEX += bi/DLR.tex
 TEX += linux/build.tex linux/struc.tex
 
-TEX += warren/warren.tex warren/intro.tex warren/unification.tex
-TEX += warren/resolution.tex warren/prolog.tex
-TEX += warren/design.tex warren/conclusion.tex
-TEX += warren/appendixA.tex warren/appendixB.tex
+TEX += prolog/fisher/fisher.tex prolog/fisher/intro.tex
+
+TEX += prolog/warren/warren.tex prolog/warren/intro.tex 
+TEX += prolog/warren/unification.tex
+TEX += prolog/warren/resolution.tex prolog/warren/prolog.tex
+TEX += prolog/warren/design.tex prolog/warren/conclusion.tex
+TEX += prolog/warren/appendixA.tex prolog/warren/appendixB.tex
 
 TEX += skelex/skelex.tex skelex/mkproject.rc skelex/bat.bat
 TEX += skelex/Makefile skelex/git.ignore skelex/skelex.mk
