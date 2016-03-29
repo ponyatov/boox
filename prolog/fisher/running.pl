@@ -9,7 +9,7 @@ factorial(A,B) :-
            C is A-1,
            factorial(C,D),
            B is A*D. 
-yes
+true.
   
 ?- factorial(10,What).     /* 3. Вычислить 10! (в переменную) */
 What=3628800
@@ -21,17 +21,17 @@ What=3628800
 takeout(A,[A|B],B).
 takeout(A,[B|C],[B|D]) :-
           takeout(A,C,D).
-yes
+true.
 
 ?- takeout(X,[1,2,3,4],Y).  /* 5. Взять X из списка [1,2,3,4] */
 X=1  Y=[2,3,4] ;              Prolog ждет ... нужно ввести ';' и Enter
-X=2  Y=[1,3,4] ;               again ...  
-X=3  Y=[1,2,4] ;               again ...
-X=4  Y=[1,2,3] ;               again ...
-no                             Means: No more answers.
+X=2  Y=[1,3,4] ;               следующий ...  
+X=3  Y=[1,2,4] ;               следующий ...
+X=4  Y=[1,2,3] ;               следующий ...
+false.                         Обозначает: больше нет ответов.
 
-?- takeout(X,[1,2,3,4],_), X>3.  /* 6.  Conjunction of goals */
+?- takeout(X,[1,2,3,4],_), X>3.  /* 6.  Конъюнкция целей */
 X=4 ;
-no
+false.
 
-?- halt.                         /* 7. Return to OS */
+?- halt.                         /* 7. Выход из интерпретатора в OS */
