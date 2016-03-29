@@ -11,7 +11,8 @@ TEX += bi/DLR.tex
 TEX += linux/build.tex linux/struc.tex
 
 TEX += prolog/fisher/fisher.tex prolog/fisher/intro.tex
-TEX += prolog/fisher/running.tex
+TEX += prolog/fisher/running.tex prolog/fisher/running.pl
+TEX += prolog/fisher/2_2.tex prolog/fisher/2_2.pl 
 
 TEX += prolog/warren/warren.tex prolog/warren/intro.tex 
 TEX += prolog/warren/unification.tex
