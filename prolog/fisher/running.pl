@@ -23,8 +23,8 @@ takeout(A,[B|C],[B|D]) :-
           takeout(A,C,D).
 yes
 
-?- takeout(X,[1,2,3,4],Y).  /* 5. Take X out of list [1,2,3,4] */
-X=1  Y=[2,3,4] ;              Prolog waits ... User types ';' and Enter
+?- takeout(X,[1,2,3,4],Y).  /* 5. Взять X из списка [1,2,3,4] */
+X=1  Y=[2,3,4] ;              Prolog ждет ... нужно ввести ';' и Enter
 X=2  Y=[1,3,4] ;               again ...  
 X=3  Y=[1,2,4] ;               again ...
 X=4  Y=[1,2,3] ;               again ...
