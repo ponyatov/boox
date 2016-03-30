@@ -9,57 +9,154 @@ Tutorial\ \cp{https://www.cpp.edu/~jrfisher/www/prolog\_tutorial/contents.html}
 
 \input{prolog/fisher/running}
 
-\secrel{2. Sample Programs -- Descriptions}\label{fish2}\secdown
-\secrel{2.1 Map colorings} 
+\secrel{Разбор примеров программ}\label{fish2}\secdown
+
+In this chapter we provide several sample \prolog\ programs. The programs are
+given in a progression from fairly simple programs to more complex programs. The
+key goals of the presentation are to show several important methods of knowledge
+representation in \prolog\ and the declarative programming methodology of
+\prolog.
+
+\secrel{2.1 Map colorings}
+
+This section uses a famous mathematical problem -- that of coloring planar maps
+-- to motivate logical representations of facts and rules in \prolog\. The \prolog\
+program developed provides a representation for adjacent regions in a map, and
+shows a way to represent colorings, and a definition of when the colorings in
+conflict; that is, when two adjacent regions have the same coloring. The
+section introduces the concept of a semantic program clause tree -- to motivate
+the issue of semantics for logic-based programming.
 
 \input{prolog/fisher/2_2}
 
-\secrel{2.3 Towers of Hanoi puzzle} 
-\secrel{2.4 Loading programs, editing programs} 
+\secrel{2.3 Towers of Hanoi puzzle}
+
+This famous puzzle is formulated in \prolog\. The discussion concerns both the
+declarative and the procedural meanings of the program. The program write puzzle
+solutions to the screen.
+ 
+\secrel{2.4 Loading programs, editing programs}
+
+Examples show various ways to load programs into \prolog\, and an example of a
+program calling a system editor is given. The reader is encouraged to read
+sections 3.1 an 3.2 on How \prolog\ Works before continuing with section 2.5
+ 
 \secrel{2.5 Negation as failure} 
+
+The section gives an introduction to \prolog\'s negation-as-failure feature, with
+some simple examples. Further examples show some of the difficulties that can be
+encountered for programs with negation as failure.
+
 \secrel{2.6 Tree data and relations}
+
+This section shows \prolog\ operator definitions for a simple tree structure. Tree
+processing relations are defined and corresponding goals are studied.
 
 \input{prolog/fisher/2_7} 
  
-\secrel{2.8 Change for a dollar} 
+\secrel{2.8 Change for a dollar}
+
+A simple change maker program is studied. The important observation here is how
+a \prolog\ predicate like 'member' can be used to generate choices, the choices
+are checked to see whether they solve the problem, and then backtracking on
+'member' generates additional choices. This fundamental generate and test
+strategy is very natural in \prolog.
+
 \secrel{2.9 Map coloring redux} 
-\secrel{2.10 Simple I/O} 
-\secrel{2.11 Chess queens challenge puzzle} 
+
+We take another look at the map coloring problem introduced in Section 2.1. This
+time, the data representing region adjacency is stored in a list, colors are
+supplied in a list, and the program generates colorings which are then checked
+for correctness.
+
+\secrel{2.10 Simple I/O}
+
+This section discusses opening and closing files, reading and writing of \prolog\
+data.
+ 
+\secrel{2.11 Chess queens challenge puzzle}
+
+This familiar puzzle is formulate in \prolog\ using a permutation generation
+program from Section 2.7. Backtracking on permutations produces all solutions.
+ 
 \secrel{2.12 Finding all answers} 
+
+\prolog\'s 'setof' and 'bagof' predicates are presented. An implementation of
+'bagof' using 'assert' and 'retract' is given.
+
 \secrel{2.13 Truth table maker} 
-\secrel{2.14 DFA parser} 
-\secrel{2.15 Graph structures and paths} 
+
+This section designs a recursive evaluator for infix Boolean expressions, and a
+program which prints a truth table for a Boolean expression. The variables are
+extracted from the expression and the truth assignments are automatically
+generated.
+
+\secrel{2.14 DFA parser}
+
+A generic DFA parser is designed. Particular DFAs are represented as \prolog\
+data.
+ 
+\secrel{2.15 Graph structures and paths}
+
+This section designs a path generator for graphs represented using a static
+\prolog\ representation. This section serves as an introduction to and motivation
+for the next section, where dynamic search grows the search graph as it works.
+ 
 \secrel{2.16 Search} 
+
+The previous section discussed path generation in a static graph. This section
+develops a general \prolog\ framework for graph searching, where the search graph
+is constructed as the search proceeds. This can be the basis for some of the
+more sophisticated graph searching techniques in A.I.
+
 \secrel{2.17 Animal identification game} 
+
+This is a toy program for animal identification that has appeared in several
+references in some form or another. We take the opportunity to give a unique
+formulation using \prolog\ clauses as the rule database. The implementation of
+verification of askable goals (questions) is especially clean. This example is a
+good motivation for expert systems, which are studied in Chapter 6.
+
 \secrel{2.18 Clauses as data} 
+
+This section develops a \prolog\ program analysis tool. The program analyses a
+\prolog\ program to determine which procedures (predicates) use, or call, which
+other procedures in the program. The program to be analyzed is loaded
+dynamically and its clauses are processed as first-class data.
+
 \secrel{2.19 Actions and plans}
+
+An interesting prototype for action specifications and plan generation is
+presented, using the toy blocks world. This important subject is continued and
+expanded in Chapter 7.
+
 \secup
-\secrel{3. How Prolog Works}\label{fish3}\secdown
-\secrel{3.1 Prolog derivation trees, choices and unification} 
+\secrel{3. How \prolog\ Works}\label{fish3}\secdown
+\secrel{3.1 \prolog\ derivation trees, choices and unification} 
 \secrel{3.2 Cut} 
-\secrel{3.3 Meta-interpreters in Prolog}
+\secrel{3.3 Meta-interpreters in \prolog}
 \secup
 \secrel{4. Built-in Goals}\label{fish4}\secdown
 \secrel{4.1 Utility goals }
 \secrel{4.2 Universals (true and fail)} 
-\secrel{4.3 Loading Prolog programs} 
+\secrel{4.3 Loading \prolog\ programs} 
 \secrel{4.4 Arithmetic goals} 
 \secrel{4.5 Testing types} 
-\secrel{4.6 Equality of Prolog terms, unification} 
+\secrel{4.6 Equality of \prolog\ terms, unification} 
 \secrel{4.7 Control} 
 \secrel{4.8 Testing for variables} 
 \secrel{4.9 Assert and retract} 
 \secrel{4.10 Binding a variable to a numerical value} 
 \secrel{4.11 Procedural negation, negation as failure }
 \secrel{4.12 Input/output} 
-\secrel{4.13 Prolog terms and clauses as data} 
-\secrel{4.14 Prolog operators} 
+\secrel{4.13 \prolog\ terms and clauses as data} 
+\secrel{4.14 \prolog\ operators} 
 \secrel{4.15 Finding all answers}
 \secup
-\secrel{5. Search in Prolog}\label{fish5}\secdown
-\secrel{5.1 The A* algorithm in Prolog} 
+\secrel{5. Search in \prolog}\label{fish5}\secdown
+\secrel{5.1 The A* algorithm in \prolog} 
 \secrel{5.2 The 8-puzzle} 
-\secrel{5.3 $\alpha\beta$ search in Prolog}\label{fish53}
+\secrel{5.3 $\alpha\beta$ search in \prolog}\label{fish53}
 \secup
 \secrel{6. Logic Topics}\label{fish6}\secdown
 \secrel{6.1 Chapter 6 notes} 
@@ -70,17 +167,17 @@ Tutorial\ \cp{https://www.cpp.edu/~jrfisher/www/prolog\_tutorial/contents.html}
 \secrel{6.6 Rule tree visualization using Java}
 \secup
 \secrel{7. Introduction to Natural Language Processing}\label{fish7}\secdown
-\secrel{7.1 Prolog grammar parser generator} 
-\secrel{7.2 Prolog grammar for simple English phrase structures} 
+\secrel{7.1 \prolog\ grammar parser generator} 
+\secrel{7.2 \prolog\ grammar for simple English phrase structures} 
 \secrel{7.3 Idiomatic natural language command and question interfaces}
 \secup
-\secrel{8. Prototyping with Prolog}\label{fish8}\secdown
+\secrel{8. Prototyping with \prolog}\label{fish8}\secdown
 \secrel{8.1 Action specification for a simple calculator} 
 \secrel{8.2 Animating the 8-puzzle (\$5.2) using character graphics} 
 \secrel{8.3 Animating the blocks mover (\$2.19) using character graphics} 
-\secrel{8.4 Java Tic-Tac-Toe GUI plays against Prolog opponent
+\secrel{8.4 Java Tic-Tac-Toe GUI plays against \prolog\ opponent
 (\$5.3)}\label{fish84}
-\secrel{8.5 Structure diagrams and Prolog}
+\secrel{8.5 Structure diagrams and \prolog}
 \secup
 \secly{References}
 \secup
