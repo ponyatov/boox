@@ -15,7 +15,7 @@ TEX += prolog/fisher/running.tex prolog/fisher/running.pl
 TEX += prolog/fisher/2_2.tex prolog/fisher/2_2.pl 
 TEX += prolog/fisher/2_7.tex prolog/fisher/2_7.pl
 TEX += prolog/fisher/2_1.tex prolog/fisher/f2_1_2.pdf prolog/fisher/f2_1_3.pdf
-TEX += prolog/fisher/f21_*.pl
+TEX += prolog/fisher/f21_*.pl prolog/fisher/f2_2.pdf
 
 TEX += prolog/warren/warren.tex prolog/warren/intro.tex 
 TEX += prolog/warren/unification.tex
