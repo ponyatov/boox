@@ -3,3 +3,109 @@
 Показано формулирование и решение классической задача на \prolog е. Рассмотрены
 декларативные и процедурные подходы к программированию. Решение задачи выводится
 на экран.
+
+This object of this famous puzzle is to move N disks from the left peg to the
+right peg using the center peg as an auxiliary holding peg. At no time can a
+larger disk be placed upon a smaller disk. The following diagram depicts the
+starting setup for \verb|N=3| disks.
+
+\fig{}{prolog/fisher/f2_3.png}{width=0.95\textwidth}
+
+Here is a recursive Prolog program that solves the puzzle. It consists of two
+clauses.
+
+\lst{Ханойские башни}{prolog/fisher/2_3.pl}{Prolog}
+
+The variables filled in by \verb'_' (or any variables beginning with underscore)
+are \verb'don't-care' variables. Prolog allows these variables to freely match
+any structure, but no variable binding results from this gratuitous matching.
+
+Here is what happens when Prolog solves the case \verb|N=3|.
+
+\begin{verbatim}
+?-  move(3,left,right,center). 
+Move top disk from left to right 
+Move top disk from left to center 
+Move top disk from right to center 
+Move top disk from left to right 
+Move top disk from center to left 
+Move top disk from center to right 
+Move top disk from left to right 
+yes
+\end{verbatim}
+
+The first clause in the program describes the move of a single disk. The second
+clause declares how a solution could be obtained, recursively. For example, a
+declarative reading of the second clause for \verb|N=3, X=left, Y=right|, and
+\verb|Z=center| amounts to the following:
+
+\begin{verbatim}
+move(3,left,right,center) if 
+move(2,left,center,right) and ] * 
+move(1,left,right,center) and 
+move(2,center,right,left). ] ** 
+\end{verbatim}
+
+This declarative reading of the clause is obviously correct. The procedural
+reading is closely related to the declarative interpretation of the recursive
+clause. The procedural interpretation would go something like this:
+
+In order to satisfy the goal \verb|?- move(3,left,right,center)| do this : 
+
+\begin{verbatim}
+satisfy the goal ?-move(2,left,center,right), and then 
+satisfy the goal ?-move(1,left,right,center), and then 
+satisfy the goal ?-move(2,center,right,left). 
+\end{verbatim}
+
+Also, we could write the declarative readings for \verb|N=2|:
+
+\begin{verbatim}
+move(2,left,center,right) if ] * 
+move(1,left,right,center) and 
+move(1,left,center,right) and 
+move(1,right,center,left). 
+move(2,center,right,left) if ] ** 
+move(1,center,left,right) and 
+move(1,center,right,left) and 
+move(1,left,right,center). 
+\end{verbatim}
+
+Now substitute the bodies of these last two implications for the heads and one
+can "see" the solution that the prolog goal generates.
+
+\begin{verbatim}
+move(3,left,right,center) if 
+move(1,left,right,center) and 
+move(1,left,center,right) and * 
+move(1,right,center,left) and 
+--------------------------- 
+move(1,left,right,center) and 
+--------------------------- 
+move(1,center,left,right) and 
+move(1,center,right,left) and ** 
+move(1,left,right,center). 
+\end{verbatim}
+
+A procedural reading for this last big implication should be obvious. This
+example illustrates well three major operations of Prolog:
+\begin{enumerate}[nosep]
+  \item 
+Goals are matched against the head of a rule, and
+  \item 
+the body of the rule (with variables appropriately bound) becomes a new sequence
+of goals, repeatedly, until
+  \item 
+some base goal or condition is satisfied, or some simple action is taken (like
+printing something).
+\end{enumerate}
+ 
+The variable matching process is called unification.
+
+\paragraph{Exercise 2.3.1} Draw a program clause tree for the goal
+\verb'move(3,left,right,center)' show that it is a consequence of the program.
+How is this clause tree related to the substitution process explained above?
+
+\paragraph{Exercise 2.3.2} Try the Prolog goal \verb|?-move(3,left,right,left)|.
+What's wrong? Suggest a way to fix this and follow through to see that the fix
+works.
