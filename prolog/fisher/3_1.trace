@@ -1,0 +1,23 @@
+?- trace.
+true.
+
+[trace]  ?- p(X).
+   Call: (6) p(_G2873) ? [Enter] creep
+   Exit: (6) p(a) ? [Enter] creep
+X = a [;]
+   Redo: (6) p(_G2873) ? creep
+   Call: (7) q(_G2873) ? creep
+   Call: (8) s(_G2873) ? creep
+   Exit: (8) s(a) ? creep
+   Exit: (7) q(a) ? creep
+   Call: (7) r(a) ? creep
+   Exit: (7) r(a) ? creep
+   Exit: (6) p(a) ? creep
+X = a ;
+   Redo: (8) s(_G2873) ? creep
+   Exit: (8) s(b) ? creep
+   Exit: (7) q(b) ? creep
+   Call: (7) r(b) ? creep
+   Exit: (7) r(b) ? creep
+   Exit: (6) p(b) ? creep
+X = b .
