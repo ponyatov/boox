@@ -4,21 +4,22 @@
 декларативные и процедурные подходы к программированию. Решение задачи выводится
 на экран.
 
-This object of this famous puzzle is to move N disks from the left peg to the
-right peg using the center peg as an auxiliary holding peg. At no time can a
-larger disk be placed upon a smaller disk. The following diagram depicts the
-starting setup for \verb|N=3| disks.
+Цель известной головоломки\ --- переместить \var{N} дисков с левого штыря на
+правый, используя центральный штырь как дополнительное храненилище. Требование:
+\emph{нельзя класть б\'{о}льший диск на м\'{е}ньший}. Следующая диаграмма
+показывает начальное положение для \verb|N=3| дисков.
 
 \fig{}{prolog/fisher/f2_3.png}{width=0.95\textwidth}
 
-Here is a recursive Prolog program that solves the puzzle. It consists of two
-clauses.
+Регурсивная программа на \prolog е, решающая головоломку, состоит из двух
+утверждений:
 
 \lst{Ханойские башни}{prolog/fisher/2_3.pl}{Prolog}
 
-The variables filled in by \verb'_' (or any variables beginning with underscore)
-are \verb'don't-care' variables. Prolog allows these variables to freely match
-any structure, but no variable binding results from this gratuitous matching.
+Переменная \verb'_' (или любое другое имя начинающееся с подчеркивания)\ --- 
+переменные \verb|don't-care| (не важно). \prolog\ позволяет использовать
+эти перемененные как обычные в любых структурах, но для них \emph{не выполняется
+привязка}.
 
 Here is what happens when Prolog solves the case \verb|N=3|.
 
