@@ -1,4 +1,4 @@
-\secrel{Классическая задача ``Ханойские башни''}
+\secrel{Классическая задача ``Ханойские башни''}\label{fish23}
 
 Показано формулирование и решение классической задача на \prolog е. Рассмотрены
 декларативные и процедурные подходы к программированию. Решение задачи выводится
@@ -9,19 +9,20 @@
 \emph{нельзя класть б\'{о}льший диск на м\'{е}ньший}. Следующая диаграмма
 показывает начальное положение для \verb|N=3| дисков.
 
-\fig{}{prolog/fisher/f2_3.png}{width=0.95\textwidth}
-
 Регурсивная программа на \prolog е, решающая головоломку, состоит из двух
 утверждений:
 
-\lst{Ханойские башни}{prolog/fisher/2_3.pl}{Prolog}
+\noindent\begin{tabular}{p{0.4\textwidth} p{0.5\textwidth}}
+\fig{}{prolog/fisher/f2_3.png}{width=0.4\textwidth}&
+\lst{Ханойские башни}{prolog/fisher/2_3.pl}{Prolog}\\
+\end{tabular}
 
 Переменная \verb'_' (или любое другое имя начинающееся с подчеркивания)\ --- 
 переменные \verb|don't-care| (не важно). \prolog\ позволяет использовать
 эти перемененные как обычные в любых структурах, но для них \emph{не выполняется
 привязка}.
 
-Here is what happens when Prolog solves the case \verb|N=3|.
+Вот что выводится при решении задачи при \verb|N=3|:
 
 \begin{verbatim}
 ?-  move(3,left,right,center). 
@@ -32,81 +33,82 @@ Move top disk from left to right
 Move top disk from center to left 
 Move top disk from center to right 
 Move top disk from left to right 
-yes
+true .
 \end{verbatim}
 
-The first clause in the program describes the move of a single disk. The second
-clause declares how a solution could be obtained, recursively. For example, a
-declarative reading of the second clause for \verb|N=3, X=left, Y=right|, and
-\verb|Z=center| amounts to the following:
+Первое предложение программы описывает перемещение одного диска. Второе
+предложение описывает как можно получить решение рекурсивно. Например,
+декларативное чтение второго предложения для случая \verb|N=3, X=left, Y=right|,
+и \verb|Z=center| приводит к следующему:
 
 \begin{verbatim}
-move(3,left,right,center) if 
-move(2,left,center,right) and ] * 
-move(1,left,right,center) and 
-move(2,center,right,left). ] ** 
+move(3,left,right,center) если 
+    move(2,left,center,right) и ] * 
+    move(1,left,right,center) и 
+    move(2,center,right,left). ] ** 
 \end{verbatim}
 
-This declarative reading of the clause is obviously correct. The procedural
-reading is closely related to the declarative interpretation of the recursive
-clause. The procedural interpretation would go something like this:
-
-In order to satisfy the goal \verb|?- move(3,left,right,center)| do this : 
+Это декларативное чтение очевидно правильно. Процедурное чтение тесно связано с
+декларативной интерпретацией рекурсивного утверждения, оно должно выглядеть
+как-то так:
 
 \begin{verbatim}
-satisfy the goal ?-move(2,left,center,right), and then 
-satisfy the goal ?-move(1,left,right,center), and then 
-satisfy the goal ?-move(2,center,right,left). 
+удовлетворить цель ?-move(2,left,center,right), и потом 
+удовлетворить цель ?-move(1,left,right,center), и потом 
+удовлетворить цель ?-move(2,center,right,left). 
 \end{verbatim}
 
-Also, we could write the declarative readings for \verb|N=2|:
+Аналогично мы можем записать декларативное прочтение для случая \verb|N=2|:
 
 \begin{verbatim}
-move(2,left,center,right) if ] * 
-move(1,left,right,center) and 
-move(1,left,center,right) and 
+move(2,left,center,right) если ] * 
+move(1,left,right,center) и 
+move(1,left,center,right) и 
 move(1,right,center,left). 
-move(2,center,right,left) if ] ** 
-move(1,center,left,right) and 
-move(1,center,right,left) and 
+move(2,center,right,left) если ] ** 
+move(1,center,left,right) и
+move(1,center,right,left) и 
 move(1,left,right,center). 
 \end{verbatim}
 
-Now substitute the bodies of these last two implications for the heads and one
-can "see" the solution that the prolog goal generates.
+Теперь подставим содержимое последних двух implications и увидим решение которое
+сгенерирует \prolog:
 
 \begin{verbatim}
-move(3,left,right,center) if 
-move(1,left,right,center) and 
-move(1,left,center,right) and * 
-move(1,right,center,left) and 
+move(3,left,right,center) если 
+move(1,left,right,center) и 
+move(1,left,center,right) и * 
+move(1,right,center,left) и 
 --------------------------- 
-move(1,left,right,center) and 
+move(1,left,right,center) и 
 --------------------------- 
-move(1,center,left,right) and 
-move(1,center,right,left) and ** 
+move(1,center,left,right) и 
+move(1,center,right,left) и ** 
 move(1,left,right,center). 
 \end{verbatim}
 
-A procedural reading for this last big implication should be obvious. This
-example illustrates well three major operations of Prolog:
+Процедурное прочтение последних двух больших implication должно быть очевидно.
+Этот пример показывает при основных операции \prolog а:
 \begin{enumerate}[nosep]
+  \item
+Цели сопоставляются с головой правила, и
   \item 
-Goals are matched against the head of a rule, and
+тело правила (с соответствующе привязанными переменными) становится новой
+последовательностью целей; процесс повторяется 
   \item 
-the body of the rule (with variables appropriately bound) becomes a new sequence
-of goals, repeatedly, until
-  \item 
-some base goal or condition is satisfied, or some simple action is taken (like
-printing something).
+пока не будет удовлетворена основная цель или условие, или не будет выполнено
+простое действие, например выведен текст.
 \end{enumerate}
- 
-The variable matching process is called unification.
 
-\paragraph{Exercise 2.3.1} Draw a program clause tree for the goal
-\verb'move(3,left,right,center)' show that it is a consequence of the program.
-How is this clause tree related to the substitution process explained above?
+\begin{framed}\noindent
+Процесс сопоставления переменных с образцом (variable matching)\\
+называется \termdef{унификацией}{унификация}.
+\end{framed}
 
-\paragraph{Exercise 2.3.2} Try the Prolog goal \verb|?-move(3,left,right,left)|.
-What's wrong? Suggest a way to fix this and follow through to see that the fix
-works.
+\paragraph{Упражнение \ref{fish23}.1} Нарисуйте clause-дерево для цели
+\verb'move(3,left,right,center)', покажите что это консеквенция программы. Как
+полученное дерево связано с процессом подстановки, поисанным выше\,?
+
+\paragraph{Exercise \ref{fish23}.2} Попробуйте \prolog-цель
+\verb|?-move(3,left,right,left)|. Что не так\,? Предложите способ
+исправления, и проследите процесс работы исправления.
