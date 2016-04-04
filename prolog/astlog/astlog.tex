@@ -195,7 +195,30 @@ restored at relatively little cost.
 
 \secrel{Elements of ASTLOG}\secdown
 
-\subsecly{Complete Syntax of ASTLOG} 
+Section \ref{crewsyntax} gives the complete syntax for our language, ASTLOG. The
+ASTLOG interpreter reads a script of user-defined predicate operator definitions
+and then runs one or more queries.
+
+As in \prolog, the definition of a user-defined predicate operator is composed
+of one or more \term{clauses}. A compound term \verb|opname(term,...)| appearing
+at top level in a clause body is interpreted as a predicate, whether
+\term{opname} be primitive or user-defined. In the latter case, the script is
+searched for a defining clause whose head terms successfully unify with the
+respective operand terms of the given compound term, variables are bound
+accordingly, and the terms of the clause body are likewise interpreted. The
+clause \emph{succeeds} (i. e., is found to be true) if all of its body terms
+succeed. Whenever a clause head fails to unify, or a clause body term
+\emph{fails} (i. e., is found to be false), or any primitive term fails by the
+rules of evaluation of that primitive, we backtrack to the last point where
+there was a choice (e. g., of clauses to try for a given compound term) and
+continue.
+
+A \term{query} is a clause whose head terms are all variables. Ultimately,
+whenever all terms of a query body succeed, the bindings of any variables listed
+in the query head (\term{qhead}) are reported. Otherwise, we report failure.
+Thus far, this is all exactly like \prolog.
+
+\secrel{Complete Syntax of ASTLOG}\label{crewsyntax} 
 
 \begin{tabular}{l l l}
 script & ::= named-clause* & script file syntax \\
@@ -206,6 +229,7 @@ anon-clause & ::= ( term* ) clause-body? ; &\\
 clause-body & ::= <- term+ &\\
 \end{tabular}
 
+\noindent
 \begin{tabular}{l l l}
 \hline
 &Essential Term Syntax&\\
@@ -220,6 +244,7 @@ term & ::= literal & reference to denotable ob ject \\
 & ::= ( term )( term* ) & ``application'' term \\ 
 \end{tabular}
 
+\noindent
 \begin{tabular}{l l l}
 \hline
 &Gratuitous Term Syntax&\\
@@ -231,6 +256,38 @@ cons(term; nil()), etc\ldots\\
 cons(term1,term2), etc\ldots\\
 arity-spec & ::= / integer &\\ 
 \end{tabular}
+
+\secrel{Objects}
+
+ASTLOG refers to external objects. Given a \ci/\cpp\ compiler front end that
+provides a (\cpp) interface to the syntactic/semantic data structures built
+during the parse of a given program, it is simple to graft this onto the core of
+ASTLOG so that it may recognize object references corresponding to
+\begin{itemize}[nosep]
+  \item whole C/C++ programs,
+  \item single files,
+  \item symbols,
+  \item AST nodes (including statements, expressions, and declarations), and
+  \item \ci/\cpp\ type descriptions.
+\end{itemize}
+
+For the purposes of ASTLOG, an \term{object} is simply some external entity that
+is significant for its identity and for the primitive predicates that it may
+satisfy. To simplify the language we regard the traditional
+constants (integers, floats, and strings) to be references to ``external''
+objects as well, though one could just as easily take the converse view in which
+the universe of object references is just a (very large) pool of
+constants\note{``atoms'' in the usual \prolog\ terminology}.
+
+In any case, object references are terms in ASTLOG. Only references to equal
+objects can unify, equality meaning numeric equality for numbers,
+same-sequence-of-characters for strings, and identity for all other classes of
+objects. Only objects that have denotations (numbers, strings and the unique
+\verb|null object*|) can find their way into scripts.
+
+\secrel{The Current Object}
+
+
 
 \secup
 
