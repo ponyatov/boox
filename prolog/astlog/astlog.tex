@@ -1,5 +1,5 @@
 \secrel{ASTLOG: Язык для анализа синтаксических деревьев}\secdown
-\cp{http://www.cs.nyu.edu/~lharris/papers/crew.pdf}
+\cp{\url{http://www.cs.nyu.edu/~lharris/papers/crew.pdf}}
 \copyright\ Roger F. Crew \email{rfc@microsoft.com}\\
 Microsoft Research
 Microsoft Corporation
@@ -21,11 +21,150 @@ programs like \prog{Microsoft SQL server} (450Klines) and \prog{Microsoft Word}
 
 The model in which terms are matched against an implicit current object, rather
 than simply proven against a database of facts, leads to a distinct ``inside-out
-functional" programming style that is quite unlike typical \prolog, but one that
-is, in fact, well-suited to the examination of trees. Also, various second-order
+functional'' programming style that is quite unlike typical \prolog, but one
+that is, in fact, well-suited to the examination of trees. Also, various second-order
 \prolog\ set-predicates may be implemented via manipulation of the current
 object, thus retaining an important feature without entailing that the database
 be dynamically extensible as the usual implementation does.
 
+\secrel{Introduction}\secdown
+
+Tools like \prog{grep} and \prog{awk} are useful for finding and analyzing
+lexical artifacts; e.g., a one-line command locates all occurences of a
+particular string. Unfortunately, many simple facts about programs are less
+accessible at the character/token level, such as the locations of assignments to
+a particular \cpp\ class member. In general, reliably extracting such syntactic
+constructs requires writing a parser or some fragment thereof. And after writing
+one's twenty-seventh parser fragment, one might begin to yearn for a more
+general tool capable of operating at the syntax-tree level.
+
+Even given a compiler front-end that exposes the abstract syntax tree (AST)
+representation for a given program, there remains the question of what exactly
+to do with it. To be sure, supplying a \ci\ programmer with a sufficiently
+complete interface to this representation generally solves any problem one might
+care to pose about it. One may just as easily say that all problems at the
+lexical level may be solved via proper use of the UNIX standard IO library
+\verb|<stdio.h>|, a true, but utterly trivial and unsatisfying statement. The
+question is rather that of building a simpler, more useful and flexible
+interface: one that is less error-prone, more concise than writing in \ci, and
+more directly suited to the task of exploring ASTs. We first consider a couple
+of prior approaches.
+
+\secrel{The \prog{awk} Approach}
+
+One of the more popular approaches is to extend the \prog{awk} \cite{AKW86}
+paradigm. An \prog{awk} script is a list of pairs, each being a
+regular-expression with an accompanying statement in a C-like imperative
+language. For each line in the input file, we consider each pair of the script
+in turn; if the regular-expression matches the line, the corresponding statement
+is executed.
+
+Extending this to the AST domain is straightforward, though with numerous
+variations. One defines a regular-expression-like language in which to express
+tree patterns and an \prog{awk}-like imperative language for statements. The
+tree nodes of the input program are traversed in some order (e.g., preorder),
+and for each node the various pairs of the script are considered as before.
+
+We have two objections to this approach, the first having to do with the
+hardwired framework that usually implicit. In some cases (e. g., \prog{TAWK}
+\cite{GA96}), the traversal order for the AST nodes is essentially fixed; using
+a different order would be analogous to attempting to use plain \prog{awk} to
+scan the lines of a text file in reverse order. In $A*$ \cite{LR95}, while the
+user may define a general traversal order, only one traversal method may be
+defined/active at any given time, making difficult any structure comparisons
+between subtrees or other applications that require multiple concurrent
+traversals. Since the imperative language is quite general in both cases, little
+is deffinitively impossible, however for some applications one may be little
+better off than when programming in straight \ci.
+
+The second objection has to do with the kinds of pattern-abstraction available.
+Inevitably there exist simply-described patterns that are a poor fit to a
+regular-expression-like syntax. This tends to happen when said simple
+descriptions are in terms of the idioms of a particular programming language;
+most of the various tree-\prog{awk} pattern languages tend to be designed with
+the intent of being language independent.
+
+Suppose one wishes to find all consecutive occurrences of one statement
+immediately preceding another, e. g., places where a given system call
+\verb|syscall();| is followed immediately by an \verb|assert();| \note{on the
+theory that testing of outcomes of system calls should be done in production
+code rather than just debugging code}. A tree-regular-expression pattern of the
+form
+
+\begin{verbatim}
+<syscall() pattern>; <assert() pattern>
+\end{verbatim}
+
+\noindent
+(where \verb|;| is the regular-expression sequence operator) finds all instances
+of the two calls occurring consecutively within a single block, but it misses
+instances like
+
+\begin{verbatim}
+syscall();
+{
+    assert();
+    ...
+}
+\end{verbatim}
+
+and
+
+\begin{verbatim}
+if (...) {
+    syscall();
+}
+else {
+    ...
+}
+assert();
+\end{verbatim}
+
+While the tree-\prog{awk} languages allow one to write patterns to match each of
+these cases, without a pattern-abstraction facility, we may be back at square
+one when it comes time to look for some \emph{different} pair of consecutive
+function calls. We prefer to write a single consecutive-statement pattern
+constructor \emph{once} and then be able to use it for a variety of cases where
+we need to find pairs of consecutive statements satisfying certain criteria,
+invoking it as
+
+\begin{verbatim}
+follow_stmt(<syscall() pattern>, <assert() pattern>)
+\end{verbatim}
+for the above problem, or, if we instead want to be fiding all of the places
+where a \ci\ switch-case falls through, as
+\begin{verbatim}
+follow_stmt(not(<unconditional-jump pattern>),
+                <case-labeled stmt pattern>)
+\end{verbatim}
+
+One solution, used by \prog{TAWK}, is to use \prog{cpp}, the C preprocessor, to
+preprocess the script, allowing for pattern-abstractions to be expressed as
+\verb|#define| macros whose invocations are then expanded as needed. This is
+unsatisfactory in a number of ways, whether one wants to consider the problem of
+recursively-defined patterns, macros with large bodies that result in a
+corresponding blow-up in the size of the script, or the difficulty of tracing
+script errors that resulted from complex macro-expansions.
+
+Another way out is to fall back on the procedural abstraction available in the
+imperative language that the patterns invoke. One essentially uses a degenerate
+pattern that always matches and then allows the imperative code to test whether
+the given node is in fact the desired match, defining functions to test for
+particular patterns. Once again, it seems we are back to programming in straight
+C and not deriving as much benefit from having a pattern language available as
+we could be.
+
+In general, the philosophical underpinning of the \prog{awk} approach is that
+the designer has already determined the kinds of searches the user will want to
+do; the effort is put towards making those particular searches run efficiently.
+There is also an assumption that the underlying imperative language for the
+actions has all the abstraction facilities one will ever need, so that if the
+pattern language is lacking in various ways, this is not deemed a serious
+problem. While this is not an unreasonable approach, we have less confidence of
+having identified all of the reasonable search possibilities, and thus would
+prefer instead to make the pattern language more flexible and extensible, being
+willing to sacrifice some efficiency to do so.
+
+\secup
 
 \secup
