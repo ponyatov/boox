@@ -287,8 +287,144 @@ objects. Only objects that have denotations (numbers, strings and the unique
 
 \secrel{The Current Object}
 
+The first significant departure from the \prolog\ model is that a query or
+predicate term always evaluates under an ambient \term{current object}. Every
+query and every term being evaluated as a predicate is not so much a standalone
+statement that may or may not be intrinsically true (i. e., provable from the
+``facts'' in the script) as it is a specification that may or may not be
+satisfied by the current ob ject, or, alternatively, a \term{pattern} that may
+or may not \term{match} the current object. For example, in \prolog
+\begin{verbatim}
+odd(3)
+\end{verbatim}
+always succeeds by virtue of 3 being odd or because the ``fact'' \verb|odd(3)|
+exists in the script somewhere. By contrast, in ASTLOG
+\begin{verbatim}
+odd()
+\end{verbatim}
+succeeds if the current object happens to be the integer 3, fails if the current
+object is 4, and raises an error if the current object is the string
+\verb|"Hi mom"|. Another way to view this is that every predicate term takes an
+extra, hidden current-object operand.
 
+While one normally only expects to see compound (and application) terms in
+predicate position, ASTLOG allows variables and ob ject references there as
+well. The rules for matching are as follows:
 
+\begin{itemize}
+  \item 
+An object reference matches the current object, if it references an equal
+object.
+  \item 
+A bound variable matches according as whatever term it is bound to.
+  \item 
+An unbound variable gets bound to reference the current ob ject (and thus
+automatically matches it).
+\item 
+A compound term whose operator is defined via clauses matches if there exists a
+clause whose head operands unify with the term operands and whose body terms
+themselves all match the current object.
+\end{itemize}
+
+Section \ref{crew31} describes the operator-valued and application terms.
+
+The evaluation rules for compound terms having primitive operators are widely
+varied, however the operands are usually treated one of two ways:
+
+\begin{enumerate}
+  \item 
+\verb|(foo-pred)| requiring the operand to be match some object\note{which
+becomes the current object for that evaluation}, not necessarily the same
+current object as that which the full term is being matched against. For
+example, the operand of \verb|strlen| (see \ref{crewfig2}) and the second
+operand of \verb|with| are treated this way.
+  \item 
+\verb|(foo)| requiring the operand be an object reference, whether this be a
+literal or an object-reference-bound variable. The operands of \verb|re|,
+\verb|gt|, and the first operand of \verb|with| are treated this way.
+\end{enumerate}
+
+Most primitives also expect a current ob ject to be of a particular kind and
+raise an error if confronted with something different.
+
+The use of an implicit current object is not by itself an increase in
+expressivity. If we had, in a \prolog\ database, terms representing the various
+AST nodes, there would be a fairly straightforward translation of ASTLOG terms
+into \prolog\ terms, one in which we simply modify all terms to make the current
+object an explicit operand.
+
+Nevertheless, ASTLOG programs exhibit a distinct style of programming. Consider
+as an example that we might, in a typical functional language, write a function
+call
+\begin{verbatim}
+strlen(string)
+\end{verbatim}
+to find the length of the string returned by the expression \verb|string|. Here
+the length result is implicitly returned to the context of the call. In \prolog,
+the natural style would be to express this as a relation
+\begin{verbatim}
+strlen(string, length)
+\end{verbatim}
+which stipulates that \verb|length| is in fact the length of \verb|string|. In
+ASTLOG, we would write
+\begin{verbatim}
+strlen(length-pred)
+\end{verbatim}
+where now it is the \verb|string| argument that is implicitly supplied \emph{as
+the current object} \textit{by} the context while the length result is returned
+\textit{to} the subterm \verb|length-pred|, which in turn can be some arbitrary
+term expecting a numeric current ob ject as its implicit argument. For example,
+given an \verb|odd()| predicate as above, the term \verb|strlen(odd())| would
+match any string consisting of an odd number of characters. It is this
+``inside-out functional'' evaluation strategy that makes ASTLOG well-suited to
+constructing anchored patterns to match tree-like structures.
+
+\subsecly{Figure 2: Some core ASTLOG primitives}\label{crewfig2}
+
+\begin{itemize}
+  \item 
+\verb|and(object-pred,... )|\\
+The current object satisfies every \verb|object-pred| operand. 
+  \item 
+\verb|or(object-pred,... )|\\
+The current object satisfies some \verb|object-pred| operand. 
+  \item 
+\verb|if(object-pred, then-pred, else-pred)|\\
+The current object satisfies \verb|then-pred| or \verb|else-pred| according as
+it satisfies or fails to satisfy \verb|object-pred| (once; if \verb|object-pred|
+matches but \verb|then-pred| does not, we do not retry \verb|object-pred|). 
+  \item 
+\verb|not(object-pred)|\\
+\verb|= if(object-pred, or(), and())|
+  \item 
+\verb|with(object, object-pred)|\\
+\verb|object| satisfies \verb|object-pred| (outer current object is ignored).
+  \item 
+\verb|strlen(integer-pred)|\\
+The current string object has length satisfying \verb|integer-pred|. 
+  \item 
+\verb|re(string)|\\
+The regular expression \verb|string| matches the current string. 
+  \item 
+\verb|gt(integer)|\\
+The current integer is greater than \verb|integer|. 
+  \item 
+\verb|minus(integer-pred, integer)|\\
+\verb|integer-pred| matches the current integer \verb|+ integer|. 
+  \item 
+\verb|minus(integer, integer-pred)|\\
+\verb|integer-pred| matches \verb|integer|\ --- the current integer.\\
+(An error is raised if neither operand of a minus term
+is an integer ob ject reference.) 
+  \item 
+\verb|plus(integer-pred, integer)|\\
+\verb|integer-pred| matches the current integer\ --- \verb|integer|
+\end{itemize}
+
+\secup
+
+\secrel{}\secdown
+\secrel{3.1}\label{crew31}
 \secup
 
 \secup
