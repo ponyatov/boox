@@ -1,0 +1,31 @@
+\secrel{ASTLOG: Язык для анализа синтаксических деревьев}\secdown
+\cp{http://www.cs.nyu.edu/~lharris/papers/crew.pdf}
+\copyright\ Roger F. Crew \email{rfc@microsoft.com}\\
+Microsoft Research
+Microsoft Corporation
+Redmond, WA 98052
+
+\secly{Abstract}
+
+We desired a facility for locating/analyzing syntactic artifacts in abstract
+syntax trees of \ci/\cpp\ programs, similar to the facility \prog{grep} or
+\prog{awk} provides for locating artifacts at the lexical level. \prolog, with
+its implicit pattern-matching and backtracking capabilities, is a natural choice
+for such an application. We have developed a \prolog\ variant that avoids the
+overhead of translating the source syntactic structures into the form of a
+\prolog\ database; this is crucial to obtaining acceptable performance on large
+programs. An interpreter for this language has been implemented and used find
+various kinds of syntactic bugs and other questionable constructs in real
+programs like \prog{Microsoft SQL server} (450Klines) and \prog{Microsoft Word}
+(2Mlines) in time comparable to the runtime of the actual compiler.
+
+The model in which terms are matched against an implicit current object, rather
+than simply proven against a database of facts, leads to a distinct ``inside-out
+functional" programming style that is quite unlike typical \prolog, but one that
+is, in fact, well-suited to the examination of trees. Also, various second-order
+\prolog\ set-predicates may be implemented via manipulation of the current
+object, thus retaining an important feature without entailing that the database
+be dynamically extensible as the usual implementation does.
+
+
+\secup
