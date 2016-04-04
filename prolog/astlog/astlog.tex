@@ -165,6 +165,73 @@ having identified all of the reasonable search possibilities, and thus would
 prefer instead to make the pattern language more flexible and extensible, being
 willing to sacrifice some efficiency to do so.
 
+\secrel{The Logic Programming Approach}
+
+Another common approach is to run an inference engine over a database of program
+syntactic structures \cite{BCD88, BGV90, CMR92}. \prolog\ \cite{SS86} is a
+convenient language for this sort of application. Backtracking and a form of
+pattern matching are built in, the abstraction mechanisms to build up complex
+predicates exist at a fundamental level, andfinally, \prolog\ allows for a more
+declarative programming style.
+
+The problems with using \prolog\ are two-fold. First there is the issue of
+efficiency. Second, we must represent the AST for our source program in the
+\prolog\ database. Large programs ($10^5..10^6$ lines) will result in
+correspondingly large \prolog\ databases, most likely with a significant
+performance penalty.
+
+We finesse the second problem by not attempting to import the source program's
+AST at all, instead opting to modify the interpretation of the predicates and
+queries of \prolog\ so as to be applicable to external objects rather than just
+facts provable in the existing database. Removing reasons that require the
+database to grow beyond the initial script creates significant opportunities for
+optimization. This, however, requires removing primitives like \verb|assert()|
+and \verb|retract()| that allow for the dynamic (re)defiition or removal of
+predicates, which in turn removes many higher-order logical features that are
+defined in terms of them. Fortunately, some of the more essential ones can be
+restored at relatively little cost.
+
+\secup
+
+\secrel{Elements of ASTLOG}\secdown
+
+\subsecly{Complete Syntax of ASTLOG} 
+
+\begin{tabular}{l l l}
+script & ::= named-clause* & script file syntax \\
+query & ::= imports? ( varname* ) clause-body ; & query syntax \\
+imports & ::= \{ varname+ \} &\\
+named-clause & ::= opname anon-clause &\\
+anon-clause & ::= ( term* ) clause-body? ; &\\
+clause-body & ::= <- term+ &\\
+\end{tabular}
+
+\begin{tabular}{l l l}
+\hline
+&Essential Term Syntax&\\
+\hline
+term & ::= literal & reference to denotable ob ject \\
+& ::= varname &\\
+& ::= opname ( term* ) & compound term \\
+& ::= FN imports? ( anon-clause+ ) & anonymous predicate-operator-valued 
+\\&&(``lambda'') term \\
+& ::= ' opname arity-spec? & named predicate-operator-valued
+\\&&(``function quote'') term \\
+& ::= ( term )( term* ) & ``application'' term \\ 
+\end{tabular}
+
+\begin{tabular}{l l l}
+\hline
+&Gratuitous Term Syntax&\\
+\hline
+&::= \# constname & named constant\\&&($\equiv$ corresponding literal number)\\
+&::= \verb|[ term* ]| & \verb|[ ]| $\equiv$ nil(), \verb|[term]| $\equiv$
+cons(term; nil()), etc\ldots\\
+&::= \verb$[ term+ | term ]$ & \verb$[ term1 | term2 ]$ $\equiv$
+cons(term1,term2), etc\ldots\\
+arity-spec & ::= / integer &\\ 
+\end{tabular}
+
 \secup
 
 \secup
