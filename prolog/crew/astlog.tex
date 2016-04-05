@@ -584,7 +584,7 @@ is, \verb|cond(p1, e1, p2, e2,..., e)| is equivalent to
 as a side-effect, emits the source location of the current AST node in
 grep-output form.
 
-\lstx{\file{follow\_stmt.astlog}}{prolog/astlog/follow.pl}
+\lstx{\file{follow\_stmt.astlog}}{prolog/crew/follow.pl}
 
 \subsecly{Figure 5: Definition of \file{flatten}}
 
@@ -631,12 +631,62 @@ flatten2kids(test, n, head, tail)
 unify(x,x);
 \end{verbatim}
 
+\secup %2
+
+\secrel{Higher order features}\secdown %3
+
+We have already included some of the non-1st-order features of \prolog, notably
+``cut'' (in the form of \verb|if()|) and the corresponding notion of negation,
+\verb|not()|. There are others that turn out to be essential as well.
+
+\secrel{3.1 Lambdas and Applications}\label{crew31}
+
+One may observe that, in \verb|somenode(test)|, because this is an existential
+query, it does not matter that we are matching the same term \verb|test| to
+every node of the tree. If variables in \verb|test| get bound as a result of
+matching a given node, those bindings will be undone prior to advancing to the
+next node.
+
+If one instead wants to write a conjunctive predicate over all tree nodes, say
+\begin{verbatim}
+flatten(test, list)
+\end{verbatim}
+which holds if \verb|list| is a list of \emph{all} descendant nodes satisfying
+\verb|test|,\ --- we give a definition in Figure 5\ --- this will not work
+correctly if \verb|test| contains any variables that are bound during the course
+of matching any node; said variables will \emph{stay} bound for the duration of
+the \verb|flatten| evaluation.
+
+Even in an existential query, there is the possibility that the \verb|test|
+being passed in will itself need to take a parameter. For example, one might
+imagine defining a version of \verb|sametree| that also requires an additional
+user-specified \verb|test| to hold at each corresponding pair of nodes. If
+\verb|test| is a mere compound term, it can be matched against one of the nodes,
+but not both.
+
+Thus we introduce \termdef{``application'' terms}{application term} and
+operator-valued \termdef{``lambda'' terms}{lamdba term}. For an application
+\verb|(fterm)(term;...)| to match the current object, the term \verb|fterm| must
+be (or be a variable bound to) a predicate-operator-valued term, which will
+either be
+\begin{itemize}
+  \item a reference, \verb|'foo/3| to a named predicate operator,
+in which case the application evaluates exactly as the corresponding compound
+term would, or
+\item an anonymous predicate operator
+\verb|FN{importvars ... }(anon-clauses ...)|, in which case the application
+evaluates \emph{almost} exactly as if there were a named predicate-operator
+defined by the given clauses and this were a compound term on that operator. The
+difference is that any variables of those clauses that are also on the
+\verb|{importvars... }| list are identified with the correspondingly-named
+variables in the clause where the \verb|FN| term occurs lexically.
+\end{itemize}
+
+An \verb|FN| term with imports can be thought of as a kind of
+\termdef{closure}{closure}.
 
 
-\secup
 
-\secrel{}\secdown
-\secrel{3.1}\label{crew31}
-\secup
+\secup %3
 
-\secup
+\secup %crew

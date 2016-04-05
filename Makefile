@@ -28,7 +28,7 @@ TEX += prolog/warren/resolution.tex prolog/warren/prolog.tex
 TEX += prolog/warren/design.tex prolog/warren/conclusion.tex
 TEX += prolog/warren/appendixA.tex prolog/warren/appendixB.tex
 
-TEX += prolog/astlog/astlog.tex
+TEX += prolog/crew/astlog.tex prolog/crew/follow.pl
 
 TEX += skelex/skelex.tex skelex/mkproject.rc skelex/bat.bat
 TEX += skelex/Makefile skelex/git.ignore skelex/skelex.mk
