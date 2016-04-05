@@ -218,7 +218,7 @@ whenever all terms of a query body succeed, the bindings of any variables listed
 in the query head (\term{qhead}) are reported. Otherwise, we report failure.
 Thus far, this is all exactly like \prolog.
 
-\secrel{Complete Syntax of ASTLOG}\label{crewsyntax} 
+\subsecly{Figure 1: Complete Syntax of ASTLOG}\label{crewsyntax} 
 
 \begin{tabular}{l l l}
 script & ::= named-clause* & script file syntax \\
@@ -419,7 +419,219 @@ is an integer ob ject reference.)
   \item 
 \verb|plus(integer-pred, integer)|\\
 \verb|integer-pred| matches the current integer\ --- \verb|integer|
+
+\subsecly{Figure 3: Some primitive node and symbol predicates}
+  \item 
+\verb|parent(ast-pred)|\\
+This AST node is not a root node and its parent satisfies \verb|ast-pred|.
+  \item 
+\verb|kid(integer-pred; ast-pred)|\\
+This AST node has a child satisfying \verb|ast-pred| whose (0-based) index
+satisfies \verb|integer-pred|.
+  \item 
+\verb|kidcount(integer-pred)|\\
+The number of children of this AST node satifies \verb|integer-pred|. 
+  \item 
+\verb|op(integer-pred)|\\
+The opcode of this AST node satisfies \verb|integer-pred|. 
+  \item 
+\verb|atype(type-pred)|\\
+This AST node has a return type satisfying \verb|type-pred|. 
+  \item 
+\verb|asym(symbol-pred)|\\
+This AST node is a symbol satisfying \verb|symbol-pred|. 
+  \item 
+\verb|aconst(const-pred)|\\
+This AST node is a constant (integer, float or string) satisfying
+\verb|const-pred|.
+  \item 
+\verb|sname(string-pred)|\\
+This symbol's name satisfies \verb|string-pred|. 
 \end{itemize}
+
+There are named constants available for designating the opcodes of various kinds
+of nodes for use in \verb|op()| terms, and the indices of particular children
+for use in \verb|kid()|.
+
+\secrel{Examples}
+
+Given the set of AST node primitives in Figure 3, we could write
+\begin{verbatim}
+and(op(#=), kid(#LEFT, asym(sname("foo"))))
+\end{verbatim}
+which would be satisified by any AST node that is an assignment (=) expression
+whose left-hand side is itself a symbol expression where the symbol name is
+"foo". Here, \verb|#=| and \verb|#LEFT| are numeric literals for the assignment
+node opcode and the assignment target's childindex, respectively.
+
+To define a predicate \verb|assignment/2| to match assignment nodes, a script
+could include the clause
+\begin{verbatim}
+assignment(target, value)
+    <- op(#=),
+        kid(#LEFT, target),
+        kid(#RIGHT, value);
+\end{verbatim}
+which would then allow writing the previous term as
+\begin{verbatim}
+assignment(asym(sname("foo")), _)
+\end{verbatim}
+
+As in \prolog, the underscore \verb|(_)| is ``wild-card'' variable, i.e., one
+that is internally given a distinct identity so as not to be conated with any
+other instances of \verb|_|. Such a variable, being guaranteed to be unbound,
+will match any o ject or unify with any term.
+
+Defining a general purpose node-traversal predicate is also straightforward
+\begin{verbatim}
+somenode(pred)
+    <- or(pred, kid(_ , somenode(pred)));
+\end{verbatim}
+Given this definition, an attempt to match \verb|somenode(test)| to a given node
+will create an instance of the defining clause of \verb|somenode/1| above with
+pred bound to \verb|test|. Satisfying the clause body requires that either
+\verb|pred| match the current node, or, if (when) that fails, that
+\verb|kid(_,somenode(pred))| match the current node. The latter in turn will
+attempt to match the variable \verb|_| with 0 (easy) and the term
+\verb|somenode(pred)| with the first child, and, when that fails, \verb|_| with
+1 and \verb|somenode(pred)| with the second child, etc\ldots Making the
+interpreter fail and backtrack after each hit (in the usual manner of \prolog)
+eventually causes \verb|test| to be matched with the original node and all of
+its descendants.
+
+So, if we issue the query
+\begin{verbatim}
+(v) <- somenode(
+    assignment(asym(sname("foo")), v)
+        );
+\end{verbatim}
+on the root node of some function's AST, we obtain, via the successive bindings
+reported for \verb|v| on each hit, all of the expressions assigned to variables
+named \var{"foo"} within that function.
+
+As an example that makes less trivial use of backtracking, consider the problem
+of whether two trees have the same structure (i.e., root nodes have the same
+opcode and all corresponding children have the same structure).
+\begin{verbatim}
+sametree(node)
+    <- op(nodeop),
+       with(node, op(nodeop)),
+       not(and(with(node, kid(n, nkid)),
+           kid(n, not(sametree(nkid)))));
+\end{verbatim}
+
+This defines a predicate \verb|sametree(node)| that holds if \verb|node| is a
+reference to an AST node with the same structure as the current object. The
+first line of the clause body binds the current node's opcode to \verb|nodeop|,
+the second line compares that to the opcode of \verb|node|, while the remaining
+lines search for children whose subtrees have distinct structure. The term
+\verb|kid(n, nkid)| will match each child of \verb|node|, since both variables
+are initially unbound. If \verb|sametree(nkid)| happens to be true of the
+corresponding child of the current node, the inner \verb|not| fails and we go
+back and try another child of \verb|node|. If \verb|sametree(nkid)| happens to
+be true of \emph{every} corresponding child of the current node, then the
+enclosing \verb|not| and thus the outer \verb|sametree(node)| invocation
+succeeds.
+
+The preceding version of \verb|sametree/1| is a purely
+structural comparison; there is no attempt to take account
+of the commutativity/associativity of the various
+operators, e. g., \verb|a + b| and \verb|b + a| are not considered
+the same. If, say, we \emph{did} want to consider commutativity,
+we could define
+\begin{verbatim}
+csametree(node)
+    <- op(nodeop),
+       with(node,op(nodeop)),
+       kidcount(if(with(nodeop,commutes()),
+                    any_perm(perm),
+                    id_perm(perm))),
+       not(and(with(node,kid(corresp(perm,n),
+                            nkid)),
+                kid(n,not(csametree(nkid)))));
+\end{verbatim}
+along with suitable definitions of
+\begin{description}
+\item[commutes()]\ \\
+the current integer is the opcode of a commutative operator,
+\item[any\_perm(perm)]\ \\
+\verb|perm| is any permutation of the sequence\\
+\verb|0, ... , (<current-object> - 1)|,
+\item[id\_perm(perm)]\ \\
+\verb|perm| is the identity permutation of the sequence\\
+\verb|0, ... , (<current-object> - 1)|,
+\item[corresp(perm, n)]\ \\
+permutation \verb|perm| takes the current integer to something matching
+\verb|n|.
+\end{description}
+Here, permutations can be represented by list terms. Note that since all of the
+commutative \ci/\cpp operators are, in fact, binary, this all simplifies
+significantly.
+
+It should, incidentally, be clear that there is nothing about the core language
+that is specifically tailored for the examination of compiler-produced ASTs, let
+alone ASTs for a given language. The language in fact lends itself to the
+examination of a wide variety of external structures, e. g., hierarchical file
+systems, or collections of web pages. All that is needed is a suitable
+collection of primitive ASTLOG predicates for querying said structures.
+
+\subsecly{Figure 4: Actual ASTLOG code for follow\_stmt}
+
+Actual ASTLOG code for \verb|follow_stmt| and how one uses it to find case
+statement fallthroughs. The cond operator is an if-then-elseif- construct, that
+is, \verb|cond(p1, e1, p2, e2,..., e)| is equivalent to
+\verb|if(p1, e1,if(p2,e2,..,e))|. \verb|sfa(emit(string))| always succeeds and,
+as a side-effect, emits the source location of the current AST node in
+grep-output form.
+
+\lstx{\file{follow\_stmt.astlog}}{prolog/astlog/follow.pl}
+
+\subsecly{Figure 5: Definition of \file{flatten}}
+
+\begin{verbatim}
+flatten(test, lst)
+  <- flatten(test, lst, []);
+
+flatten(test, head, tail)
+  <- if(test,
+        first(head, hrest),
+        unify(head, hrest)),
+     flattenkids(test, 0, hrest, tail);
+
+flattenkids(test, n, head, tail)
+  <- if(kid(n, flatten(test, head, mid)),
+        and(with(n, minus(nplus1,1)),
+            flattenkids(test, nplus1,
+                        mid, tail)),
+        unify(head, tail));
+
+first([o|rest],rest) <- o;
+unify(x,x);
+\end{verbatim}
+
+\subsecly{Figure 6: Parameterized version, \file{flatten2}}
+
+\begin{verbatim}
+flatten2(test, lst)
+  <- flatten2(test, lst, []);
+
+flatten2(test, head, tail)
+  <- if((test)(value),
+        unify(head, [value|hrest]),
+        unify(head, hrest)),
+     flatten2kids(test, 0, hrest, tail);
+
+flatten2kids(test, n, head, tail)
+  <- if(kid(n, flatten2(test, head, mid)),
+        and(with(n, minus(nplus1,1)),
+            flatten2kids(test, nplus1,
+                         mid, tail)),
+        unify(head, tail));
+
+unify(x,x);
+\end{verbatim}
+
+
 
 \secup
 
