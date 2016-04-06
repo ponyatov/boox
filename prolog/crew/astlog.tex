@@ -586,7 +586,7 @@ grep-output form.
 
 \lstx{\file{follow\_stmt.astlog}}{prolog/crew/follow.pl}
 
-\subsecly{Figure 5: Definition of \file{flatten}}
+\subsecly{Figure 5: Definition of \file{flatten}}\label{crewfig5}
 
 \begin{verbatim}
 flatten(test, lst)
@@ -609,7 +609,7 @@ first([o|rest],rest) <- o;
 unify(x,x);
 \end{verbatim}
 
-\subsecly{Figure 6: Parameterized version, \file{flatten2}}
+\subsecly{Figure 6: Parameterized version, \file{flatten2}}\label{crewfig6}
 
 \begin{verbatim}
 flatten2(test, lst)
@@ -685,8 +685,524 @@ variables in the clause where the \verb|FN| term occurs lexically.
 An \verb|FN| term with imports can be thought of as a kind of
 \termdef{closure}{closure}.
 
+The parameterized version of flatten, namely
+\begin{verbatim}
+flatten2(test, list)
+\end{verbatim}
+which holds iff list is a list of all x corresponding to
+descendants that \verb|(test)(x)| matches, is defined in Figure
+\ref{crefig6}.
 
+\subsecly{Figure 7: Parameterized version of sametree}\label{crewfig7}
+\begin{verbatim}
+sametree(node,equiv)
+<- unify(same,
+FN{same,equiv}
+((node)
+<- op(nodeop),
+with(node,op(nodeop)),
+(equiv)(node),
+not(and(with(node,kid(n,nkid)),
+kid(n,not((same)(nkid))))))),
+(same)(node);
+\end{verbatim}
+
+The parameterized version of sametree is invoked as
+\begin{verbatim}
+sametree(node, equiv)
+\end{verbatim}
+which holds iff node is a reference to an AST node with
+the same tree structure as the current node and, for
+every descendant n of node, the corresponding node in
+the current tree satisfies \verb|equiv(n);| this predicate is defined in Figure
+\ref{crewfig7}. This definition demonstrates the use
+of import lists, both to define a recursive anonymous
+predicate, and to make equiv available at once to all
+evaluations of that predicate. Given that definition,
+the following
+\begin{verbatim}
+sametree(node,
+FN((n) <- if(aconst(c),
+ with(n, aconst(c)),
+  and());))
+\end{verbatim}
+would then test whether the current tree has the same
+structure as underneath node and such that all corresponding
+constants are the same.
+
+\subsecly{Figure 8: Embedded Query State Primitives}\label{crewfig8}
+
+\begin{description}
+\item[query(fterm; query-pred)]\ \\
+The embedded query state object created from fterm satisfies query-pred.
+\item[qnext(pred; thisquery-pred; nextquery-pred)]\ \\
+If the current embedded query state is a failure, pred is true, otherwise the
+current object satisfies this query-pred and, after the embedded query is
+advanced to the next hit or to failure, the resulting query state satisfies
+nextquery-pred.
+\item[qget(object-pred;::: )]\ \\
+Each object-pred matches the ob ject bound to the corresponding variable in the
+head of the embedded query corresponding to the current query state object.
+An error will be raised if the embedded query has failed or if any head variable
+is not bound to an object.
+\end{description}
+
+\secrel{Queries as Objects}
+
+Sometimes one wishes to build a collection or some other kind of aggregate of
+all ob jects found by a query. Unfortunately, when backtracking to get to the
+next hit, information about the previous hit will generally be lost. One
+solution is to rewrite the query into a conjunctive form, as we did in the
+previous section converting writing flatten as a conjunctive version of somenode
+(see Figure \ref{crewfig5}). We can already see that even in simple cases this
+process can be non-trivial and is not readily generalized.
+
+It may also be the case for some conjunctive queries
+that they require memory proportional to the size of
+the data structure being searched, instead of merely
+memory proportional to the depth of the data structure.
+Judicious use of if() | astlog's moral equivalent
+of the cut operator | can avoid this, but this is
+sometimes cumbersome to get right.
+
+As it happens, Prolog provides a number of setpredicates for accumulating query
+results. For example,
+\begin{verbatim}
+bagof(x, term, list)
+\end{verbatim}
+binds list to a list of the bindings of x corresponding to each instance where
+term holds true. Unfortunately, this is usually implemented in terms of assert
+and retract, meaning we would have to abandon the idea
+of keeping our script small and fixed. Even just adding
+this as a new primitive is dubious if we have to add,
+say, another new primitive to merely count query hits,
+and yet more new primitives for each accumulation
+method anyone dreams up.
+
+The key observation is that the execution model of
+astlog allows for the possibility of treating some subset
+of its own internal structures as ``external'' objects
+which can then serve as the current ob ject of various
+kinds of queries. To be sure, some care needs to be exercised,
+since the internal structures of astlog are not
+static the way the program asts are. We can however,
+take a query whose hits we wish to accumulate, and
+encapsulate its state after a given hit as an astlog
+ob ject. Such an embedded query in a given state can
+now be the current ob ject for the evaluation of some
+other predicate term. We thus only need to provide
+suitable primitive predicates applicable to query-state
+ob jects that may be used in such a term. Figure \ref{crewfig8} lists
+these primitives.
+
+\subsecly{Figure 9: Query Accumulators qcount and qlist}\label{crewfig9}
+
+\begin{verbatim}
+qcount(n) <- qcount(0, n);
+qcount(sofar, return)
+<- qnext(unify(sofar, return),
+with(sofar, minus(sofarp1,1)),
+qcount(sofarp1, return));
+qlist(lst)
+<- qnext(unify(lst, []),
+qget(first(lst,rest)),
+qlist(rest));
+// utilities
+first([o|rest],rest) <- o;
+unify(x,x);
+\end{verbatim}
+
+Using this mechanism, it is then possible to define
+a wide variety of accumulators of query results. Given
+an ast node, and a query to see if there exists a descendant
+satisfying \verb|test(x)|
+\begin{verbatim}
+() <- somenode(test(x));
+\end{verbatim}
+the corresponding query to count the number of descendants
+satisfying test(x) would be
+\begin{verbatim}
+(n) <- query(FN(() <- somenode(test(x)); ),
+ qcount(n));
+\end{verbatim}
+where qcount/1 is defined as in Figure \ref{crewfig9}. Evaluating the
+\verb|query()| term starts an embedded query corresponding to the first operand
+and builds a query state ob ject representing the resulting first state (first
+hit or failure). This ob ject then becomes the current object to which we try to
+match qcount(n). It is the qnext() term therein that does the actual work. If
+the query-state is a success state, we increment the count of hits thus far
+(sofar), advance the embedded query, and recursively try to match a qcount term
+to the new state. If the query-state is a failure, we unify the count of hits
+thus far with the return variable.
+
+To build a list of bindings for x corresponding to the
+query hits, we can do
+\begin{verbatim}
+(list) <- query(FN((x) <- somenode(test(x)); ),
+ qlist(list));
+\end{verbatim}
+which is essentially the same as before except that now
+qlist(list) uses qget to examine the query state.
+Since the embedded query has only one head variable
+x, the qget term must likewise have at most one
+operand.
+
+Some care is required when using embedded queries
+to phrase them so that the head variables will always
+be bound to ob jects. qget() will in fact raise an error
+if a head variable is not bound to an ob ject. This
+requirement is crucial since, with a non-ob ject term,
+there is no guarantee that said term will remain intact
+when the embedded query backtracks to the next
+state. Better to keep terms constructed by an embedded
+query from polluting the outer world.
+
+The mechanism is also somewhat impure in that
+evaluating a qnext on a given query state ob ject essentially
+destroys that ob ject. Subsequent attempts to
+match additional terms against that query state will
+raise an error since the state of a query is lost once we
+advance it.
 
 \secup %3
+
+\secrel{Implementation}
+
+astlog has been implemented as an interpreter in roughly 11,000 lines of \cpp\
+for the core astlog interpreter and supporting utilities. Another 1100 lines
+define the roughly 60 primitives and supporting structures to invoke the various
+functions of the AST library. Coverage of the library API is in not entirely
+complete, but it is sufficient to perform various interesting tasks:
+
+\begin{itemize}
+  \item 
+Finding all instances of a simple assignment expression (=) occurring in any
+boolean context, for example,
+\begin{verbatim}
+if ((major == SORTM)
+|| (major == MEMORYM)
+|| ((major == BUFFERM)
+&& (minor = B_NOIO)))
+\end{verbatim}
+  \item 
+Finding all instances of an equality-test (==) or dereference expression
+occurring in any void context (i. e., where results are discarded); the converse
+to the previous problem.
+  \item 
+Finding all case statement fall-throughs, i. e.,
+where the preceding statement is not a break. 
+  \item 
+Finding various patterns of irreducible control-
+ow in functions. 
+  \item 
+Obtaining all static call-graph edges. 
+  \item 
+Computing the McCabe cyclomatic complexity \cite{McC76} of a function. Our code
+to do so looks like
+\begin{verbatim}
+mccabe(n) <- query(
+FN(()<- somenode(
+op(or(#IF,#FOR,#DO,
+#WHILE,#CASE,
+#?,#||,#&&)));)
+qcount(minus(n,1))
+);
+\end{verbatim}
+which might be compared with the 17-line version in Aria \cite{DR96}.
+Admittedly, fairness would probably entail including the definitions of somenode
+and qcount as well.
+  \item 
+Finding gaps (unused space due to alignment rules) in structure definitions;
+this is a matter of traversing \ci\ type structures rather than asts.
+\end{itemize}
+
+A typical running time (on a 200MHz Pentium P6 with
+64meg of RAM) for a one-pass search that evaluates
+a simple predicate on every ast node in Microsoft
+\prog{SQLserver} (roughly 450,000 lines, 4300 functions) is
+roughly 10 minutes, of which 7.5 minutes are taken up
+by the ast library building the actual trees. For Microsoft
+Word (roughly 2,000,000 lines) the corresponding
+times are 45-60 minutes of which about 30 minutes
+is taken up by the tree builder.
+
+Though this dreadfully slow in comparison with
+grep, these times are arguably acceptable in comparison
+with the times taken by the actual compiler |
+what one might expect for a tool that requires the use
+of compiler's data structures. One is, of course, free
+to write arbitrarily non-linear programs in astlog, so
+there are no guarantees. In any case we would doubtless
+see a certain amount of speedup if we actually were
+to attempt some kind of compilation of the astlog
+code.
+
+\secrel{Conclusions and Future Work}
+
+We have described a language for doing syntax-level
+analysis for C/C++ programs, though the core language
+is, in fact, adaptable to many other kinds of
+structures. As with previous such tools, the utility
+to users who are thus no longer required to write
+their own parse/semantic-analysis phase is apparent.
+The contribution here is a pattern language sufficiently
+powerful to provide traversal possibilites beyond what
+is naturally available in prior awk-like frameworks
+while avoiding some of the ineficiencies of importing
+the entire program structure into a logical inference
+engine. The Pan work \cite{BGV90} stressed the need to
+partition code and data; this we have done in a rather
+straightforward way. The surprise is that the \prolog\
+with-an-ambient-current-object model turns out to be
+so well suited to analyzing treelike structures.
+
+To be sure, there are various rough edges:
+
+\begin{enumerate}
+  \item 
+As already noted, embedded queries are slightly
+unsafe; there may exist a more robust set of primitives
+to use. Some form of type inference to detect
+unsafe uses of qnext may also be worth considering.
+More generally, there is the issue of typing
+of astlog expressions to reduce the incidence of
+unbound variables or ob jects of the wrong type
+appearing as operands where ob ject-references of
+a particular type are required.
+
+\item
+Occasionally, we run up against the generally
+cumbersome nature of arithmetic in Prolog, which
+is arguably worse in astlog. The ``inside-out
+functional'' nature of astlog may be good for
+ast patterns, but it can make arithmetic operations
+like
+\begin{verbatim}
+with(n; divide(minus(x; 1); 2))
+\end{verbatim}
+downright unreadable. Algebraic syntax could help, e. g.,
+\begin{verbatim}
+with(n; (x - 1)=2) 
+\end{verbatim}
+but even so, one must stare at this pretty hard to
+realize that n is being multiplied by 2 and then
+incremented by 1.
+
+One possibility is to complicate the language by
+introducing actual ``forward'' functional operator
+definitions. For example, with such forward operators
+for addition and multiplication, one could
+then write
+\begin{verbatim}
+with(2  n + 1; x)
+\end{verbatim}
+where the appearance of the + (plus) term in
+a slot normally requiring an ob ject reference in- vokes the forward
+return-value-to-context definition of the operator + to sum its operands
+rather than the usual ``backward'' return-valueto-operand
+definition (see Figure 2) in which one
+operand is treated as a predicate.
+
+\item
+Though there is a surprising amount of mileage to
+be had via instantiating terms with unbound variables
+in them, there are those occasions when a
+genuinely mutable data structure is required. Fortunately,
+given the strong partition between the
+script/database and the ob jects, having mutable
+ob jects exist and primitives that side-effect them
+when they match would not disrupt astlog's execution
+model.
+
+\item
+Currently, new primitives need to be manually
+written. Given the current collection of macros
+available, this is not actually an arduous task.
+Still, while language-independence was not one
+of our priorities, given that the core language is
+rather language-independent anyway, one would
+hope for a more automatic means of adapting
+astlog to work with other language parsers, perhaps
+by adapting GENII \cite{Dev92} or some similar
+tool to generate code for the basic primitive predicate
+operators for a fresh language.
+ 
+\end{enumerate}
+
+\secrel{Acknowledgements}
+
+ASTLOG would not have been possible without the existence
+of an ast library for C/C++ implemented by
+the members of Program Analysis group at Microsoft
+Research, particularly Linda O'Gara, David Gay, Erik
+Ruf and Bjarne Steensgaarde. I would also like to
+thank Bruce Duba, Michael Ernst, Chris Ramming,
+and the conference reviewers for much useful commentary
+and discussion.
+
+\secly{References}
+
+\begin{description}
+\item[AKW86] A. V. Aho, B. W. Kernighan, and P. J.
+Weinberger. The AWK Programming Language.
+Addison Wesley, Reading, MA,
+1986.
+\item[BCD88] P. Borras, D. Clement, Th. Despeyroux,
+J. Incerpi, G. Kahn, B. Lang, and V. Pascual.
+Centaur: The system. In Proceedings
+of the SIGSOFT/SIGPLAN Software
+Engineering Symposium on Practical Software
+Development Environments, Boston,
+MA, 1988.
+\item[BGV90] Robert A. Ballance, Susan L. Graham,
+and Michael L. Van De Vanter. The
+pan language-based editing system for integrated
+development environments. In Proceedings
+of the 4th ACM SIGSOFT Symposium
+on Software Development Environments,
+pages 77..93, Irvine, CA, 1990.
+\item[CMR92] Mariano Consens, Alberto Mendelzon, and
+Arthur Ryman. Visualizing and querying
+software structures. In Proceedings of the
+Fourteenth International ACM Conference
+on Software Engineering, pages 138..156,
+1992.
+\item[Dev92] Premkumar T. Devanbu. Genoa - a
+customizable, language-and-front-end independent
+code analyzer. In Proceedings of
+the Fourteenth International ACM Conference
+on Software Engineering, pages 307..319. ACM Press, 1992.
+\item[DR96] Premkumar T. Devanbu and David S.
+Rosenblum. Generating testing and analysis
+tools with aria. ACM Transactions
+on Software Engineering and Methodology, 5(1):42..62, January 1996.
+\item[GA96] William G. Griswold and Darren C. Atkinson.
+Fast, exible syntactic pattern matching
+and processing. In Proceedings of the
+IEEE Workshop on Program Comprehension.
+ACM Press, 1996.
+\item[LR95] David A. Ladd and J. Christopher Ramming.
+A*: A language for implementing
+language processors. IEEE Transactions
+on Software Engineering, 21(11):894..901,
+November 1995.
+\item[McC76] T. McCabe. A complexity measure.
+IEEE Transactions on Software Engineering,
+2(4):308..320, December 1976.
+\item[SS86] Leon Sterling and Ehud Shapiro. The Art
+of Prolog: Advanced Programming Techniques.
+MIT Press series in logic programming.
+The MIT Press, Cambridge, MA,
+1986.
+\end{description}
+
+\secly{Appendix}
+
+For those who would prefer to see a slightly more formal
+description, we include a brief outline of an operational
+semantics for astlog in Figure 10, one that
+bears some resemblance to the actual implementation.
+
+For any given term that is not an ob ject reference,
+one may imagine there being numerous instances of
+that term in existence at any given time. We differentiate
+the various instances by assigning each a unique
+frame identifier (f ) which is only significant for its
+identity. A variable v occurring within a given term t
+may, for a particular instance hf ; \verb|[[t]]i| of that term,
+be bound to some ob ject o or other term instance
+\verb|hf 0 ; [[t|
+\verb|0 ]]i|, this being indicated by having a binding,
+i.e., one of \verb|hf ; [[v]]i fi o or hf ; [[v]]ifihf 0 ; [[t|
+\verb|0 ]]i| present
+in the current binding stack, which in turn is nothing
+more than a list of bindings. The semantic function
+\verb|vlookup(B ; hf ; [[t]]i)| returns
+\begin{itemize}
+  \item 
+\verb| hf ; [[t]]i| itself if t is not a variable. 
+  \item 
+ ? if the variable t is not bound in B. 
+  \item 
+ o if hf ; \verb|[[t]]i | o is in B
+  \item 
+ \verb|vlookup(B ; hf 0 ; [[t|
+\verb|0 ]]i) if hf ; [[t]]iffhf 0 ; [[t|
+\verb|0]]i | is in B.
+ \end{itemize}
+ 
+ At any given time, the full state of our abstract machine
+is described by a failure of the form B ` C :: F
+which consists of
+
+\begin{itemize}
+  \item the current binding stack B,
+  \item the current continuation C = (o; f ; g; C0), which
+in turn consists of a current ob ject o, a current
+frame identifier f , a current goal, usually a term,
+but this can also be one of the auxiliary goals
+``apply(\ldots)'' or ``cut(\ldots),'' and finally another
+continuation C0 to which we advance if the goal
+succeeds
+\item the next failure F , to which we advance if the
+current goal fails.
+\end{itemize}
+
+Note that unlike the case where the goal succeeds, failure
+may involve undoing one or more bindings; thus,
+a failure (F ) contains its own binding stack (a subset
+of B) whereas the continuations (C, C0) do not.
+
+The bottom half of Figure 10 (partially) defines a
+transition relation between states of the abstract machine.
+Given an initial current ob ject o and a query
+[[query]] with n head variables, we take the initial state
+to be
+
+\verb|F0 = [] ` (o; f0; apply(f0; [[query]]; [[v1;:::; vn]]); yes) :: no|
+If there is a sequence of transitions
+\verb|F0 !|
+\verb|B1 ` yes :: F\verb|
+then we have a hit and the various query head bindings
+are available as vlookup(B1; hf0; [[vi ]]i) for i = 1 :::n. Likewise, if
+Fk !
+Bk ` yes :: Fk+1
+then we havea(k + 1)th hit.
+
+When we havea(k + 1)th hit.
+The semantic function
+mgu(B; f; [[t1;:::;tn]]; f 0 ; [[t
+01;:::;t0n]])
+returns an augmented binding stack that includes B
+together with those additional bindings that make up
+the most general unifier of the respective term instances
+hf ; [[t1]]i with hf 0 ; [[t
+01]]i, etc::: . If there is no
+most general unifier, mgu() returns ufail.
+
+In the actual implementation, because the script is
+unified, we may precompute at load time mgus of all
+pairs of same-operator-and-arity compound terms occurring
+in the script, making clause invocation no more
+expensive than a function call in many cases. We also
+omit the ``occurs check'' [SS86] for the run-time portion
+of unification (i.e., where we're transitively following
+variable bindings), with the usual increase in
+speed and infinite-loop risk. Thus far, unification has
+played a somewhat smaller role in astlog scripts than
+expected, so there's some question whether we need to
+be doing even this much.
+
+As noted above ob jects only unify with equal objects.
+The idea of allowing an ob ject to unify with
+a compound predicate term that matches it has been
+considered, but rejected due to the significant complications
+it would introduce. Also, once one has subgoals
+being attempted during the course of unification, the
+user's control over evaluation order is drastically reduced,
+something to be avoided if one is interested in
+having users being able to write efficient scripts.
+
+\subsecly{Figure 10: Outline of astlog Operational Semantics}\label{crewfig10}
 
 \secup %crew
