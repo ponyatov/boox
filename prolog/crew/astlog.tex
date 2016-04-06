@@ -1164,28 +1164,28 @@ If there is a sequence of transitions
 \verb|F0 !|
 \verb|B1 ` yes :: F\verb|
 then we have a hit and the various query head bindings
-are available as vlookup(B1; hf0; [[vi ]]i) for i = 1 :::n. Likewise, if
-Fk !
-Bk ` yes :: Fk+1
-then we havea(k + 1)th hit.
+are available as \verb|vlookup(B1; hf0; [[vi ]]i) for i = 1 :::n.| Likewise, if
+\verb|Fk !|
+\verb|Bk ` yes :: Fk+1|
+then we have a |(k + 1)th| hit.
 
-When we havea(k + 1)th hit.
+When we have \verb|a(k + 1)th| hit.
 The semantic function
-mgu(B; f; [[t1;:::;tn]]; f 0 ; [[t
-01;:::;t0n]])
+\verb|mgu(B; f; [[t1;:::;tn]]; f 0 ; [[t\verb|
+\verb|01;:::;t0n]])|
 returns an augmented binding stack that includes B
 together with those additional bindings that make up
 the most general unifier of the respective term instances
-hf ; [[t1]]i with hf 0 ; [[t
-01]]i, etc::: . If there is no
-most general unifier, mgu() returns ufail.
+\verb|hf ; [[t1]]i with hf 0 ; [[t|
+\verb|01]]i, etc:::| . If there is no
+most general unifier, \verb|mgu()| returns \verb|ufail|.
 
 In the actual implementation, because the script is
 unified, we may precompute at load time mgus of all
 pairs of same-operator-and-arity compound terms occurring
 in the script, making clause invocation no more
 expensive than a function call in many cases. We also
-omit the ``occurs check'' [SS86] for the run-time portion
+omit the ``occurs check'' \cite{SS86} for the run-time portion
 of unification (i.e., where we're transitively following
 variable bindings), with the usual increase in
 speed and infinite-loop risk. Thus far, unification has
