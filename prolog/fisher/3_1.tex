@@ -54,3 +54,139 @@
 дерева вывода, то находится ответ, и возвраается резщультат \verb|true|. В этой
 точке привязки переменных могут быть использованы для дачи ответа на
 оригинальный запрос.
+
+\subsecly{Унификация термов \prolog а}
+
+Prolog unification matches two Prolog terms T1 and T2 by finding a substitution
+of variables mapping M such that if M is applied T1 and M is applied to T2 then
+the results are equal.
+
+For example, Prolog uses unification in order to satisfy equations (T1=T2) ...
+
+\begin{verbatim}
+?- p(X,f(Y),a) = p(a,f(a),Y).
+X = a  Y = a
+
+?- p(X,f(Y),a) = p(a,f(b),Y).
+No
+\end{verbatim}
+
+In the first case the successful substituton is \verb|{X/a, Y/b}|, and for the
+second example there is no substitution that would result in equal terms. In
+some cases the unification does not bind variables to ground terms but result in
+variables sharing references \ldots
+
+\begin{verbatim}
+?- p(X,f(Y),a) = p(Z,f(b),a).
+X = _G182   Y = b   Z = _G182 
+\end{verbatim}
+
+In this case the unifying substitution is \verb|{X/_G182, Y/b, Z/_G182}|, and X
+and Z share reference, as can be illustrated by the next goal ...
+
+\begin{verbatim}
+?- p(X,f(Y),a) = p(Z,f(b),a), X is d.
+X = d   Y = b   Z = d 
+\end{verbatim}
+
+\verb|{X/_G182, Y/b, Z/_G182}| was the most general unifying substitution for
+the previous goal, and the instance \verb|{X/d, Y/b, Z/d}| is specialized to
+satisfy the last goal.
+
+Prolog does not perform an occurs check when binding a variable to another term,
+in case the other term might also contain the variable. For example (SWI-Prolog)
+...
+
+\begin{verbatim}
+?- X=f(X).
+X = f(**)
+\end{verbatim}
+
+The circular reference is flagged (**) in this example, but the goal does
+succeed \verb|{X/f(f(f(...)))}|. However ...
+
+\begin{verbatim}
+?- X=f(X), X=a.
+No
+\end{verbatim}
+
+The circular reference is checked by the binding, so the goal fails. "a canNOT
+be unified with \verb|f(_Anything)"| ...
+
+\begin{verbatim}
+?- a \=f(_).
+Yes
+\end{verbatim}
+
+Some Prologs have an occurs-check version of unification available for use. For
+example, in SWI-Prolog ...
+
+\begin{verbatim}
+?- unify_with_occurs_check(X,f(X)).
+No
+\end{verbatim}
+
+The Prolog goal satisfation algoritm, which attempts to unify the current goal
+with the head of a program clause, uses an instance form of the clause which
+does not share any of the variables in the goal. Thus the occurs-check is not
+needed for that.
+
+The only possibility for an occurs-check error will arise from the processing of
+Prolog terms (in user programs) that have unintended circular reference of
+variables which the programmer believes should lead to failed goals when they
+occur . Some Prologs might succeed on these circular bindings, some might fail,
+others may actually continue to record the bindings in an infinite loop, and
+thus generate a run-time error (out of memory). These rare situations need
+careful programming.
+
+It is possible to mimic the general unification algorithm in Prolog. But here we
+present a specialized version of unification, whose computational complexity is
+linear in the size of the input terms, and simply matches terms left-to-right.
+The match(+GeneralTerm,+GroundedTerm) predicate attempts to match its first
+argument (which may contain variables) against its second argument (which must
+be grounded). This little program should be considered just as an illustration,
+or a programming exercise, although we do know of cogent applications for the LR
+matching algorithm in situations where general unification in not needed. We
+would not use match, however, in a Prolog application because built-in
+unification would be so much faster; we would simply have to ensure that the
+presuppositions for match are appropriately checked when built-in unification is
+used. The reference Apt and Etalle (1993) discusses the question in general
+regarding how much of general unification is actually NOT needed by Prolog.
+
+\begin{verbatim}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% match(U,V) : 
+%%   U may contain variables
+%%   V must be ground
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% match a variable with a ground term
+match(U,V) :- 
+   var(U), 
+   ground(V),
+   U = V.  % U assigned value V
+
+% match grounded terms
+match(U,V) :- 
+   ground(U), 
+   ground(V),
+   U == V.
+
+% match compound terms
+match(U,V) :- 
+   \+var(U), 
+   ground(V),
+   functor(U,Functor,Arity),
+   functor(V,Functor,Arity),
+   matchargs(U,V,1,Arity).
+
+% match arguments, left-to-right
+matchargs(_,_,N,Arity) :- 
+   N > Arity.
+matchargs(U,V,N,Arity) :- 
+   N =< Arity,
+   arg(N,U,ArgU),
+   arg(N,V,ArgV), 
+   match(ArgU,ArgV), 
+   N1 is N+1, 
+   matchargs(U,V,N1,Arity).
+\end{verbatim}

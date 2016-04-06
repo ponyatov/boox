@@ -21,6 +21,7 @@ TEX += prolog/fisher/2_4.tex
 TEX += prolog/fisher/3_1.tex 
 TEX += prolog/fisher/3_1.pl prolog/fisher/3_1.trace
 TEX += prolog/fisher/f3_1_1.png prolog/fisher/f3_1_2.png
+TEX += prolog/fisher/3_2.tex 
 
 TEX += prolog/warren/warren.tex prolog/warren/intro.tex 
 TEX += prolog/warren/unification.tex
