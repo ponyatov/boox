@@ -4,3 +4,102 @@ The Prolog \termdef{cut}{cut} predicate, or \verb'!', eliminates choices is a
 Prolog derivation tree. To illustrate, first consider a cut in a goal. For
 example, consider goal \verb|?-p(X),!.| for the program P used in section
 \ref{fish31}.
+
+\begin{framed}
+The cut goal succeeds whenever it is the current goal, AND the derivation tree
+is trimmed of all other choices on the way back to and including the point in
+the derivation tree where the cut was introduced into the sequence of goals.
+\end{framed}
+
+For the previous derivation tree, this means that the branches labeled \#2 and
+\#3 are eliminated, and hence the entire subtrees below these two edges are also
+cut off. This then corresponds to only producing the first answer X=a:
+
+\begin{verbatim}
+?- p(X),!. 
+X=a ; 
+no 
+\end{verbatim}
+
+Here we tried to get Prolog to find some more answers using ';' but they have
+already been cut off. Consider also:
+
+\begin{verbatim}
+?- r(X),!,s(Y). 
+X=a Y=a ; 
+X=a Y=b ; 
+X=a Y=c ; 
+no 
+\end{verbatim}
+
+Note that there is no backtracking into that first goal. Also,
+\begin{verbatim}
+?- r(X), s(Y), !. 
+X=a Y=a ; 
+no
+\end{verbatim}
+as expected.
+
+Suppose that a cut occurs in the body of the program. The cut rule (above) still
+applies when the cut appears as a called subgoal. The cut is used in the body of
+a given clause so as to avoid using clauses appearing after the given clause in
+the program. To illustrate, consider the following program:
+
+\begin{verbatim}
+part(a). part(b). part(c). 
+red(a). black(b). 
+color(P,red) :- red(P),!. 
+color(P,black) :- black(P),!. 
+color(P,unknown).
+\end{verbatim}
+
+The intention is to determine a color for a part based upon specific stored
+information, or else conclude that the color is 'unknown' otherwise.
+
+A derivation tree for goal \verb|?- color(a,C)| is
+
+\fig{}{prolog/fisher/f3_2_1.png}{width=0.7\textwidth}
+
+which corresponds with
+
+\begin{verbatim}
+?- color(a,C). 
+C = red 
+\end{verbatim}
+
+and a derivation tree for goal \verb|?- color(c,C)| is
+
+\fig{}{prolog/fisher/f3_2_2.png}{width=0.95\textwidth}
+
+which corresponds with
+
+\begin{verbatim}
+?- color(c,C). 
+C = unknown 
+\end{verbatim}
+
+The Prolog cut is a procedural device for controlling goal satisfaction. The use
+of cut affects the meanings of programs. For example, in the 'color' program,
+the following program clause tree says that 'color(a,unknown)' should be a
+consequence of the program:
+
+\fig{}{prolog/fisher/f3_2_3.png}{width=0.3\textwidth}
+
+\begin{verbatim}
+\end{verbatim}
+
+\begin{verbatim}
+\end{verbatim}
+
+\begin{verbatim}
+\end{verbatim}
+
+\begin{verbatim}
+\end{verbatim}
+
+\begin{verbatim}
+\end{verbatim}
+
+\begin{verbatim}
+\end{verbatim}
+
