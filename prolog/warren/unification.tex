@@ -1,18 +1,20 @@
 \secrel{2 Унификация\ --- ясно и просто 9}\label{warren2}\secdown
 
-Recall that a (first-order) term is either a \termdef{variable}{variable}\
-(denoted by a capitalized identifier), a \termdef{constant}{constant} (denoted
-by an identifier starting with a lower-case letter) or a
-\termdef{structure}{structure} of the form $f(t_1,\ldots,t_n)$ where $f$ is a
-symbol called a \termdef{functor}{fucntor} (denoted as a constant), and the
-$t_i$’s are first-order terms\ --- the term’s \termdef{subterms}{subterm}. The
-number of subterms for a given functor symbol is predetermined and called its
-\termdef{arity}{functor arity}. In order to allow a symbol to be used with
-possibly different arities, we shall use the explicit notation $f/n$ when
-referring to the functor consisting of the symbol $f$ and arity $n$. Hence, two
-functors are equal if and only if they have the same symbol \emph{and} arity.
-Letting $n=0$, a constant is seen as a special case of a structure. Thus, a
-constant $c$ will be designated as the functor $c/0$.
+Напомним что терм (первого порядка)\ ---
+\termdef{переменная}{\prolog!переменная} (задается большой буквой в начале
+имени), \termdef{константа}{\prolog!константа} (задается маленькой буквой в
+начале имени) или \termdef{терм}{\prolog!терм}\ --- структура вида
+$f(t_1,\ldots,t_n)$, где $f$ символ называемый
+\termdef{функтором}{\prolog|функтор} (записывается аналогично константе, с
+маленькой буквы), а элементы $t_i$ тоже термы первого порядка\ ---
+\termdef{субтермы}{\prolog!субтерм}. Число субтермов для данного функтора
+предопределено, и называется \termdef{\'{а}рностью}{\prolog!арность} функтора.
+Для обеспечения возможности использовать один и тот же символ с разной арностью,
+мы должны использовать запись $f/n$, что обозначает функтор $f$ с арностью $n$.
+Таким образом, два функтора равны только в том случае, если они имеют
+\emph{одинаковые символ $f$ и арность $n$}. Разрешая случай $n=0$ можно
+рассматривать константу как особый случай терма: константе $c$ соответствует
+функтор $c/0$ с нулевой арностью.
 
 We consider here $\mathcal L_0$, a very simple language indeed. In this
 language, one can specify only two sorts of entities: a \termdef{program
