@@ -31,8 +31,8 @@ TEX += prolog/warren/unification.tex
 TEX += prolog/warren/resolution.tex prolog/warren/prolog.tex
 TEX += prolog/warren/design.tex prolog/warren/conclusion.tex
 TEX += prolog/warren/appendixA.tex prolog/warren/appendixB.tex
-TEX += prolog/warren/termrepr.tex
-TEX += prolog/warren/fig21.pdf
+TEX += prolog/warren/termrepr.tex prolog/warren/fig21.pdf
+TEX += prolog/warren/compiling.tex
 
 TEX += prolog/crew/astlog.tex prolog/crew/follow.pl
 
