@@ -1,4 +1,4 @@
-\secrel{2 Унификация\ --- ясно и просто 9}\label{warren2}\secdown
+\secrel{Унификация\ --- ясно и просто}\label{warren2}\secdown
 
 Напомним что терм (первого порядка)\ ---
 \termdef{переменная}{\prolog!переменная} (задается большой буквой в начале
@@ -16,28 +16,28 @@ $f(t_1,\ldots,t_n)$, где $f$ символ называемый
 рассматривать константу как особый случай терма: константе $c$ соответствует
 функтор $c/0$ с нулевой арностью.
 
-We consider here $\mathcal L_0$, a very simple language indeed. In this
-language, one can specify only two sorts of entities: a \termdef{program
-term}{program term} and a \termdef{query term}{query term}.
-Both program and query are first-order terms but not variables. The semantics of
-$\mathcal L_0$ is simply tantamount to computing the most general unifier of the
-program and the query. As for syntax, $\mathcal L_0$ will denote a program as
-\verb|t| and a query as \verb$?-t$ where \verb$t$ is a term. The scope of
-variables is limited to a program (resp., a query) term. Thus, the meaning of a
-program (resp., a query) is independent of its variables’ names. An interpreter
-for $\mathcal L_0$ will dispose of some data representation for terms and use a
-unification algorithm for its operational semantics. We next describe $\mathcal
-M_0 = (\mathcal D_0,\mathcal I_0)$ , an abstract machine design for $\mathcal
-L_0$ consisting of a data representation $\mathcal D_0$ acted upon by a set
-$\mathcal I_0$ of machine instructions.
+Мы рассмотрим очень простой низкоуровневый\note{IL\--- Intermediate Language}\
+язык $\mathcal L_0$. На этом языке мы можем описать два вида объектов:
+\termdef{терм программы}{\prolog!терм программы} и \termdef{терм
+запроса}{\prolog!терм запроса}. Оба этих вида запросов являются термами первого
+порядка, но не переменными. Семантика $\mathcal L_0$ равносильна вычислению
+самого общего унификатора программы или запроса. Что касается синтаксиса,
+$\mathcal L_0$ будет описывать программу как \verb|t| и запрос как \verb$?-t$
+где \verb$t$ является термом. Область видимости переменных ограничена термом
+программы/запроса. Таким образом, \emph{значение программы не зависит от имен ее
+переменных}. Интерпретатор для $\mathcal L_0$ будет использовать определенное
+представление данных для термов и использовать алгоритм унификации для ее
+операционной семантики. Затем мы опишем $\mathcal M_0 = (\mathcal D_0,\mathcal
+I_0)$ , дизайн абстрактной машины для $\mathcal L_0$ содержащий представление
+данных $\mathcal D_0$, над которыми выполняется множество $\mathcal I_0$
+машинных инструкций.
 
-The idea is quite simple: having defined a program term $p$, one can submit any
-query \verb|?-q| and execution either fails if $p$ and $q$ do not unify, or
-succeeds with a binding of the variables in $q$ obtained by unifying it with
-$p$.
+Идея достаточно проста: имея определенных программный терм $p$, мы можем
+выполнить лююбой запрос \verb|?-q|, и выполнение запроса завершится с ошибкой
+если $p$ и $q$ не унифицируются, или будет успешным с привязкой переменных
+в $q$ полученной при унификации запроса с $p$.
 
-\secrel{2.1 Term representation . . . . . . . . . . . . . . . . . . . . . . . .
-. 10 }
+\input{prolog/warren/termrepr}
 
 \secrel{2.2 Compiling L
 queries . . . . . . . . . . . . . . . . . . . . . . . . 11}
