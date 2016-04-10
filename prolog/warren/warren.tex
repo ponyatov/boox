@@ -105,9 +105,21 @@ Hassan A\"it-Kaci. Эту книгу приятно читать. Она объ�
 \file{hpp.hpp}\ и \file{cpp.cpp} разделены на отдельные небольшие фрагменты в
 каталогах \dir{hpp/} и \dir{cpp/}. Файл сборки \file{prolog/warren/Makefile}
 содержит не только  
-\lst{запуск программы и генерация
+\lst{\file{Makefile}: запуск программы и генерация
 \file{log.log}}{prolog/warren/mk/exec.mk}{make}
-\lst{типовой блок компиляции \cpp\ программы}{prolog/warren/mk/cpprog.mk}{make}
+\lst{\file{Makefile}: типовой блок компиляции \cpp\
+программы}{prolog/warren/mk/cpprog.mk}{make}
+но и скрипты склейки файлов исходников из частей в каталогах \dir{hpp/}
+\dir{cpp/} \dir{mk/}.
+
+\lst{\file{hpp.hpp}}{prolog/warren/hpp/head.hpp}{C++}
+\lst{\file{hpp.hpp}: типовые \#include}{prolog/warren/hpp/stdinc.hpp}{C++}
+\lst{\file{hpp.hpp}: базовый класс для
+структур WAM}{prolog/warren/hpp/wam.hpp}{C++}
+\lst{\file{hpp.hpp}}{prolog/warren/hpp/foot.hpp}{C++}
+
+\lst{\file{cpp.cpp}}{prolog/warren/cpp/main.cpp}{C++}
+
 
 \input{prolog/warren/intro}
 \input{prolog/warren/unification.tex}
