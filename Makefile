@@ -115,8 +115,12 @@ prolog/warren/hpp.hpp: prolog/warren/hpp/*.hpp
 	cd prolog/warren ; make hpp.hpp
 prolog/warren/cpp.cpp: prolog/warren/cpp/*.cpp
 	cd prolog/warren ; make cpp.cpp
-prolog/warren/Makefile: prolog/warren/mk/*.mk
+prolog/warren/Makefile: \
+	prolog/warren/mk/exec.mk prolog/warren/mk/cpprog.mk \
+	prolog/warren/mk/*.mk
 	cd prolog/warren ; make Makefile
+prolog/warren/mk/%.mk: skelex/mk/%.mk
+	cat $< > $@
 
 parser/%.log: parser/%.src
 	touch $@
