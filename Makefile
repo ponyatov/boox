@@ -34,6 +34,8 @@ TEX += prolog/warren/appendixA.tex prolog/warren/appendixB.tex
 TEX += prolog/warren/termrepr.tex prolog/warren/fig21.pdf
 TEX += prolog/warren/compiling.tex
 
+TEX += prolog/warren/hpp.hpp prolog/warren/cpp.cpp prolog/warren/Makefile
+
 TEX += prolog/crew/astlog.tex prolog/crew/follow.pl
 
 TEX += skelex/skelex.tex skelex/mkproject.rc skelex/bat.bat
@@ -46,9 +48,6 @@ TEX += skelex/hpp/sym.hpp
 TEX += skelex/src/comment.src skelex/src/coretypes.src
 
 TEX += skelex/comment.log skelex/coretypes.log
-
-skelex/%.log: skelex/src/%.src skelex/exe.exe 
-	skelex/exe.exe < $< > $@
 
 TEX += ML/4man.tex
 
@@ -108,6 +107,16 @@ boox.pdf: boox.tex $(TEX) $(SRC) $(FIG) $(MAC) Makefile
 .PHONY: clean
 clean:
 	rm -f *.aux *.out *.toc *.idx *.log *.ind *.ilg	
+	
+skelex/%.log: skelex/src/%.src skelex/exe.exe 
+	skelex/exe.exe < $< > $@
+
+prolog/warren/hpp.hpp: prolog/warren/hpp/*.hpp
+	cd prolog/warren ; make hpp.hpp
+prolog/warren/cpp.cpp: prolog/warren/cpp/*.cpp
+	cd prolog/warren ; make cpp.cpp
+prolog/warren/Makefile: prolog/warren/mk/*.mk
+	cd prolog/warren ; make Makefile
 
 parser/%.log: parser/%.src
 	touch $@
