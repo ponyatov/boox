@@ -35,6 +35,7 @@ TEX += prolog/warren/termrepr.tex prolog/warren/fig21.pdf
 TEX += prolog/warren/compiling.tex
 
 TEX += prolog/warren/hpp.hpp prolog/warren/cpp.cpp prolog/warren/Makefile
+TEX += prolog/warren/ypp.ypp prolog/warren/lpp.lpp prolog/warren/log.log
 
 TEX += prolog/crew/astlog.tex prolog/crew/follow.pl
 
@@ -115,6 +116,12 @@ prolog/warren/hpp.hpp: prolog/warren/hpp/*.hpp
 	cd prolog/warren ; make hpp.hpp
 prolog/warren/cpp.cpp: prolog/warren/cpp/*.cpp
 	cd prolog/warren ; make cpp.cpp
+prolog/warren/ypp.ypp: prolog/warren/ypp/*.ypp
+	cd prolog/warren ; make ypp.ypp
+prolog/warren/lpp.lpp: prolog/warren/lpp/*.lpp
+	cd prolog/warren ; make lpp.lpp
+prolog/warren/log.log: prolog/warren/src.src
+	cd prolog/warren ; make
 prolog/warren/Makefile: \
 	prolog/warren/mk/exec.mk prolog/warren/mk/lexprog.mk \
 	prolog/warren/mk/*.mk

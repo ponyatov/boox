@@ -19,7 +19,7 @@ HPP += hpp/foot.hpp
 hpp.hpp: $(HPP) Makefile
 	cat $(HPP) > $@
 
-CPP = cpp/main.cpp ../../skelex/cpp/error.cpp
+CPP = cpp/main.cpp ../../skelex/cpp/error.cpp cpp/wam.cpp
 cpp.cpp: $(CPP)
 	cat $(CPP) > $@
 
@@ -27,7 +27,7 @@ YPP = ypp/head.ypp ypp/repl.ypp ypp/foot.ypp
 ypp.ypp: $(YPP) Makefile
 	cat $(YPP) > $@
 
-LPP = ../../skelex/lpp/head.lpp lpp/opt.lpp lpp/foot.lpp
+LPP = ../../skelex/lpp/head.lpp lpp/opt.lpp lpp/prolog.lpp lpp/foot.lpp
 lpp.lpp: $(LPP) Makefile
 	cat $(LPP) > $@
 

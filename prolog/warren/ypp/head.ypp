@@ -1,6 +1,6 @@
 %{
 #include "hpp.hpp"
 %}
-%defines %union { WAM*w; }
-%token <w> W
+%defines %union { WAM*o; }
+%token <o> W
 %%
