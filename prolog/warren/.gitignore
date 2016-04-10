@@ -2,3 +2,7 @@ fig*.pdf
 exe.exe
 hpp.hpp
 cpp.cpp
+ypp.ypp
+lpp.lpp
+ypp.tab.?pp
+lex.yy.c

@@ -1,0 +1,6 @@
+%{
+#include "hpp.hpp"
+%}
+%defines %union { WAM*w; }
+%token <w> W
+%%
