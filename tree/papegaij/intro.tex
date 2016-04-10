@@ -22,9 +22,75 @@ outline of this thesis is given in \ref{pape13}.
 
 \secrel{Compiler Construction and Abstract Syntax Trees}\label{pape11}\secdown
 
+A multi-pass compiler performs the compilation of a source file in several
+stages. These stages will be discussed in this section. Compilation starts with
+reading a source file, and recognising the syntax of the input. Next, an
+abstract representation of this input is constructed. This is the abstract
+syntax tree. This AST is used in subsequent phases to perform context checking
+and code generation. More complex compilers might have more phases, such as
+optimisers.
+
+Abstract syntax trees are also commonly used in other disciplines, such as
+communication (eg. a web browser) and source code refactoring in an integrated
+development environment (IDE) \cite{Eclipse2007}. It is also possible that the
+abstract syntax tree is not the result of a parser reading an input file, but
+from speech, or from a graphical programming language. However, the most common
+usage is a compiler, which reads an input language.
+
 \secrel{Lexical Analysis and Parsing}
 
+In the first stage, the lexical analysis, the compiler reads the input file and
+produces a stream of tokens. Every token corresponds to a fragment, or
+construct, found in the input file, such as identifiers, literals, operators and
+keywords. These tokens are fed to a parser, which discovers (and checks) the
+structure of the input.
+
+Writing a lexer (or scanner) and parser by hand is tedious, difficult and error
+prone. Many programs have been developed, which assist the developer in writing
+the lexer and parser. These tools often take a syntax specification in (E)BNF,
+and generate a lexer and parser from this specification. Therefore, these tools
+are commonly called parser generators. Some of these tools are mentioned in
+\ref{pape23}.
+
+Different strategies exist, on how a parser matches the input language, such as
+LALR and recursive descent parsing. However, a discussion of these is beyond the
+scope of this thesis\note{An explanation of various parsing algorithms, such as
+LR(k) and LL(k), can be found in \cite{Aho1986}.}.
+
 \secrel{Construction of the AST}
+
+In a multi-pass compiler, the task of the parser is to record the structure of
+the parsed input in an abstract syntax tree. This tree contains all relevant
+information from the input. What exactly is relevant information, depends on the
+subsequent phases. Normally, tokens, such as comma’s and brackets, are
+discarded. Also, nesting of parser production rules is removed.
+
+AST construction is exemplified with the grammar presented in fragment 1.1.
+This grammar matches simple expressions with addition and multiplication. The
+actual values are represented by numbers and identifiers. Expressions can be
+nested with brackets.
+
+\bigskip
+
+This grammar matches sentences such as ‘1’, ‘1+1’ and ‘(1+a)*b’. The parse
+tree of the sentence ‘3+5*(a+b)’ is given in figure 1.1. This figure shows
+how the complete sentence is matched as an hexpressioni. The hexpressioni
+consists of a htermi, followed by the literal ‘+’, again followed by a htermi.
+The left htermi is a simple hatomi, which in turn is a hnumberi. The right
+htermi consists of two hatomis, separated by a ‘*’. This process is continued
+until all tokens (the bottom line of the figure) are matched.
+
+The parse tree clearly shows the structure of the parsed text, but this
+structure is not very practical to work with. If an interpreter for this grammar
+is needed, a set of four constructs is sufficient: addition, multiplication,
+numbers and identifiers. The node adds the results of the left and right
+operands. This node is created when a ‘’ is matched in hexpressioni. The node
+multiplies the left operand with the right. It is created when a ‘’ is matched
+in htermi. A node is created when a hnumberi is matched, and yields the value of
+the number. Finally, the  node, which is created when an hidentifieri is
+matched, resolves the value in a symbol table.
+
+
 
 \secrel{Context Checking and Code Generation}
 
