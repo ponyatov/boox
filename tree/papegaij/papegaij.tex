@@ -1,0 +1,84 @@
+\secrel{The Tree Processing Language\\Defining the structure and behaviour of a
+tree}\label{papegaij}\secdown
+
+\begin{tabular}{l l l}
+\cp{\url{http://essay.utwente.nl/705/1/scriptie_Papegaaij.pdf}}&
+\copyright & E. Papegaaij 
+ \email{e.papegaaij@alumnus.utwente.nl} \\
+&Supervisors &dr. ir. Theo C. Ruys\\
+&&ir. Philip K.F. Hölzenspies\\
+&&dr. ir. Arend Rensink\\
+&Institute &University of Twente\\
+&Chair &Formal Methods and Tools\\
+\end{tabular}
+\bigskip
+
+Enschede, March 7, 2007
+
+\secly{Abstract}
+
+Tree structures are commonly used in many applications. One of these is a
+compiler, in which the tree is called an abstract syntax tree (AST). Different
+techniques have been developed for building and working with ASTs. However, many
+of these techniques are limited in their applicability, require major effort to
+implement or introduce maintenance problems in an evolving application.
+
+This thesis introduces the Tree Processing Language, a language for defining the
+structure of a tree and adding functionality to this tree. The compiler
+\prog{TPLc} is used to produce the actual class hierarchy implementing the
+specified tree. TPL provides a clear separation between the structure of a tree,
+a \emph{tree definition}, and behaviour of a tree, \emph{logic specifications}.
+Different aspects of the behaviour of a tree can be provided in separate logic
+specifications, allowing a clear separation of concerns.
+
+\prog{TPLc} generates a heterogeneous tree structure with strictly typed
+children. Functionality in a logic specification is specified using the
+inheritance pattern. To allow different inheritance trees in different logic
+specifications, the inheritance pattern is enhanced with multiple inheritance.
+For languages that do not support multiple inheritance, the inheritance pattern
+with composition is developed.
+
+To prove the applicability of TPL, \prog{TPLc} is written in TPL. When compared
+with an implementation in Java, this implementation provides a better separation
+of concerns and is easier to maintain.
+
+\secly{Preface}
+
+Compiler construction has always been one of my favourite fields of software
+engineering. In the past few years I’ve written several parsers and compilers.
+Of these compilers, the compiler for the functional programming language Tina
+has been the most challenging. I used a hand-written heterogeneous abstract
+syntax tree as underlying data structure. The most important algorithm applied
+onto this AST, the transformation of Tina into a core lambda expression
+language, was written as part of these AST node classes. However, the
+overwhelming number of AST classes (almost 100) made this approach increasingly
+difficult to maintain when other algorithms (such as a lambda lifter) where
+added. At that moment, it became clear that a more structured approach was
+required. To keep the development of an application, based on a heterogeneous
+tree, maintainable, different algorithms needed to be separated in different
+files. The development of tpl is an attempt to provide such an environment.
+
+When I first approached Theo C. Ruys, my premiere supervisor, for an assignment,
+I has no idea I would be solving this problem, which had bothered me for a long
+time. At first, ambitious as I was, I proposed to design and implement a
+completely new parser generator. Luckily, Theo slowed me down a bit and directed
+me to focus on the real problem: the heterogeneous AST.
+
+For his help in concreting the features of tpl, reading and correcting this
+thesis and his patience during the endless discussions we had last year, I would
+like to thank Theo C. Ruys, my premiere supervisor. His guiding helped me
+structure my thoughts, to be able to write them down. I would also like to thank
+Philip K.F.
+H\"olzenspies for his help in writing and formatting this thesis. His knowledge
+of the English language has proven to be far better than mine. Last, but not least,
+I would like to thank Arend Rensink for having taken the time to examine this
+thesis.
+
+\bigskip
+Emond Papegaaij\\
+Enschede, March 7, 2007
+\bigskip
+
+\input{tree/papegaij/intro}
+
+\secup

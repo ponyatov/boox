@@ -39,6 +39,10 @@ TEX += prolog/warren/ypp.ypp prolog/warren/lpp.lpp prolog/warren/log.log
 
 TEX += prolog/crew/astlog.tex prolog/crew/follow.pl
 
+TEX += prolog/pelin/pelin.tex
+
+TEX += tree/papegaij/papegaij.tex tree/papegaij/intro.tex
+
 TEX += skelex/skelex.tex skelex/mkproject.rc skelex/bat.bat
 TEX += skelex/Makefile skelex/git.ignore skelex/skelex.mk
 TEX += skelex/ypp/head.ypp skelex/ypp/tokscalars.ypp skelex/ypp/scalar.ypp
