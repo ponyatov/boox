@@ -1,0 +1,16 @@
+
+skelex = [
+	src.src log.log
+	core = [ ypp.ypp lpp.lpp hpp.hpp cpp.cpp Makefile ]
+	sh.sh bat.bat
+	.gitignore
+]
+
+ .gitignore = [
+	*~
+	*.swp
+	exe.exe
+	log.log
+	ypp.tab.?pp
+	lex.yy.c
+]
