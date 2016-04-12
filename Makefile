@@ -41,6 +41,8 @@ TEX += prolog/crew/astlog.tex prolog/crew/follow.pl
 
 TEX += prolog/pelin/pelin.tex
 
+TEX += prolog/mmalg/mmalg.tex
+
 TEX += tree/papegaij/papegaij.tex tree/papegaij/intro.tex
 
 TEX += skelex/skelex.tex skelex/mkproject.rc skelex/bat.bat

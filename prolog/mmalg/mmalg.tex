@@ -1,0 +1,124 @@
+\secrel{An Efficient Unification Martelli/Montanary Algorithm}
+\label{mmalg}\secdown
+
+\cp{\url{http://www.nsl.com/misc/papers/martelli-montanari.pdf}}
+
+\noindent\copyright \
+ALBERTO MARTELLI
+Consiglio Nazionale delle Ricerche
+\\and\\
+UGO MONTANARI
+Universita di Pisa
+\note{
+Authors' present addresses: A. Martelli, Istituto di Scienze della Informazione,
+Universit~ di Torino, Corso M. d'Azeglio 42, 1-10125 Torino, Italy; U.
+Montanari, Istituto di Scienze della Informazione, Universit\& di Pisa, Corso
+Italia 40, 1-56100 Pisa, Italy.
+
+Permission to copy without fee all or part of this material is granted provided
+that the copies are not made or distributed for direct commercial advantage, the
+ACM copyright notice and the title of the publication and its date appear, and
+notice is given that copying is by permission of the Association for Computing
+Machinery. To copy otherwise, or to republish, requires a fee and/or specific
+permission.
+
+\copyright\ 1982 ACM 0164-0925/82/0400-0258 \$00.75
+
+ACM Transactions on Programming Languages and Systems, Vol. 4, No. 2, April
+ 1982, Pages 258-282.
+}\bigskip
+
+\subsecly{Abstract}
+
+The unification problem in first-order predicate calculus is described in
+general terms as the solution of a system of equations, and a nondeterministic
+algorithm is given. A new unification algorithm, characterized by having the
+acyclicity test efficiently embedded into it, is derived from the
+nondeterministic one, and a PASCAL implementation is given. A comparison with
+other well-known unification algorithms shows that the algorithm described here
+performs well in all cases.
+
+Categories and Subject Descriptors: F.2.2 [Analysis of Algorithms and Problem
+Complexity]: Nonnumerical Algorithms and Problems--complexity of proof
+procedures; F.4.1 [Mathematical Logic and Formal Languages]: Mathematical
+Logic--mechanical theorem proving; 1.2.3 [Artificial Intelligence]: Deduction
+and Theorem Proving--resolution
+
+General Terms: Algorithms, Languages, Performance, Theory 
+
+\secrel{INTRODUCTION}
+
+In its essence, the unification problem in first-order logic can be expressed as
+follows: Given two terms containing some variables, find, if it exists, the
+simplest substitution (i.e., an assignment of some term to every variable) which
+makes the two terms equal. The resulting substitution is called the \term{most
+general unifier} and is unique up to variable renaming.
+
+Unification was first introduced by Robinson [17, 18] as the central step of the
+inference rule called resolution. This single, powerful rule can replace all the
+axioms and inference rules of the first-order predicate calculus and thus was
+immediately recognized as especially suited to mechanical theorem provers. In
+fact, a number of systems based on resolution were built and tried on a variety
+of different applications [5]. Even though further research made it apparent
+that resolution systems are difficult to direct during proof search and thus are
+often prone to combinatorial explosion [6], new impetus to the research in this
+area was given by Kowalski's idea of interpreting predicate logic as a
+programming language [10]. Here predicate logic clauses are seen as procedure
+declarations, and procedure invocation represents a resolution step. From this
+viewpoint, theorem provers can be regarded as interpreters for programs written
+in predicate logic, and this analogy suggests efficient implementations [3, 25].
+
+Resolution, however, is not the only application of the unification algorithm.
+In fact, its pattern matching nature can be exploited in many cases where
+symbolic expressions are dealt with, such as, for instance, in interpreters for
+equation languages [4, 11], in systems using a database organized in terms of
+productions [19], in type checkers for programming languages with a complex type
+structure [14], and in the computation of critical pairs for term rewriting
+systems [9].
+
+The unification algorithm constitutes the heart of all the applications listed
+above, and thus its performance affects in a crucial way the global efficiency
+of each. The unification algorithm as originally proposed can be extremely
+inefficient; therefore, many attempts have been made to find more efficient
+algorithms [2, 7, 13, 15, 16, 22]. Unification algorithms have also been
+extended to the case of higher order logic [8] and to deal directly with
+associativity and commutativity [20]. The problem was also tackled from a
+computational complexity point of view, and linear algorithms were proposed
+independently by Martelli and Montanari [13] and Paterson and Wegman [15].
+
+In the next section we give some basic definitions by representing the
+unification problem as the solution of a system of equations. A nondeterministic
+algorithm, which comprehends as special cases most known algorithms, is then
+defined and proved correct. In Section 3 we present a new version of this
+algorithm obtained by grouping together all equations with some member in
+common, and we derive from it a first version of our unification algorithm.
+
+In Sections 4 and 5 we present the main ideas which make the algorithm
+efficient, and the last details are described in Section 6 by means of a PASCAL
+implementation.
+
+Finally, in Section 7, the performance of this algorithm is compared with that
+of two well-known algorithms, Huet's [7] and Paterson and Wegman's [15]. This
+analysis shows that our algorithm has uniformly good performance for all classes
+of data considered.
+
+\secrel{UNIFICATION AS THE SOLUTION OF A SET OF EQUATIONS: A NONDETERMINISTIC
+ALGORITHM}
+
+In this section we introduce the basic definitions and give a few theorems which
+are useful in proving the correctness of the algorithms. Our ay of stating the
+unification problem is slightly more general than the classical one due to
+Robinson [18] and directly suggests a number of possible solution methods.
+
+Let \[A= \bigcup_{i=0,1,..} A_i \quad (A_i \bigcap A_j = \varnothing, i \neq j\]
+be a ranked alphabet, where $A_i$ contains the $i$-adic function symbols (the
+elements of $A_0$ are constant symbols). Furthermore, let $V$ be the alphabet of
+the variables.
+The \term{terms} are defined recursively as follows:
+
+(1) constant symbols and variables are terms;
+
+(2) if $t_1,..,t_n \ (n \geq 1)$ are terms and $f \in A_n$,
+then $f(t_1,..,t_n)$ is a term.
+  
+\secup
