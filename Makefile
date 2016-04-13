@@ -44,6 +44,7 @@ TEX += prolog/pelin/pelin.tex
 TEX += prolog/mmalg/mmalg.tex
 
 TEX += prolog/adventure/adventure.tex prolog/adventure/preface.tex
+TEX += prolog/adventure/tools.tex
 
 TEX += tree/papegaij/papegaij.tex tree/papegaij/intro.tex
 
