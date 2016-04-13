@@ -1,0 +1,155 @@
+\secrel{Getting Started}\secdown
+
+Prolog stands for PROgramming in LOGic. It was developed from a foundation of
+logical theorem proving and originally used for research in natural language
+processing. Although its popularity has sprung up mainly in the artificial
+intelligence (AI) community, where it has been used for applications such as
+expert systems, natural language, and intelligent databases, it is also useful
+for more conventional types of applications. It allows for more rapid
+development and prototyping than most languages because it is semantically close
+to the logical specification of a program. As such, it approaches the ideal of
+executable program specifications\note{and fast prototyping and RAD}.
+
+Programming in Prolog is significantly different from conventional procedural
+programming and requires a readjustment in the way one thinks about programming.
+Logical relationships are asserted, and Prolog is used to determine whether or
+not certain statements are true, and if true, what variable bindings make them
+true. This leads to a very declarative style of programming.
+
+In fact, the term program does not accurately describe a Prolog collection of
+executable facts, rules and logical relationships, so you will often see term
+\term{logicbase} used in this book as well.
+
+While Prolog is a fascinating language from a purely theoretical viewpoint, this
+book will stress Prolog as a practical tool for application development.
+
+Much of the book will be built around the writing of a short adventure game. The
+adventure game is a good example since it contains mundane programming
+constructs, symbolic reasoning, natural language, data, and logic.
+
+Through exercises you will also build a simple expert system, an intelligent
+genealogical logicbase, and a mundane customer order entry application.
+
+You should create a source file for the game, and enter the examples from the
+book as you go. You should also create source files for the other three programs
+covered in the exercises. Sample source code for each of the programs is
+included in the appendix \ref{advapp}.
+
+The adventure game is called Nani Search. Your persona as the adventurer is that
+of a three year old girl. The lost treasure with magical powers is your nani
+(security blanket). The terrifying obstacle between you and success is a dark
+room. It is getting late and you're tired, but you can't go to sleep without
+your nani. Your mission is to find the nani.
+
+\fig{\ This is Nani}{prolog/adventure/nani.jpg}{width=0.3\textwidth}
+
+Nani Search is composed of
+\begin{itemize}[nosep]
+  \item 
+A read and execute command loop
+  \item 
+A natural language input parser
+  \item 
+Dynamic facts/data describing the current environment
+  \item 
+Commands that manipulate the environment
+  \item 
+Puzzles that must be solved
+\end{itemize}
+
+You control the game by using simple English commands (at the angle bracket (>)
+prompt) expressing the action you wish to take. You can go to other rooms, look
+at your surroundings, look in things, take things, drop things, eat things,
+inventory the things you have, and turn things on and off.
+
+\paragraph{Figure 1.1. A sample run of Nani Search}
+\begin{verbatim}
+You are in the kitchen.
+You can see: apple, table, broccoli
+You can go to: cellar, office, dining room
+
+> go to the cellar
+
+You can't go to the cellar because it's dark in the cellar,
+and you're afraid of the dark.
+
+> turn on the light
+
+You can't reach the switch and there's nothing to stand on.
+
+> go to the office
+
+You are in the office.
+You can see the following things: desk
+You can go to the following rooms: hall, kitchen
+
+> open desk
+
+The desk contains:
+  flashlight
+  crackers
+
+> take the flashlight
+
+You now have the flashlight
+
+> kitchen
+
+You are in the kitchen
+
+> turn on the light
+
+flashlight turned on.
+...
+\end{verbatim}
+
+Figure 1.1 shows a run of a completed version of Nani Search. As you develop
+your own version you can of course change the game to reflect your own ideas of
+adventure.
+
+The game will be implemented from the bottom up, because that fits better with
+the order in which the topics will be introduced. Prolog is equally adept at
+supporting top-down or inside-out program development.
+
+A Prolog logicbase exists in the listener's workspace as a collection of small
+modular units, called \term{predicates}. They are similar to subroutines in
+conventional languages, but on a smaller scale.
+
+The predicates can be added and tested separately in a Prolog program, which
+makes it possible to incrementally develop the applications described in the
+book. Each chapter will call for the addition of more and more predicates to the
+game. Similarly, the exercises will ask you to add predicates to each of the
+other applications.
+
+We will start with the Nani Search logicbase and quickly move into the commands
+that examine that logicbase. Then we will implement the commands that manipulate
+the logicbase.
+
+Along the way there will be diversions where the same commands are rewritten
+using a different approach for comparison. Occasionally a topic will be covered
+that is critical to Prolog but has little application in Nani Search.
+
+One of the final tasks will be putting together the top-level command processor.
+We will finish with the natural language interface.
+
+The goal of this book is to make you feel comfortable with
+\begin{itemize}[nosep]
+  \item 
+The Prolog logicbase of facts and rules
+  \item 
+The built-in theorem prover that allows Prolog to answer questions about the
+logicbase (backtracking search)
+  \item 
+How logical variables are used (They are different from the variables in most
+languages.)
+  \item 
+Unification, the built in pattern matcher
+  \item 
+Extra-logical features (like read and write that make the language practical)
+  \item 
+How to control Prolog's execution behavior
+\end{itemize}
+
+\secrel{Jumping In}
+
+\secup
