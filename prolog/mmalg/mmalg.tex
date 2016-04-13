@@ -207,5 +207,17 @@ any unifier of $S$ is also a unifier of $S'$ and vice versa. Furthermore, if
 variable $x$ occurs in $t$ (but $t$ is not $x$), then no substitution
 $\vartheta$ can make $x$ and $t$ identical, since $x_\vartheta$ becomes a
 subterm of $t_\vartheta$, and thus $S$ has no unifier. $\square$
+
+A set of equations is said to be \term{in solved form} iff it satisfies the
+following conditions: 
+
+(1) the equations are $x_j = t_j, j = 1,..,k$;
+
+(2) every variable which is the left member of some equation occurs only there.
+
+A set of equations in solved form has the obvious unifier
+\[\vartheta = {(t_1,x_1),(t_2,x_2),..,(t_k,x_k)}\]
+
+ 
   
 \secup
