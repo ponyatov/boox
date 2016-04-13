@@ -1,0 +1,134 @@
+\secrel{Facts}\label{adv2}\secdown
+
+This chapter describes the basic Prolog facts. They are the simplest form of
+Prolog predicates, and are \emph{similar to records in a relational database}.
+As we will see in the next chapter they can be queried like database records.
+
+The syntax for a fact is
+\begin{verbatim}
+pred(arg1, arg2, ...  argN).
+\end{verbatim}
+where
+\begin{description}[nosep]
+\item[pred]\ \\The name of the predicate
+\item[arg1,..]\ \\The arguments
+\item[N]\ \\The arity
+\item[.]\ \\The syntactic end of all Prolog clauses
+\end{description}
+
+\bigskip
+A predicate \verb'pred/0' of arity 0 is simply
+\begin{verbatim}
+pred.
+\end{verbatim}
+
+The arguments can be any legal Prolog \term{term}. The basic Prolog terms are
+\begin{description}[nosep]
+\item[integer]\ \\A positive or negative number whose absolute value is less
+than some implementation-specific power of 2
+\item[atom]\ \\A text constant beginning with a lowercase letter
+\item[variable]\ \\Begins with an uppercase letter or underscore (\_)
+\item[structure]\ \\Complex terms, which will be covered in chapter \ref{adv9}
+\end{description}
+
+Various Prolog implementations enhance this basic list with other data types,
+such as floating point numbers, or strings.
+
+The Prolog character set is made up of
+\begin{itemize}[nosep]
+  \item 
+Uppercase letters, \verb|A-Z|
+  \item 
+Lowercase letters, \verb|a-z|
+  \item 
+Digits, \verb|0-9|
+  \item 
+Symbols, \verb|+ - * / \ ^ , . ~ : . ? @ # $ &|
+\end{itemize}
+Integers are made from digits. Other numerical types\note{0x\ldots hex numbers
+or floating point numbers} are allowed in some Prolog implementations.
+
+Atoms are usually made from letters and digits with the first character being a
+\emph{lowercase} letter, such as
+\begin{verbatim}
+hello
+twoWordsTogether
+x14
+\end{verbatim}
+
+For readability, the underscore (\_), \emph{but not the hyphen (-)}, can be used
+as a separator in longer names. So the following are legal.
+\begin{verbatim}
+a_long_atom_name
+z_23
+\end{verbatim}
+
+The following are not legal atoms.
+\begin{verbatim}
+no-embedded-hyphens
+123nodigitsatbeginning
+_nounderscorefirst
+Nocapsfirst
+\end{verbatim}
+
+Use single quotes to make any character combination a legal atom as follows.
+\begin{verbatim}
+'this-hyphen-is-ok'
+'UpperCase'
+'embedded blanks'
+\end{verbatim}
+
+Do not use double quotes (\verb|""|) to build atoms. This is a special syntax
+that causes the character string to be treated as a list of ASCII character
+codes (string).
+
+Atoms can also be legally made from symbols, as follows.
+\begin{verbatim}
+-->
+++
+\end{verbatim}
+
+Variables are similar to atoms, but are distinguished by beginning with either
+an \emph{uppercase} letter or the underscore (\_).
+\begin{verbatim}
+X
+Input_List
+_4th_argument
+Z56
+\end{verbatim}
+
+Using these building blocks, we can start to code facts. The predicate name
+follows the rules for atoms. The arguments can be any Prolog terms.
+
+Facts are often used to store the data a program is using. For example, a
+business application might have \verb'customer/3'.
+\begin{verbatim}
+customer('John Jones', boston, good_credit).
+customer('Sally Smith', chicago, good_credit).
+\end{verbatim}
+
+The single quotes are needed around the names because they begin with uppercase
+letters and because they have embedded blanks.
+
+Another example is a windowing system that uses facts to store data about the
+various windows. In this example the arguments give the window name and
+coordinates of the upper left and lower right corners.
+\begin{verbatim}
+window(main, 2, 2, 20, 72).
+window(errors, 15, 40, 20, 78).
+\end{verbatim}
+
+A medical diagnostic expert system might have \verb'disease/2'.
+\begin{verbatim}
+disease(plague, infectious).
+\end{verbatim}
+
+A Prolog listener provides the means for dynamically recording facts and rules
+in the logicbase, as well as the means to \termdef{query}{\prolog!query}
+(\termdef{call}{\prolog!call}) them. The logicbase is updated by
+\verb'consult'ing or \verb'reconsult'ing program source. Predicates can also be
+typed directly into the listener, but they are not saved between sessions.
+
+\secrel{Nani Search}
+
+\secup
