@@ -152,4 +152,75 @@ How to control Prolog's execution behavior
 
 \secrel{Jumping In}
 
+As with any language, the best way to learn Prolog is to use it. This book is
+designed to be used with a Prolog listener, and will guide you through the
+building of four applications.
+\begin{enumerate}[nosep]
+  \item 
+Adventure game
+  \item 
+Intelligent genealogical logicbase
+  \item 
+Expert system
+  \item 
+Customer order entry business application
+\end{enumerate}
+The adventure game will be covered in detail in the main body of the text, and
+the others you will build yourself based on the exercises at the end of each
+chapter.
+
+There will be two types of example code throughout the book. One is code, meant
+to be entered in a source file, and the other is interactions with the listener.
+The listener interactions are distinguished by the presence of the question mark
+and dash (?-) listener prompt.
+
+Here is a two-line program, meant to help you learn the mechanics of the editor
+and your listener.
+\begin{verbatim}
+mortal(X) :- person(X).
+person(socrates).
+\end{verbatim}
+
+In the \prog{Amzi! Eclipse IDE}, first create a project for your source files.
+Select \menu{File>New>Project} on the main menu, then click on \menu{Prolog} and
+\menu{Project}, and enter the name of your project, \prog{adventure}.
+Next, create a new source file. Select \menu{File>New>File}, and enter the name
+of your file, \file{mortal.pro}. Enter the program in the edit window, paying
+careful attention to upper and lowercase letters and punctuation. Then select
+\menu{File>Save} from the menu.
+
+Next, start the Prolog listener by selecting \menu{Run>Run As>Interpreted
+Project}. Loading the source code in the \prog{Listener} is called
+\term{consulting}. You should see a message indicating that your source file,
+\file{mortal.pro}, was consulted. This message is followed by the typical
+listener prompt.
+\begin{verbatim}
+?-
+\end{verbatim}
+\emph{Entering the source code} in the Listener is called \term{consulting}.
+Select \menu{Listener>Consult} from the main menu, and select \file{mortal.pro}
+from the file menu. You can also consult a Prolog source file directly from the
+listener prompt like this.
+\begin{verbatim}
+?- consult(mortal).
+yes
+\end{verbatim}
+
+See the documentation and/or online help for details on the Amzi! listener and
+Eclipse IDE.
+
+In all the listener examples in this book, you enter the text after the prompt
+(?), the rest is provided by Prolog. When working with Prolog, it is important
+to remember to include the final period \keys{.} and to press the \keys{return}
+key. If you forget the period (and you probably will), you can enter it on the
+next line with a \keys{.}\keys{return}.
+
+Once you've loaded the program, try the following Prolog queries.
+\begin{verbatim}
+?- mortal(socrates).
+yes
+?- mortal(X).
+X = socrates.
+\end{verbatim}
+
 \secup
