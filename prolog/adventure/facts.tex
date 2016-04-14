@@ -146,10 +146,22 @@ Where the player is at the beginning of the game
 \fig{\\Figure 2.1. The rooms of \prog{Nani
 Search}}{prolog/adventure/advfig21.png}{width=0.6\textwidth}
 
-Open a new source file and save it as \file{myadven.pro}\note{or
-\file{myadven.pl}, .pl is ProLog program extension}, or whatever name you feel
-is appropriate. You will make your changes to the program in that source file.
-(A completed version of \file{nanisrch.pro} is in the Prolog \dir{samples/}
+Open a new source file and save it as \file{myadven.pro}\note{or \file{nani.pl},
+.pl is ProLog program extension}, or whatever name you feel is appropriate. You
+will make your changes to the program in that source file. (A completed version
+of \file{nanisrch.pro} is in the Prolog \dir{samples/}
 directory,\\\file{samples/prolog/misc\_one\_file}.)
+
+First we define the rooms with the predicate \verb|room/1|, which has five
+clauses, all of which are facts. They are based on the game map in figure 2.1.
+\begin{verbatim}
+room(kitchen).
+room(office).
+room(hall).
+room('dining room').
+room(cellar).
+\end{verbatim}
+
+
 
 \secup
