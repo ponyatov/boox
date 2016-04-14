@@ -152,8 +152,9 @@ will make your changes to the program in that source file. (A completed version
 of \file{nanisrch.pro} is in the Prolog \dir{samples/}
 directory,\\\file{samples/prolog/misc\_one\_file}.)
 
-First we define the rooms with the predicate \verb|room/1|, which has five
-clauses, all of which are facts. They are based on the game map in figure 2.1.
+First we define the \emph{rooms} with the predicate \verb|room/1|, which has
+five clauses, all of which are facts. They are based on the game map in figure
+2.1.
 \begin{verbatim}
 room(kitchen).
 room(office).
@@ -162,6 +163,94 @@ room('dining room').
 room(cellar).
 \end{verbatim}
 
+We define the \emph{locations of things} with a two-argument predicate
+\verb'location/2'. The \emph{first} argument will mean the \emph{thing} and the
+\emph{second} will mean its \emph{location}. To begin with, we will add the
+following things\note{is can be thinked as \term{relation}s in traditional
+RDBMS}.
+\begin{verbatim}
+location(desk, office).
+location(apple, kitchen).
+location(flashlight, desk).
+location('washing machine', cellar).
+location(nani, 'washing machine').
+location(broccoli, kitchen).
+location(crackers, kitchen).
+location(computer, office).
+\end{verbatim}
 
+The symbols we have chosen, such as \var{kitchen} and \var{desk} have meaning to
+us, but none to Prolog. The relationship between the arguments should also
+accurately reflect our meaning.
+
+For example, the meaning we attach to \verb'location/2' is ``The first argument
+is located in the second argument``. Fortunately Prolog considers
+\verb'location(sink, kitchen)' and \verb'location(kitchen, sink)' to be
+different. Therefore, as long as we are consistent in our use of arguments, we
+can accurately represent our meaning and avoid the potentially ambiguous
+interpretation of the kitchen being in the sink.
+
+We are not as lucky when we try to represent the \emph{connections between
+rooms}. Let's start, however, with \verb'door/2', which will contain facts such
+as
+\begin{verbatim}
+door(office, hall).
+\end{verbatim}
+
+We would like this to mean ``There is a connection from the office to the hall,
+\emph{or} from the hall to the office''.
+
+Unfortunately, Prolog considers \verb'door(office, hall)' to be different from
+\verb'door(hall, office)'. If we want to accurately represent a two-way
+connection, we would have to define \verb'door/2' twice for each
+connection\note{it is \term{symmetric relation}}.
+\begin{verbatim}
+door(office, hall).
+door(hall, office).
+\end{verbatim}
+The strictness about order serves our purpose well for location, but it creates
+this problem for connections between rooms. If the office is connected to the
+hall, then we would like the reverse to be true as well.
+
+For now, we will just add \emph{one-way doors} to the program; we will address
+the symmetry problem again in the next chapter \ref{adv3} and resolve it in
+chapter 5 \ref{adv5}.
+\begin{verbatim}
+door(office, hall).
+door(kitchen, office).
+door(hall, 'dining room').
+door(kitchen, cellar).
+door('dining room', kitchen).
+\end{verbatim}
+
+Here are some other facts about properties of things the game player might try
+to eat.
+\begin{verbatim}
+edible(apple).
+edible(crackers).
+
+tastes_yucky(broccoli).
+\end{verbatim}
+
+Finally we define the initial status of the flashlight, and the player's
+location at the beginning of the game.
+\begin{verbatim}
+turned_off(flashlight).
+here(kitchen).
+\end{verbatim}
+We have now seen how to use basic facts to represent data in a Prolog program.
+
+\secrel{Exercises}
+
+During the course of completing the exercises you will develop three Prolog
+applications in addition to \prog{Nani Search}. The exercises from each chapter
+will build on the work of previous chapters. Suggested solutions to the
+exercises are contained in the Prolog source files listed in the appendix, and
+are also included in \file{samples/prolog/misc\_one\_file}. The files
+\begin{description}
+\item[\file{gene}.pl]\ \\A genealogical intelligent logicbase
+\item[\file{custord}.pl]\ \\A customer order entry application
+\item[\file{birds}.pl]\ \\An expert system that identifies birds
+\end{description}
 
 \secup
