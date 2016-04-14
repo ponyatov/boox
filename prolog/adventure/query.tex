@@ -32,4 +32,198 @@ Before proceeding, review figure 3.1, which has a listing of the program so far.
 \lst{Figure 3.1. The listing of \prog{Nani Search} entered at this
 point}{prolog/adventure/fig31.pl}{prolog}
 
+The first query we will look at asks if the office is a room in the game. To
+pose this, we would enter that goal followed by a period at the listener prompt.
+\begin{verbatim}
+?- room(office).
+yes
+\end{verbatim}
+
+Prolog will respond with a \verb'yes' or \verb'true.' if a match was found. If
+we wanted to know if the attic was a room, we would enter that goal.
+\begin{verbatim}
+?- room(attic).
+no
+\end{verbatim}
+
+Prolog will respond with a \verb'no' if no match was found. Likewise, we can ask
+about the locations of things.
+\begin{verbatim}
+?- location(apple, kitchen).
+yes
+
+?- location(kitchen, apple).
+no
+\end{verbatim}
+Prolog responds to our location query patterns in a manner that makes sense to
+us. That is, the kitchen is not located in the apple.
+
+However, here is the problem with the one-way doors, which we still haven't
+fixed. It is mentioned again to stress the importance of the order of the
+arguments.
+\begin{verbatim}
+?- door(office, hall).
+yes
+
+?- door(hall, office).
+no
+\end{verbatim}
+
+Goals can be generalized by the use of Prolog
+\termdef{variables}{\prolog!variable}. They do not behave like the variables in
+other languages, and are better called \term{logical variables} (although Prolog
+does not precisely correspond to logic). The logical variables replace one or
+more of the arguments in the goal.
+
+Logical variables add a new dimension to unification. As before, the predicate
+names and arity must be the same for unification to succeed. However, when the
+corresponding arguments are compared, an (unbound) \emph{variable} will
+successfully \emph{match any term}.
+
+After successful unification, the logical variable takes on the value of the
+term it was matched with. This is called \termdef{binding}{\prolog!binding} the
+variable. When a goal with a variable successfully unifies with a fact in the
+logicbase, Prolog returns the value of the newly bound variable.
+
+Since there may be more than one value a variable can be bound to and still
+satisfy the goal, Prolog provides the means for you to ask for alternate values.
+After an answer you can enter a semicolon \keys{;}. It causes Prolog to look
+for alternative bindings for the variables. Entering anything else at the prompt
+ends the query.
+
+For example, we can use a logical variable to find all of the rooms.
+\begin{verbatim}
+?- room(X).
+X = kitchen ;
+X = office ;
+X = hall ;
+X = 'dining room' ;
+X = cellar ;
+no
+\end{verbatim}
+The last \verb'no' means there are no more answers.
+
+Here's how to find all the things in the kitchen. (Remember, variables begin
+with uppercase letters.)
+\begin{verbatim}
+?- location(Thing, kitchen).
+Thing = apple ;
+Thing = broccoli ;
+Thing = crackers ;
+no
+\end{verbatim}
+
+We can use two variables to see everything in every place.
+\begin{verbatim}
+?- location(Thing, Place).
+Thing = desk
+Place = office ;
+
+Thing = apple
+Place = kitchen ;
+
+Thing = flashlight
+Place = desk ;
+
+...
+no
+\end{verbatim}
+
+Other sample applications might have the following queries.
+
+What customers live in Boston, and what is their credit rating\,?
+\begin{verbatim}
+?- customer(X, boston, Y).
+\end{verbatim}
+
+What is the title of chapter 2 \ref{adv2}\,?
+\begin{verbatim}
+?- chapter(2,Title).
+\end{verbatim}
+
+What are the coordinates of window \verb'main'\,?
+\begin{verbatim}
+?- window(main,Row1,Col1,Row2,Col2).
+\end{verbatim}
+
+\secrel{How Queries Work}
+
+When Prolog tries to satisfy a goal about a predicate, such as
+\verb'location/2', it searches through the clauses defining \verb'location/2'.
+When it finds a match for its variables, it marks the particular clause that was
+used to satisfy the goal. Then, if the user asks for more answers, it resumes
+its search of the clauses at that place marker.
+
+Referring to the list of clauses in figure 3.1, let's look closer at this
+process with the query \verb'location(X, kitchen)'. First, unification is
+attempted between the query pattern and the first clause of \verb'location/2'.
+\begin{verbatim}
+Pattern                           Clause #1 
+location(X, kitchen)              location(desk, office) 
+\end{verbatim}
+This unification fails. The predicate names are the same, the number of
+arguments is the same, but the second argument in the pattern, \verb'kitchen',
+is \emph{different} from the second argument in the clause, \verb'office'.
+
+Next, unification is attempted between the pattern and the second clause of
+\verb'location/2'.
+\begin{verbatim}
+Pattern                           Clause #2 
+location(X, kitchen)              location(apple, kitchen) 
+\end{verbatim}
+This unification succeeds. The predicate names, \term{arity} (number of
+arguments), and second arguments \emph{are the same}. The first arguments can be
+made the same if the variable \verb'X' in the pattern takes the value
+\verb'apple.'
+
+Now that unification succeeds, the Prolog listener reports its success, and the
+binding of the variable \var{X}.
+\begin{verbatim}
+?- location(X, kitchen).
+X = apple
+\end{verbatim}
+If the user presses a key other than the semicolon \keys{;} at this point, the
+listener responds with \verb'yes' indicating the query ended successfully.
+
+If the user presses the semicolon (;) key, the listener looks for other
+solutions. First it \term{unbinds} the variable \var{X}. Next it resumes the
+search using the clause following the one that had just satisfied the query.
+This is called \termdef{backtracking}{\prolog!backtracking}. In the example that
+would be the third clause.
+\begin{verbatim}
+Pattern                           Clause #3 
+location(X, kitchen)              location(flashlight, desk) 
+\end{verbatim}
+
+This fails, and the search continues. Eventually the sixth clause succeeds.
+\begin{verbatim}
+Pattern                           Clause #6 
+location(X, kitchen)              location(broccoli, kitchen) 
+\end{verbatim}
+
+As a result, the variable \var{X} is now rebound to \verb'broccoli', and the
+listener responds
+\begin{verbatim}
+X = broccoli ;
+\end{verbatim}
+
+Again, entering a semicolon \keys{;} causes \var{X} to be unbound and the search
+to continue with the seventh clause, which also succeeds.
+\begin{verbatim}
+X = crackers ;
+\end{verbatim}
+
+As before, entering anything except a semicolon (;) causes the listener to
+respond \verb'yes', indicating success. A semicolon (;) causes the unbinding of
+\var{X} and the search to continue. But now, there are no more clauses that
+successfully unify with the pattern, so the listener responds with \verb'no'
+indicating the final attempt has failed.
+\begin{verbatim}
+no 
+\end{verbatim}
+The best way to understand Prolog execution is to trace its execution in the
+debugger. But first it is necessary to have a deeper understanding of goals.
+
+
+
 \secup
