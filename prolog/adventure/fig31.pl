@@ -1,8 +1,8 @@
-/*
-	Nani Search
+/* /block comment/
+					Nani Search
 */
 
-% locations
+% locations /line comment/
 
 room(kitchen).
 room(office).
@@ -38,8 +38,4 @@ tastes_yucky(broccoli).
 
 % initial state
 
-turned_off(flashlight).
 here(kitchen).
-
-
-z :- room(M),location(X,M),writeq([X,M]),fail.
