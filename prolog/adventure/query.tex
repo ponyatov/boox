@@ -1,0 +1,35 @@
+\secrel{Simple Queries}\label{adv3}\secdown
+
+Now that we have some facts in our Prolog program, we can
+\termdef{consult}{\prolog!consult} the program in the listener and
+\termdef{query}{\prolog!query}, or \termdef{call}{\prolog!call}, the facts. This
+chapter, and the next \ref{adv4}, will assume the Prolog program contains only
+facts. Queries against programs with rules will be covered in a later chapter
+\ref{5}.
+
+Prolog queries work by pattern matching. The query pattern is called a
+\termdef{goal}{\prolog!goal}. If there is a fact that matches the \term{goal},
+then the \term{query} \emph{succeeds} and the listener responds with
+\verb'yes.'\note{or \var{true.}} If there is \emph{no matching} fact, then the
+query \emph{fails} and the listener responds with \verb'no.'\note{or
+\var{false.}}
+
+Prolog's \term{pattern matching} is called
+\termdef{unification}{\prolog!unification}. In the case where the logicbase
+contains only facts, unification succeeds if the following three conditions hold
+simultaneously.
+\begin{itemize}[nosep]
+  \item 
+The predicate named in the goal and logicbase are the same.
+  \item 
+Both predicates have the same arity.
+  \item 
+All of the arguments are the same.
+\end{itemize}
+
+Before proceeding, review figure 3.1, which has a listing of the program so far.
+
+\lst{Figure 3.1. The listing of \prog{Nani Search} entered at this
+point}{prolog/adventure/fig31.pl}{prolog}
+
+\secup
