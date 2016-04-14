@@ -245,12 +245,79 @@ We have now seen how to use basic facts to represent data in a Prolog program.
 During the course of completing the exercises you will develop three Prolog
 applications in addition to \prog{Nani Search}. The exercises from each chapter
 will build on the work of previous chapters. Suggested solutions to the
-exercises are contained in the Prolog source files listed in the appendix, and
-are also included in \file{samples/prolog/misc\_one\_file}. The files
+exercises are contained in the Prolog source files listed in the appendix
+\ref{advapp}, and are also included in \file{samples/prolog/misc\_one\_file}.
+The files
 \begin{description}
 \item[\file{gene}.pl]\ \\A genealogical intelligent logicbase
 \item[\file{custord}.pl]\ \\A customer order entry application
 \item[\file{birds}.pl]\ \\An expert system that identifies birds
+\end{description}
+
+Not all applications will be covered in each chapter. For example, the expert
+system requires an understanding of rules and will not be started until the end
+of chapter 5 \ref{adv5}.
+
+\secrel{Genealogical Logicbase}
+
+1- First create a source file \file{gene.pl} for the genealogical logicbase
+application. Start by adding a few members of your family tree. It is important
+to be accurate, since we will be exploring family relationships. Your own
+knowledge of who your relatives are will verify the correctness of your Prolog
+programs.
+
+Start by recording the gender of the individuals. Use two separate predicates,
+\verb'male/1' and \verb'female/1'. For example
+\begin{verbatim}
+male(dennis).
+male(michael).
+
+female(diana).
+\end{verbatim}
+
+Remember, if you want to include \emph{uppercase} characters or embedded
+\emph{blanks} you must enclose the name in 'single' (not double) quotes. For
+example
+\begin{verbatim}
+male('Ghenghis Khan').
+\end{verbatim}
+
+2- Enter a two-argument predicate that records the parent-child relationship.
+One argument represents the parent, and the other the child. It doesn't matter
+in which \emph{order} you enter the arguments, as long as you are
+\emph{consistent}. Often Prolog programmers adopt the convention that
+\verb'parent(A,B)' is interpreted ``A is the parent $\rightarrow$ of B''. For
+example
+\begin{verbatim}
+parent(dennis, michael).
+parent(dennis, diana).
+\end{verbatim}
+
+\secrel{Customer Order Entry}
+
+3- Create a source file for the customer order entry program. We will begin it
+with three record types (predicates). The first is \verb'customer/3' where the
+three arguments are
+\begin{description}
+\item[arg1]\ \\Customer name
+\item[arg2]\ \\City
+\item[arg3]\ \\Credit rating (aaa, bbb, etc)
+\end{description}
+Add as many customers as you see fit.
+
+4- Next add clauses that define the items that are for sale. It should also have
+three arguments
+\begin{description}
+\item[arg1]\ \\Item identification numbers
+\item[arg2]\ \\Item name
+\item[arg3]\ \\The reorder point for inventory (when at or below this level,
+reorder)
+\end{description}
+
+5- Next add an inventory record for each item. It has two arguments.
+\begin{description}
+\item[arg1]\ \\Item identification number (same as in the item record)
+\item[arg2]\ \\Amount in stock
 \end{description}
 
 \secup
