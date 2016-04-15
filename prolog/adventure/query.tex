@@ -224,6 +224,47 @@ no
 The best way to understand Prolog execution is to trace its execution in the
 debugger. But first it is necessary to have a deeper understanding of goals.
 
+A Prolog goal has four \termdef{ports}{\prolog!port} representing the flow of
+control through the goal: call, exit, redo, and fail. First the goal is called.
+If successful it is exited. If not it fails. If the goal is retried, by entering
+a semicolon (;) the redo port is entered. Figure 3.2 shows the goal and its
+ports.
+
+\fig{\ Figure 3.2. The ports of a \prolog\
+goal}{prolog/adventure/fig32.png}{width=0.4\textwidth}
+
+\noindent
+The behaviors at each port are
+\begin{description}
+\item[call]\ \\Begins searching for clauses that unify with the goal
+\item[exit]\ \\Indicates the goal is satisfied, sets a place marker at the
+clause and binds the variables appropriately
+\item[redo]\ \\Retries the goal, unbinds the variables and resumes search at the
+place marker
+\item[fail]\ \\Indicates no more clauses match the goal
+\end{description}
+
+Prolog debuggers use these ports to describe the state of a query. Figure 3.3
+shows a trace of the \verb'location(X, kitchen)' query. Study it carefully
+because it is the key to your understanding of Prolog. The number in parentheses
+indicates the current clause.
+
+\lstx{Figure 3.3. Prolog trace of
+\var{location(X,kitchen)}}{prolog/adventure/fig33.log}
+
+Because the trace information presented in this book is designed to teach Prolog
+rather than debug it, the format is a little different from that used in the
+actual debugger. Run the Amzi! Source Code Debugger on these queries to see how
+they work for real.
+
+To start the \prog{Amzi! Debugger}, highlight your project name or edit a source
+file in your project, then select \menu{Run>Debug As>Interpreted Project}
+from the main menu.
+
+You will see a separate perspective with multiple views that contain trace
+information. Enter the query \verb'location(X, kitchen)' in the \menu{Debug
+Listener} view. You will see the trace start in the debugger view.
+
 
 
 \secup
