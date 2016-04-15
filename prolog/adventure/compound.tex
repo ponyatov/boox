@@ -1,5 +1,318 @@
 \secrel{Compound Queries}\label{adv4}\secdown
 
+Simple goals can be combined to form compound queries. For example, we might
+want to know if there is anything good to eat in the kitchen. In Prolog we might
+ask
+\begin{verbatim}
+?- location(X, kitchen), edible(X).
+\end{verbatim}
+Whereas a simple query had a single goal, the compound query has a
+\emph{conjunction} of goals. The comma separating the goals is read as
+\verb|and|.
+
+Logically (declaratively) the example means ``Is there an \var{X} such that
+\var{X} is located in the \verb|kitchen| and \var{X} is \verb|edible|\,?'' If
+the \emph{same variable} name appears \emph{more than once} in a query,
+\emph{it must have the same value in all places} it appears. The query in the
+above example will only succeed if there is a single value of \var{X} that can
+satisfy both goals.
+
+However, the variable name has no significance to any other query, or clause in
+the logicbase. If \var{X} appears in other queries or clauses, that query or
+clause gets its own copy of the variable. We say the \emph{scope of a logical
+variable is a query}.
+
+Trying the sample query we get
+\begin{verbatim}
+?- location(X, kitchen), edible(X).
+X = apple ;
+X = crackers ;
+no
+\end{verbatim}
+The \verb'broccoli' does not show up as an answer because we did not include it
+in the \verb|edible/1| predicate.
+
+This logical query can also be interpreted procedurally, using an understanding
+of Prolog's execution strategy. The procedural interpretation is: ``First find
+an \var{X} located in the \verb|kitchen|, and then test to see if it is
+\verb|edible|. If it is not, go back and find another \var{X} in the
+\verb|kitchen| and test it. Repeat until successful, or until there are no more
+\var{X}s in the \verb|kitchen|''.
+
+To understand the execution of a compound query, think of the goals as being
+arranged from left to right. Also think of a separate table which is kept for
+the current variable bindings. The flow of control moves back and forth through
+the goals as Prolog attempts to find variable bindings that satisfy the query.
+
+Each goal can be entered from either the left or the right, and can be left from
+either the left or the right. These are the ports of the goal as seen in the
+last chapter.
+
+A compound query begins by calling the first goal on the left. If it succeeds,
+the next goal is called with the variable bindings as set from the previous
+goal. If the query finishes via the exit port of the rightmost goal, it
+succeeds, and the listener prints the values in the variable table.
+
+If the user types semicolon \keys{;} after an answer, the query is re-entered at
+the redo port of the rightmost goal. Only the variable bindings that were set in
+that goal are undone.
+
+If the query finishes via the fail port of the leftmost goal, the query fails.
+Figure 4.1 shows a compound query with the listener interaction on the ending
+ports.
+
+\fig{Figure 4.1. Compound
+queries}{prolog/adventure/fig41.png}{width=0.6\textwidth}
+
+\secdown
+\secrel{Annotated trace of compound query}
+
+Next log contains the annotated trace of the sample query. Make sure you
+understand it before proceeding.
+
+\bigskip
+
+\begin{verbatim}
+?- location(X, kitchen), edible(X).
+\end{verbatim}
+The trace has a new feature, which is a number in the first column that
+indicates the goal being worked on.
+
+First the goal \verb|location(X, kitchen)| is called, and the trace
+indicates that pattern matches the second clause of location.
+
+\begin{verbatim}
+1 CALL location(X, kitchen)
+\end{verbatim}
+
+It succeeds, and results in the binding of \var{X} to \verb|apple|.
+
+\begin{verbatim}
+1 EXIT (2)location(apple, kitchen)
+\end{verbatim}
+
+Next, the second goal \verb|edible(X)| is called. However, \var{X} is now bound
+to apple, so it is called as \verb|edible(apple)|.
+
+\begin{verbatim}
+2 CALL edible(apple)
+\end{verbatim}
+
+It succeeds on the first clause of \verb|edible/1|, thus exiting the query
+successfully.
+
+\begin{verbatim}
+2 EXIT (1) edible(apple)
+    X = apple ;
+\end{verbatim}
+
+Entering semicolon (;) causes the listener to backtrack into the rightmost goal
+of the query.
+
+\begin{verbatim}
+2 REDO edible(apple)
+\end{verbatim}
+
+There are no other clauses that match this pattern, so it fails.
+
+\begin{verbatim}
+2 FAIL edible(apple)
+\end{verbatim}
+
+Leaving the fail port of the second goal causes the listener to enter the redo
+port of the first goal. In so doing, the variable binding that was established
+by that goal is undone, leaving \var{X} unbound.
+
+\begin{verbatim}
+1 REDO location(X, kitchen)
+\end{verbatim}
+
+It now succeeds at the sixth clause, rebinding \var{X} to \verb|broccoli|.
+
+\begin{verbatim}
+1 EXIT (6) location(broccoli, kitchen)
+\end{verbatim}
+
+The second goal is called again with the new variable binding. This is a fresh
+call, just as the first one was, and causes the search for a match to begin at
+the first clause
+
+\begin{verbatim}
+2 CALL edible(broccoli)
+\end{verbatim}
+
+There is no clause for \verb|edible(broccoli)|, so it fails.
+
+\begin{verbatim}
+2 FAIL edible(broccoli)
+\end{verbatim}
+
+The first goal is then re-entered at the redo port, undoing the variable
+binding.
+
+\begin{verbatim}
+1 REDO location(X, kitchen)
+\end{verbatim}
+
+It succeeds with a new variable binding.
+
+\begin{verbatim}
+1 EXIT (7) location(crackers, kitchen)
+\end{verbatim}
+
+This leads to the second solution to the query.
+
+\begin{verbatim}
+2 CALL edible(crackers)
+2 EXIT (2) edible(crackers)
+    X = crackers ;
+\end{verbatim}
+
+Typing semicolon (;) initiates backtracking again, which fails through both
+goals and leads to the ultimate failure of the query.
+
+\begin{verbatim}
+2 REDO edible(crackers)
+2 FAIL edible(crackers)
+1 REDO location(X, kitchen)
+1 FAIL location(X, kitchen)
+     no
+\end{verbatim}
+
+\secup
+
+In this example we had a single variable, which was bound (given a value) by the
+first goal and tested in the second goal. We will now look at a more general
+example with two variables. It is attempting to ask for all the things located
+in rooms adjacent to the kitchen.
+
+In logical terms, the query says ``Find a \var{T} and \var{R} such that there is
+a door from the kitchen to \var{R} and \var{T} is located in \var{R}''. In
+procedural terms it says ``First find an R with a door from the kitchen to R.
+Use that value of R to look for a T located in R``.
+\begin{verbatim}
+?- door(kitchen, R), location(T,R).
+R = office
+T = desk ;
+
+R = office
+T = computer ;
+
+R = cellar
+T = 'washing machine' ;
+no
+\end{verbatim}
+
+In this query, the backtracking is more complex. Figure 4.3 shows its trace.
+
+\lstx{Figure 4.3. Trace of a compound query}{prolog/adventure/fig43.log}
+
+Notice that the variable \var{R} is bound by the first goal and \var{T} is bound
+by the second. Likewise, the two variables are unbound by entering the redo port
+of the goal that bound them. After \var{R} is first bound to office, that
+binding sticks during backtracking through the second goal. Only when the
+listener backtracks into the first goal does R get unbound.
+
+\secrel{Built-in Predicates}
+
+Up to this point we have been satisfied with the format Prolog uses to give us
+answers. We will now see how to generate output that is customized to our needs.
+The example will be a query that lists all of the items in the kitchen. This
+will require performing I/O and forcing the listener to automatically backtrack
+to find all solutions.
+
+To do this, we need to understand the concept of the \term{built-in} (evaluable)
+predicate. A built-in predicate is predefined by Prolog. There are no clauses in
+the logicbase for built-in predicates. When the listener encounters a goal that
+matches a built-in predicate, it calls a predefined procedure.
+
+Built-in predicates are usually written in the language used to implement the
+listener. They can perform functions that have nothing to do with logical
+theorem proving, such as writing to the console. For this reason they are
+sometimes called extra-logical predicates.
+
+However, since they appear as Prolog goals they must be able to respond to
+either a call from the left or a redo from the right. Its response in the redo
+case is referred to as its behavior on backtracking.
+
+We will introduce specific built-in predicates as we need them. Here are the I/O
+predicates that will let us control the output of our query.
+\begin{description}
+\item[write/1]\ \\This predicate always succeeds when called, and has the side
+effect of writing its argument to the console.It always fails on backtracking.
+Backtracking does not undo the side effect.
+\item[nl/0]\ \\Succeeds, and starts a new line. Like write, it always succeeds
+when called, and fails on backtracking.
+\item[tab/1]\ \\It expects the argument to be an integer and tabs that number of
+spaces. It succeeds when called and fails on backtracking.
+\end{description}
+
+Figure 4.4 is a stylized picture of a goal showing its internal control
+structure. We will compare this with the internal flow of control of various
+built-in predicates.
+
+\fig{\\Figure 4.4. Internal flow of control through a normal
+goal}{prolog/adventure/fig44.png}{width=0.4\textwidth}
+
+In figure 4.4, the upper left diamond represents the decision point after a
+call. Starting with the first clause of a predicate, unification is attempted
+between the query pattern and each clause, until either unification succeeds or
+there are no more clauses to try. If unification succeeded, branch to exit,
+marking the clause that successfully unified, if it failed, branch to fail.
+
+The lower right diamond represents the decision point after a redo. Starting
+with the most recent clause found in the predicate, unification is again
+attempted between the query pattern and remaining clauses. If it succeeds,
+branch to exit, if not, branch to fail.
+
+The I/O built-in predicates differ from normal goals in that they never change
+the direction of the flow of control. If they get control from the left, they
+pass control to the right. If they get control from the right, they pass control
+to the left as shown in figure 4.5.
+
+\fig{\\Figure 4.5. Internal flow of control through an
+I/O predicate}{prolog/adventure/fig45.png}{width=0.4\textwidth}
+
+The output I/O predicates do not affect the variable table; however, they may
+output values from it. They simply leave their mark at the console each time
+control passes through them from left to right.
+
+There are built-in predicates that do affect backtracking, and we have need of
+one of them for the first example. It is \verb|fail/0|, and, as its name
+implies, it always fails.
+
+If \verb|fail/0| gets control from the left, it immediately passes control back
+to the redo port of the goal on the left. It will never get control from the
+right, since it never allows control to pass to its right. Figure 4.6 shows its
+internal control structure.
+
+\fig{\\Figure 4.6. Internal flow of control through the \var{fail/0}
+predicate}{prolog/adventure/fig46.png}{width=0.3\textwidth}
+
+Previously we relied on the listener to display variable bindings for us, and
+used the semicolon (;) response to generate all of the possible solutions. We
+can now use the I/O built-in predicates to display the variable bindings, and
+the \verb|fail/0| predicate to force backtracking so all solutions are
+displayed.
+
+Here then is the query that lists everything in the kitchen.
+\begin{verbatim}
+?- location(X, kitchen), write(X) ,nl, fail.
+apple
+broccoli
+crackers
+no
+\end{verbatim}
+
+The final \verb'no' means the query failed, as it was destined to, due to the
+\verb|fail/0|.
+
+Figure 4.7 shows the control flow through this query.
+
+\fig{\\Figure 4.7. Flow of control through query with built-in 
+predicates}{prolog/adventure/fig47.png}{width=0.3\textwidth}
 
 
+
+     
 \secup
