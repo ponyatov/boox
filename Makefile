@@ -48,6 +48,7 @@ TEX += prolog/adventure/tools.tex prolog/adventure/getstart.tex
 TEX += prolog/adventure/plato.pl
 TEX += prolog/adventure/facts.tex prolog/adventure/query.tex 
 TEX += prolog/adventure/fig31.pl
+TEX += prolog/adventure/compound.tex
 TEX += prolog/adventure/appendix.tex
 
 TEX += tree/papegaij/papegaij.tex tree/papegaij/intro.tex
