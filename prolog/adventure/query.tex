@@ -265,6 +265,158 @@ You will see a separate perspective with multiple views that contain trace
 information. Enter the query \verb'location(X, kitchen)' in the \menu{Debug
 Listener} view. You will see the trace start in the debugger view.
 
+Use the \menu{Step Over} button in the debugger to creep from port to port. When
+output appears in the listener view, enter semicolons \keys{;} to continue the
+search. See the help files for more details on the debugger.
 
+Unification between goals and facts is actually more general than has been
+presented. Variables can also occur in the facts of the Prolog logicbase as
+well.
+
+For example, the following fact could be added to the Prolog program. It might
+mean everyone sleeps.
+\begin{verbatim}
+sleeps(X).
+\end{verbatim}
+
+You can add it directly in the listener, to experiment with, like this.
+\begin{verbatim}
+?- assert(sleeps(X)).
+yes
+\end{verbatim}
+
+Queries against a logicbase with this fact give the following results.
+\begin{verbatim}
+?- sleeps(jane).
+yes
+
+?- sleeps(tom).
+yes
+\end{verbatim}
+Notice that the listener does not return the variable bindings of \verb'X=jane'
+and \verb'X=tom.' While they are surely bound that way, the listener only lists
+variables mentioned in the query, not those used in the program.
+
+Prolog can also bind variables to variables.
+\begin{verbatim}
+?- sleeps(Z).
+Z = H116
+
+?- sleeps(X).
+X = H247
+\end{verbatim}
+When two unbound variables match, they are both bound, but \emph{not to a
+value}. They are bound together, so that if either one takes a value, the other
+takes the same value. This is usually implemented by binding both variables to a
+common internal variable. In the first query above, both \var{Z} in the query
+and \var{X} in the fact are bound to internal variable \var{H116}. In this way
+Prolog remembers they have the same value. If either one is bound to a value
+later on, both automatically bind to that value. This feature of Prolog
+distinguishes it from other languages and, as we will discover later, gives
+Prolog much of its power.
+
+The two queries above are the same, even though one uses the same character
+\var{X} that is used in the fact \verb'sleeps(X)'. The variable in the fact is
+considered different from the one in the query.
+
+\secrel{Exercises}\secdown
+
+The exercise sections will often contain nonsense Prolog questions. These are
+queries against a meaningless logicbase to strengthen your understanding of
+Prolog without the benefit of meaningful semantics. You are to predict the
+answers to the query and then try them in Prolog to see if you are correct. If
+you are not, trace the queries to better understand them.
+
+\secrel{Nonsense Prolog}
+
+1- Consider the following Prolog logicbase
+\begin{verbatim}
+easy(1).
+easy(2).
+easy(3).
+
+gizmo(a,1).
+gizmo(b,3).
+gizmo(a,2).
+gizmo(d,5).
+gizmo(c,3).
+gizmo(a,3).
+gizmo(c,4).
+\end{verbatim}
+and predict the answers to the queries below, including all alternatives when
+the semicolon (;) is entered after an answer.
+\begin{verbatim}
+?- easy(2).
+?- easy(X).
+
+?- gizmo(a,X).
+?- gizmo(X,3).
+?- gizmo(d,Y).
+?- gizmo(X,X).
+\end{verbatim}
+
+2- Consider this logicbase,
+
+\begin{verbatim}
+harder(a,1).
+harder(c,X).
+harder(b,4).
+harder(d,2).
+\end{verbatim}
+and predict the answers to these queries.
+\begin{verbatim}
+?- harder(a,X).
+?- harder(c,X).
+?- harder(X,1).
+?- harder(X,4).
+\end{verbatim}
+
+\secrel{Adventure Game}
+
+3- Enter the listener and reproduce some of the example queries you have seen
+against \verb|location/2|. List or print \verb|location/2| for reference if you
+need it. Remember to respond with a semicolon \keys{;} for multiple answers.
+Trace the query.
+
+\secrel{Genealogical Logicbase}
+
+4- Pose queries against the genealogical logicbase that:
+\begin{itemize}[nosep]
+  \item 
+Confirm a parent relationship such as parent(dennis, diana)
+  \item 
+Find someone's parent such as parent(X, diana)
+  \item 
+Find someone's children such as parent(dennis, X)
+  \item 
+List all parent-children such as parent(X,Y)
+\end{itemize}
+
+\bigskip\noindent
+5- If \verb|parent/2| seems to be working, you can add additional family members
+to get a larger logicbase. Remember to include the corresponding \verb|male/1|
+or \verb|female/1| predicate for each individual added.
+
+\secrel{Customer Order Entry}
+
+6- Pose queries against the customer order entry logicbase that
+\begin{itemize}[nosep]
+  \item 
+find customers in a given city
+  \item 
+find customers with a given credit rating
+  \item 
+confirm a given customer's credit rating
+  \item 
+find the customers in a given city with a given credit rating
+  \item 
+find the reorder quantity for a given item
+  \item 
+find the item number for a given item name
+  \item 
+find the inventory level for a given item number
+\end{itemize}
+
+\secup
 
 \secup
