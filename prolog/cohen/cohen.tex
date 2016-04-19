@@ -256,7 +256,82 @@ conventional programs.
 Finally, note that it would be straightforward to extend this type of parser to
 cover the syntactical analysis of bounded-context grammars, that is, those for
 which a decision to reduce or shift is based on an inspection of m elements in
-the top of the stack and a look-ahead of n elements in the input string.  
+the top of the stack and a look-ahead of n elements in the input string. 
+
+\secrel{Top-Down}
+
+A Prolog implementation of predictive parsers [l] follows readily from the
+programs described in the previous section. The grammar G2, below, generates
+the same language as G1, but left-recursion has been replaced by right-recursion. 
+\[Gz: E -+ TE’\]
+\[E’ -+ + TE’\]
+\[E’ 3 e\]
+\[T +FT’\]
+\[T’ --B * FT’\]
+\[T’ + E\]
+\[F *U-O\]
+\[F + (letter)\]
+The above rules are placed in the database using the unit clauses
+\begin{verbatim}
+rule(Non-terminal, Rhs).
+\end{verbatim}
+Examples are
+\begin{verbatim}
+ruMn(tprim), [t(*), n(f), nt@hne)l).
+rule(n(tprime), [ I). 
+\end{verbatim}
+
+The parser predict(Input, Stack) has the same parameters as its predecessors,
+namely: (1) the input string and (2) the current stack contents (initially n(e),
+where E is the main nonterminal). The parser succeeds if the Input string is in
+the language, and fails otherwise. 
+
+The basic action of predict is to replace a nonterminal on the top of the parse
+stack by the rhs of the rule defining that nonterminal. If a terminal element lies
+on the top of the stack and if it matches the element W in the window, then
+parsing proceeds by popping W and considering the next element of the input
+string to be in the window. A string is accepted when the stack is empty and the
+window contains the marker. In Prolog we have 
+\begin{verbatim}
+% acceptance.
+predict(I$l, 1 I).
+% try a possible rule.
+predict(lnput, [n(N) 1 Stack]) :-
+ruldn(N), Rh),
+append(Rhs, Stack, NewStack),
+predict&put, NewStack).
+% match the terminals.
+predict([t(W) 1 Input], [t(W) 1 Stack]) :- predict(lnput, Stack). 
+\end{verbatim}
+The above parser can handle nondeterministic or even ambiguous grammars, but
+may become trapped in an infinite recursion loop if the grammar is left-recursive. 
+
+To improve the efficiency when processing deterministic grammars, one could
+again resort to placing additional information in the database. This is the case
+for the next parser we consider, which is applicable to LL( 1) grammars, and does
+not rely on backtracking. It will become apparent in Section 5 that it is straightforward
+to generate tables for LL( 1) grammars [ 1]. These tables have as entries
+the contents of the window t(W) and the nonterminal n(N) on the top of the
+stack, and they specify the appropriate (unique) replacement by the rhs of the
+rule defining N. Entries may be defined by unit clauses of the form 
+\begin{verbatim}
+entv(t(W), n(N), Rhs).
+\end{verbatim}
+for all pairs ( W, N) such that N J* W . . . . An LL(1) deterministic parser is
+obtained by replacing the middle clause of predict by
+\begin{verbatim}
+predict[t( W) 1 Input], [n(N) 1 Stack]) :- entry(t(W), n(N), Rhs),
+append(Rhs, Stack, NewStack),
+predict([t(W) I Input], NewStack).   
+\end{verbatim}
+
+By properly selecting one among multiple entries, predict can deterministically
+parse languages defined by ambiguous grammars, as is the case of the if then
+else construct considered in [l, p. 191]. Moreover, the parser does not rely on
+backtracking to accept a string. The complexity of the LL(1) parser is therefore
+O(n) where n is the length of the input string.
+
+ 
 
 \secup
 
