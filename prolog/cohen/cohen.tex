@@ -331,8 +331,142 @@ else construct considered in [l, p. 191]. Moreover, the parser does not rely on
 backtracking to accept a string. The complexity of the LL(1) parser is therefore
 O(n) where n is the length of the input string.
 
- 
+\secrel{Recursive Descent }
+
+All of the previously described parsers contain a general nucleus which drives
+the parsing, the grammar rules being specified by unit clauses in the database.
+Parser efficiency can be increased by establishing a direct mapping between
+grammar rules and Prolog clauses. This is accomplished as in recursive descent
+parsing: each procedure directly corresponds to a given grammar rule. As usual,
+left-recursion is not allowed and has to be replaced by right-recursion to avoid
+endless loops. 
+
+There are three manners in which these parsers can be implemented in Prolog,
+depending on the form of the input string. The first and the least efficient of
+these is the one that uses the predicate append. The second uses links to define
+the input string that appears as unit clauses in the database. Finally, the third,
+which uses difference lists, is the most efficient, as will be seen by estimates of
+the various complexities. The implementation of these versions is illustrated
+using the grammar G3, generating a’kb”, n I 0. The notation t(T) and n(N) will
+no longer be needed to differentiate between terminals and nonterminals, since
+the nonterminals will be transformed into Prolog procedures which manipulate
+terminal strings. 
+\[G3: S+aSb\]
+\[S4C\]
+Every grammar rule is transformed into a clause whose argument is the list of
+terminals derived from the defined nonterminal. Terminals are similarly handled
+using unit clauses. We have 
+\begin{verbatim}
+s(ASB) :- uppend(A, SB, ASB),
+~PP~W, B, SB),
+a(A),
+SW,
+MB).
+s(C) :- c(C).
+ml).
+WI).
+4cl).   
+\end{verbatim}
+The appends are used to partition the list ASB as the concatenation of three
+sublists A, S, B. Although the only partition for which the parser will succeed is
+\[A = a, S = an-lcbnml, B = b,\]
+this program will generate at least 2n incorrect partitions. Hence the number of
+calls needed to append is at least n2. Note that the appends should precede the
+calls of a(A), s(S), b(B). Otherwise, an infinite loop would occur. The above
+program can be optimized by symbolic execution: the terms a(A), b(B), and c(C)
+can be directly replaced by their unit clause counterparts, yielding 
+\begin{verbatim}
+s(ASB) :- uppend([a], SB, ASB),
+wwMS, PI, SB),
+SW.
+ml).  
+\end{verbatim}
+
+The second approach for programming recursive descent parsers in Prolog is
+the use of links. An input string such as [a, a, c, b, b] is represented by the unit
+clauses link(i, t, i + l), stating that there is a terminal t located between positions
+i and i + 1. In our case the input string aacbb becomes
+hk(1, a, 2).
+\begin{verbatim}
+link(2, a, 3).
+link(3, c, 4).
+link(4, b, 5).
+link(5, b, 6). 
+\end{verbatim}
+A clause recognizing a nonterminal will now have two parameters denoting the
+leftmost and rightmost positions in the input string that will parse into the given
+nonterminal. In our particular example we have
+\begin{verbatim}
+s(X1, X4) :- link(X1, a, X2),
+s(X2, X3),
+link(X3, b, X4).
+s(X1, X2) :- link(X1, c, X2). 
+\end{verbatim}
+The as will be consumed by the n successive calls of the first two literals. Then,
+only the second clause is applicable and the c is consumed. Finally, the unbound
+variables X3, X4 are successively bound to the points separating the remaining
+bs. The algorithm’s complexity is therefore linear. 
+
+An efficient implementation of recursive descent parsers in Prolog makes use
+of difference lists. If a nonterminal A generates a terminal string a! (i.e., A ==a*
+a), that string can be represented by the difference of two lists U and V; V is a
+sublist of U which has the same tail as U. For example, if U is [a, c, b, b, b] and
+V is [b, b] the difference U - V defines the list [a, c, b], which for G3 parses into
+an S. Warren [31] points out that the use of difference lists corresponds to having
+the general link-like clause:
+\begin{verbatim}
+link([H 1 2’1, H, T) 
+\end{verbatim}
+which can be read as “the string position labelled by the list with head H and
+tail T is connected by a symbol H to the string position labelled T.” A parser for
+G3 using difference lists can be written as follows:
+\begin{verbatim}
+s(U, V) :- a(U, Vl), s(V1, V2), b(V2, V).
+s( w, 2) :- c( w, 2). 
+\end{verbatim}
+For the terminals a, b, and c we have
+\begin{verbatim}
+am I VII, vu.
+b([b I U21, U2).
+c(k I u31, U3). 
+\end{verbatim}
+Symbolic execution allows us to find the values of U and Vl in the first clause:
+\begin{verbatim}
+U=[alUl], Vl=Ul 
+\end{verbatim}
+Similarly,
+\begin{verbatim}
+V2=[bIU2], V= U2
+W=[cIu@], z=u3 
+\end{verbatim}
+Substituting the values of the above variables, we obtain the optimized program
+\begin{verbatim}
+s([a 1 Ul], U2) :- s(U1, [b I U2]).
+4kl u31, U3). 
+\end{verbatim}
+(The above program could also have been derived using symbolic execution
+by considering the first version of the parser with append and noticing that
+if X - Y and Y - Z are difference lists, then append(X - Y, Y - 2, X - 2) is
+a fact.) 
+
+Let us follow the execution of the call
+\[s(b, 0, c, b, bl, [ I).\]
+Notice that Ul becomes [a, c, b, b] and U2 is [ ]. The next calls of S are
+\[~([a, c, h bl, PII\]
+\[s(k, h bl, P, bl)\] 
+This last call matches only the second clause thus indicating a valid string. An
+informal English description of the acceptance is as follows: successively remove
+each a in the head of the first of the difference lists and add a b to the second
+one. A string is accepted when no more as can be removed, the head of the first
+list is a c, and the two lists contain the same number of bs. Therefore, for this
+particular grammar, G3, the parsing is done in linear time with no backtracking.
+The reader might have already surmised that the use of difference lists and of
+symbolic executions illustrated in this example could be carried out automatically
+from the given grammar rules. Clocksin and Mellish ([6, 1st ed., p. 237-2381]
+present a short Prolog program that does the translation. 
 
 \secup
+
+
 
 \secup
