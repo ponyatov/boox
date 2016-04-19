@@ -24,6 +24,8 @@ TEX += prolog/fisher/f3_1_1.png prolog/fisher/f3_1_2.png
 TEX += prolog/fisher/3_2.tex
 
 TEX += prolog/cohen/cohen.tex 
+TEX += prolog/cohen/4m.tex 
+TEX += prolog/cohen/5grammar.tex prolog/cohen/6lexical.tex  
 
 #TEX += prolog/datomic/datomic.tex prolog/datomic/basic.tex
 #TEX += prolog/datomic/notation.tex
