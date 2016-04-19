@@ -57,5 +57,58 @@ ACM Transactions on Programming Languages and Systems, Vol. 9, No. 2, April 1967
 
 \secrel{INTRODUCTION}
 
+The seminal paper by Alain Colmerauer on Metamorphosis Grammars first
+appeared in 1975 [9]. That paper spawned most of the developments in compiler
+writing using Prolog, a great many of them due to David H. D. Warren. Warren’s
+thesis [30], the paper summarizing it [31], and the related work on Definite
+Clause Grammars [25] are practically the sole sources of reference on the
+subject.\note{A recent book edited by Campbell [3] mostly covers the
+implementation of Prolog itself. }
+
+The available published material on the subject describes one particular approach
+in implementing compilers using Prolog. It consists of coupling actions 
+to recursive descent parsers to produce syntax-trees which are subsequently
+utilized in guiding the generation of assembly language code. Although this
+remains a worthwhile approach, there is a host of possibilities for Prolog usage
+in compiler construction. The primary aim of this paper is to present the material
+needed for exposing the reader to the advantages of using Prolog in parsing and
+compiling. A second, but equally important, goal of this paper is to show that
+Prolog is a labor-saving tool in prototyping and implementing many nonnumerical
+algorithms which arise in compiling, and whose description using
+Prolog is not available in the literature. Finally, a third goal is to present new
+approaches to compiler design which use proposed extensions to Prolog. 
+
+This paper is directed to compiler designers moderately familiar with Prolog,
+who wish to explore the advantages and present drawbacks of using this language
+for implementing language processors. The advantages of Prolog stem from two
+important features of the language. 
+
+(1) The use of unification as a general pattern-matching operation allowing
+procedure parameters (logical variables) to be both input and output or to
+remain unbound. Unification replaces the conditionals and assignments
+which exist in most languages. 
+
+(2) The ability to cope with nondeterministic situations, and therefore allow the
+determination of multiple solutions to a given problem. 
+
+From a subjective point of view, the main advantage of Prolog is that the
+language has its foundations in logic, and it therefore encourages the user to
+describe problems in a logical manner which facilitates the checking for correctness,
+enhances program readability, and reduces the debugging effort. It will be
+seen that unification and nondeterminism play an important role in compiler
+design; however, using their full generality is often costly and unnecessary. These
+issues are discussed throughout the paper whenever they become relevant.
+Remarks are made in the last section about the efficiency of Prolog-written
+compilers and the means to improve their performance. 
+
+The Prolog proficiency assumed in this paper can be acquired by reading the
+first few chapters of either Kowalski’s [20] or Clocksin and Mellish’s [6] books.
+In particular, the reader should be at ease with elementary list processing and
+with the predicate append. The concrete syntax used in this paper is that of
+Edinburgh Prolog [6]. It is also assumed that the reader is familiar with compiler
+design topics such as parsing, lexical analysis, code generation, optimizations,
+and so on. These topics are covered in standard texts [l, 17,291. 
+
+
 
 \secup
