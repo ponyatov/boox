@@ -1,0 +1,59 @@
+\secrel{SYNTAX-DIRECTED TRANSLATION }\label{cohen3}
+
+This type of translation consists of triggering semantic actions specified by the
+programmer, once selected syntactic constructs are found by a parser. In the case
+of the bottom-up parsers described in Section 2.1, it suffices to add a third
+parameter to the reduce clauses specifying the rule number and to modify the
+parser so that a semantic action (specified by the rule number) will take place
+just after the reduction. For example, in order to translate arithmetic expressions
+into postfix Polish notation, the corresponding reduce for the first rule of G1
+becomes
+\begin{verbatim}
+reduce(W), t(+), n(e) I Xl, [n(e) I Xl, 0
+\end{verbatim}
+The modified parser contains two additional parameters: (1) a stack, Sem, which
+will be manipulated by the action procedure and (2) a parameter, Result, which
+will be bound to the final result of the semantic actions:
+\begin{verbatim}
+% accept and bind Result to the semantic parameter.
+wp-trunslate([$], [n(e)], Result, Result).
+% try to perform a reduction and a semantic action.
+wp-transkzte([ W 1 Input], [S I Stack], Sem, Result) :-
+&y-reduce@, W),
+reduce([S I Stack], NewStack, RuleNumber),
+action(RuleNumber, [S I Stuck], Sem, NewSem),
+wp-translute([ W I Input], NewStack, NewSem, Result). 
+\end{verbatim}
+\begin{verbatim}
+% try a shift.
+wp-transZate([ W 1 Input], [S 1 Stack], Sem, Result) :-
+try_shift(S, W),
+wp-translute(Znput, [W, S 1 Stack], Sem, Result).  
+\end{verbatim}
+The parser can then he equipped with actions by adding rules which specify how
+the temporary semantic parameter is to be modified for each rule. The following
+action procedure constructs parse trees for the arithmetic expressions defined by
+grammar G1:
+\begin{verbatim}
+syntax-tree(Znput, Tree) :- wp-trandute(Znput, [ 1, [ 1, Tree).
+action(1, Stack, [Xl, X2 1 T], [plus(X2, Xl) IT]).
+action(3, Stack, [Xl, X2 I 2’1, [times(X2, Xl) I 2’1).
+action(6, [t(Z,etter) I Stack], Temp, [Letter I Temp]).
+action(X, Stack, Temp, Temp) :- X # 1, X # 3, X # 6. 
+\end{verbatim}
+The body of the last clause guarantees that no spurious actions are performed
+should backtracking ever occur. Notice that the action procedure must have
+access to the parsing stack (as is the case for rule 6) so that specific terminals
+may be incorporated into the actions. A similar strategy is applicable in adding
+actions to predictive parsers. 
+
+All of the above descriptions of semantic actions utilize inherited attributes
+and are admittedly standard. The main purpose of presenting them here is to
+point out how succinct the descriptions become when Prolog is used. The truly
+novel way of performing syntax-directed translation is that pioneered by
+Colmerauer and widely utilized by Warren. That approach does not strictly
+separate syntax from semantics as was done in this section. They have added
+new parameters to the recursive descent parser described in Section 2.3, so that
+the translation takes full advantage of the unification and goal-seeking features
+of Prolog. Colmerauer’s approach is the subject of the next section. 
+
