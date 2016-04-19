@@ -1,0 +1,61 @@
+\secrel{Parsing and Compiling Using Prolog}\label{cohen}\secdown
+\href{https://drive.google.com/file/d/0B0u4WeMjO894eHpLcTE2bWU0SjQ/view?usp=sharing}{pdf}
+\cp{\url{https://pdfs.semanticscholar.org/dd8d/c0deb336d90912a21ba8ec6f6c6fef4b4024.pdf}}
+
+\copyright\ JACQUES COHEN and TIMOTHY J. HICKEY\\
+Brandeis University
+\bigskip
+
+\subsecly{Abstract}
+
+This paper presents the material needed for exposing the reader to the
+advantages of using Prolog as a language for describing succinctly most of the
+algorithms needed in prototyping and implementing compilers or producing tools
+that facilitate this task. The available published material on the subject
+describes one particular approach in implementing compilers using Prolog. It
+consists of coupling actions to recursive descent parsers to produce
+syntax-trees which are subsequently utilized in guiding the generation of
+assembly language code. Although this remains a worthwhile approach, there is a
+host of possibilities for Prolog usage in compiler construction. The primary aim
+of this paper is to demonstrate the use of Prolog in parsing and compiling. A
+second, but equally important, goal of this paper is to show that Prolog is a
+labor-saving tool in prototyping and implementing many nonnumerical algorithms
+which arise in compiling, and whose description using Prolog is not available in
+the literature. The paper discusses the use of unification and nondeterminism in
+compiler writing as well as means to bypass these (costly) features when they
+are deemed unnecessary. Topics covered include bottom-up and top-down parsers,
+syntax-directed translation, grammar properties, parser generation, code
+generation, and optimixations. Newly proposed features that are useful in
+compiler construction are also discussed. A knowledge of Prolog is assumed.
+
+Categories and Subject Descriptors: D.l.O [Programming Techniques]: General;
+D.2.m [Software Engineering]: Miscellaneous--rapid prototyping; D.3.4
+[Programming Languages]: Processors; F.4.1. [Mathematical Logic and Formal
+Languages]: Mathematical Logic--logic programming 1.2.3 [Artificial
+Intelligence]: Deduction and Theorem Proving--logic programming
+
+General Terms: Algorithms, Languages, Theory, Verification
+
+Additional Key Words and Phrases: Code generation, grammar properties,
+optimization, parsing
+
+\bigskip
+This work was supported by the NSF under grant DCR 8590881.
+
+Authors’ address: Computer Science Department, Ford Hall, Brandeis University, Waltham, MA
+02254.
+
+Permission to copy without fee all or part of this material is granted provided that the copies are not
+made or distributed for direct commercial advantage, the ACM copyright notice and the title of the
+publication and its date appear, and notice is given that copying is by permission of the Association
+for Computing Machinery. To copy otherwise, or to republish, requires a fee and/or specific
+permission.
+
+0 1987 ACM 0164-0925/87/0400-0125 \$00.75
+
+ACM Transactions on Programming Languages and Systems, Vol. 9, No. 2, April 1967, Pages 125-163. 
+
+\secrel{INTRODUCTION}
+
+
+\secup
