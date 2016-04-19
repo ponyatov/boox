@@ -163,5 +163,116 @@ MULT A
 An alternative approach to the method presented here is to generate new
 Prolog variables to represent the temporaries as they are needed and to ensure,
 in a subsequent pass, that their usage is optimized. 
- 
+
+\secrel{Generating Code from Trees }
+
+A more general approach to code generation is based on “walks” in the syntaxtree
+of a program. We start by describing Warren’s approach [31] for generating
+code for a fictitious machine. This computer performs arithmetic operations
+using a single accumulator. The corresponding instructions are ADD, MULT,
+SUB, and DIV. Operations of the type ADDI, MULTI, and so on, are also
+available, and consider the value immediately following them as the second
+operand in the computation. LOAD and ST0 commands are of course present,
+as well as the unconditional transfer (JUMP) or conditional ones such as J xx,
+where xx is EQ, NE, GT, and so on. The input/output commands are simply
+READ and WRITE. The generator consists of the clause encode-statement which
+identifies the node of the syntax-tree and constructs the corresponding code. The
+generated code is a list of instructions and labels, (possibly containing embedded
+sublists), for instance,
+\begin{verbatim}
+[. . . label(LI), [instr(LOAD, X), instr(ADDI, 3)], . . -1 
+\end{verbatim}
+
+In Warren’s paper the arguments of instructions are stored in a dictionary,
+but remain unbound to actual memory addresses until the very final phase of the
+compiler. At that time an assembler determines the addresses of labels, and an
+allocator binds the addresses of the variables and reserves the number of memory
+locations needed to run the compiled program. We now present some fragments
+of Prolog programs that perform the generation. An assignment of an expression
+Expr to a variable X is translated into the list whose head is the generated code
+for the expression followed by the instruction ST0 X. The procedure encodestatement
+has three arguments: the syntax-tree, the dictionary Diet, and the
+resulting code. We have
+\begin{verbatim}
+encode-statement(assign(name(X), Expr),
+Diet,
+[Exprcode, instr(sto, Addr)]) :-
+lookup(X, Addr, Diet),
+encode-expr(Expr, Diet, Exprcode). 
+\end{verbatim}
+
+The procedure lookup stores the new variable X if it is not yet entered in Diet
+and retrieves the unbound variable representing its address (see Section 4). 
+
+The procedure encode-expr can handle two shapes of arithmetic expression
+syntax-trees. In the first the right operand is a leaf (i.e., a variable or a constant).
+In the second the right operand is a subtree. The syntax-tree for arithmetic
+expressions has internal nodes labeled by the operator Op. The more complex
+case where the right operand is a subtree is presented below. Its action is to
+translate expr(Op, Exprl, Expr2) (in which Expr2 is of the form expr(Op, Anyl,
+Any2) into the sequence containing
+
+(1) the code for Expr2,
+
+(2) the instruction ST0 temp,
+
+(3) the code for Exprl, and finally,
+
+(4) the code for the instruction specified by Op. 
+
+An added argument N is needed to specify the pool of temporary locations. Its
+initial value is zero. In Prolog we have
+\begin{verbatim}
+encode-subexpr(expr(Op, Exprl, Expr2), N, Diet,
+[Exprkode, instr(sto, Addr), Exprlcode, instr(Opcode, Addr)]) :-
+complex (Expr2),
+lookup(N, Addr, Diet),
+encode-subexpr(Expr2, N, Diet, ExprZcode),
+NlisN+l,
+encode-szbexpr(Exprl, Nl, Diet, Exprlcode),
+memoryop (Op, Opcode).
+complex(expr(Op, Anyl, AnyP)).
+memoryop(+, add).
+memoryop(*, m&t).
+\end{verbatim}
+
+The code generated for the previous expression A* (A* B + C - C* D) now
+becomes
+\begin{verbatim}
+LOAD C
+MULT D
+ST0 TO
+LOAD
+MULT ii
+ADD C
+SUB To
+ST0 T,,
+LOAD A
+MULT T,, 
+\end{verbatim}
+Note that since a right subtree is evaluated before a left one, the code for C* D
+is the first to be generated. 
+
+The use of labels is illustrated by the generation of code for while statements.
+The translation consists of transforming the syntax-tree while (Test, Do) into the
+code
+\begin{verbatim}
+hbel(L1): (encode Test)
+(encode Do )
+jump Ll
+lubel(L2): 
+\end{verbatim}
+
+Note that a new argument (L2) is needed in the procedure that encodes tests
+to generate the jump to the exit label. The Prolog program to achieve the
+translation parallels the above description.
+\begin{verbatim}
+encode-statement (while (Test, Do), Diet,
+[hbel(Ll), Testcode, Docode, in&( jump, Ll), bbel(L2)]) :-
+encode-test (Test, Diet, L2, Testcode),
+encode-statement(Do, Diet, Docode). 
+\end{verbatim}
+
+
+  
 \secup
