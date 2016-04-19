@@ -107,8 +107,157 @@ In particular, the reader should be at ease with elementary list processing and
 with the predicate append. The concrete syntax used in this paper is that of
 Edinburgh Prolog [6]. It is also assumed that the reader is familiar with compiler
 design topics such as parsing, lexical analysis, code generation, optimizations,
-and so on. These topics are covered in standard texts [l, 17,291. 
+and so on. These topics are covered in standard texts [l, 17,29]. 
 
+\secrel{PARSING}
 
+In this section we present parsers belonging to two main classes of parsing
+algorithms, namely, bottom-up and top-down. Due to the backtracking capabilities
+of Prolog, these parsers can in general handle nondeterministic and
+ambiguous languages. An early paper by Griffiths and Petrick [18] describes
+various parsing algorithms and their simulation by automata. There the amount
+of nondeterminism is roughly specified by a selectivity matrix which guides the
+parser in avoiding states leading to backtracking. A similar situation occurs in
+the Prolog parsers described here. In compilers, interest is commonly restricted 
+to deterministic languages. Backtracking may be prevented by a judicious use of
+cuts(!) and/or by introducing assertions in the database that guide the parser in
+avoiding dead-ends. 
+
+A word about notation is in order. The grammar conventions are those in [l].
+Edinburgh Prolog uses capital letters as variables, and therefore capitals cannot
+be used to represent nonterminals unless they are quoted. In this paper, the
+terms t( ) and n( ) denote, respectively, terminals and nonterminals. Quoting
+may be necessary for specifying certain terminals (e.g., parentheses). For example,
+the right-hand side (rhs) of the rule
+\[F \rightarrow (E)\]
+is described by the list 
+\[[WV), de), W)‘)l. \]
+
+Whenever stacks are used, they are also represented by lists whose leftmost
+element is the top of the stack. 
+
+This section does not pretend to make an exhaustive treatment of parsers.
+We describe bottom-up and top-down parsers for both nondeterministic and
+deterministic languages. A nondeterministic shift-reduce and a deterministic
+weak-precedence parser are the bottom-up representatives. Their top-down counterparts
+are, respectively, a predictive and an LL(1) parser. A recursive descent
+version of the latter is also considered. Besides those described herein, we have
+programmed and tested Earley’s algorithm [13] and a parser generator that
+produces the necessary tables for parsing SLR( 1) grammars [ 11]. 
+
+\secdown
+
+\secrel{Bottom-Up}
+
+A very simple (albeit inefficient) shift-reduce parser can be readily programmed
+in Prolog. Its action consists of attempting to reduce whenever possible; otherwise
+the window is shifted on to a stack and repeated reductions (followed by shifts)
+take place until the main nonterminal appears by itself in the top of the stack.
+Note that a reduction may be immediately followed by other reductions. A
+reduction corresponds to the recognition of a grammar rule; for instance, the
+reduction for the rule E + E + T occurs when E + T lies on the top of the stack.
+It is then replaced by an E. This action is expressed by the unit clause
+\[redme(Idt), H+), n(e) I Xl, Me) I Xl). \]
+
+Let us consider the classical grammar describing arithmetic expressions: 
+\[G1: E+E+T\]
+\[E-T\]
+\[T-+ T*F\]
+\[T+F\]
+\[F + (E)\]
+\[F + (letter)\]
+The appropriate sequence of reduce clauses follows immediately from the above
+rules. To decrease the amount of backtracking it is convenient to order these
+clauses so that rules with longer right-hand sides are tried before those with 
+shorter rhs. We are now ready to present the parser. It has two parameters:
+(1) a list representing the string being parsed, and (2) the list representing the
+current stack. 
+\begin{verbatim}
+% try-reduce %
+sr-parse(Input, Stack) :- reduce(Stack, NewStack),
+% try-shift %
+sr-parse(Input, NewStack).
+sr-parse([ Window I Rest], Stack) :- sr-parse(Rest, [Window 1 Stack]). 
+\end{verbatim} 
+Assume that a marker (\$) is to be placed at the end of each input string. The
+following acceptance clause accepts a string only when the marker is in the
+window and the stack contains just an E.
+\begin{verbatim}
+% acceptance %
+sr-paWL§l, Me)lh 
+\end{verbatim}
+Consider the input string a*b. We assume that a scanner is available to translate
+it into the suitable list, understandable by the parser. Then the query
+\begin{verbatim}
+?- sr-PamWa), t(*), t(b), $1, [ I).
+\end{verbatim}
+will succeed. 
+
+The above parser is very inefficient, since it relies heavily on backtracking to
+eventually accept or refuse a string. Note that in parsing the string a*b, t(a) is
+first shifted and successively reduced to an F, T, and (even) an E; the latter
+being a faulty reduction. The parser is, however, capable of undoing these
+reductions through backtracking. This inordinate amount of backtracking can
+be controlled by a careful selection of the reductions and shifts that eliminate
+possible blind-alleys. This is done in our next bottom-up parser, which is the
+weak-precedence type [ 1,19].
+
+The basic strategy is to consult a table made of unit clauses like
+\[try-redue(Top-of-stack, Window). and try_shift(Top-of-stack, Window).\]
+which command a reduction or a shift, depending on the elements lying on the
+window and on the top of the stack. The problem of automatically generating
+the above clauses from the grammar rules is addressed in Section 5. The weakprecedence
+relations for the grammar Gi are represented by the clauses 
+\[try_reduce(n(t), \$).\]
+\[try_reduce(n(f), \$9.\]
+\[. . .\]
+\[try-reduce(t(‘)‘), t(+)).\]
+\[\&-reduce(t(‘)‘), t(‘)‘)).\]
+and
+\[try-shift(t(+), t(‘(‘)).\]
+\[tryshift(n(e), t(+)).\]
+and so on.    
+
+We now transform the previous sr-parser into a wp-parser which takes
+advantage of the additional information to avoid backtracking. Using 
+Griffiths and Petrick’s terminology [ 18], these unit clauses render the
+algorithms selective. 
+\begin{verbatim}
+% acceptance %
+w-~~~~4$1, [de)l).
+% try-reduce %
+wp-parse([ W 1 Input], [S 1 Stack]) :- try_reduce(S, W),
+reduce([S 1 Stack], NewStack),
+wp-purse([ W 1 Input], NewStack).
+% try shift %
+wp-parse([ WI Input], [S 1 Stack]) :- try-shift(S, W),
+wp-purse(Zrzput, [W, S 1 Stack]). 
+\end{verbatim}
+Notice that if a grammar is truly a weak-precedence grammar (i.e., there are no
+precedence conflicts and rules have distinct rhs), then backtracking will only
+occur when try-reduce fails and try-shift has to be tried. Thus the query
+\begin{verbatim}
+?- wp-parse(Znput, [ I), print(accept).
+\end{verbatim}
+will print “accept”, and succeed if the Input string is in the language. If the string
+is not in the language, the query will fail. The time complexity is proportional to
+the length of Input. Error detection and recovery are discussed in Section 9.
+
+A comment about the efficiency of this version of wp-parse is in order. Since
+there will in general be a large number of try-reduce and try-shift rules, the
+execution time of the wp-parser could be significantly reduced if a Prolog compiler
+could branch directly to a clause having the appropriate constant as its first term
+(for example, by constructing a hashing table at compile time). Recent and
+planned Prolog optimizing compilers can indeed perform this branching [30].
+The reader should also refer to [21] for a discussion of optimizations applicable
+to deterministic Prolog programs, which render their efficiency closer to those of
+conventional programs. 
+
+Finally, note that it would be straightforward to extend this type of parser to
+cover the syntactical analysis of bounded-context grammars, that is, those for
+which a decision to reduce or shift is based on an inspection of m elements in
+the top of the stack and a look-ahead of n elements in the input string.  
+
+\secup
 
 \secup
