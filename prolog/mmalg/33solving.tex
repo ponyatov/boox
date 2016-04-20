@@ -76,3 +76,107 @@ sides.
 success. 
 \end{enumerate}
  
+Of course, if we want to use this algorithm for unifying two terms tl and t2, we
+have to construct an initial system with empty T part and with the following U
+part:
+\begin{verbatim}
+\[{{x) = (tl, t2), {xl} = 6, {x2} = O ..... {x,} = 6}\]
+\end{verbatim}
+where xl, x2 .... , Xn are all the variables in t~ and t2 and x is a new variable which
+does not occur in ti and t2. For instance, let tl = f(x~, g(x2, xs), x2, b) and
+t2 = f(g(h(a, xs), x2), x~, h(a, x4), x4). The initial system is as follows:
+\begin{verbatim}
+U: {{x} = (f(xl,g(x2, x3), x2, b), f(g(h(a, x~), x2), xl, h(a, x4), x4)),
+{x~} = 6, (x2} = 6, {x3} = ;D, (x4} = 6, {xs} = 6}; (3)
+T:().  
+\end{verbatim}
+
+After the first iteration of Algorithm 2 we get
+\begin{verbatim}
+U: {(x~} = (g(h(a, x~), x2), g(x2, x3)),
+{x2} = (h(a, x4)),
+(x~) = 0,
+(x4} = (b),
+(xs} = ~);
+T: ( {x} = (f(xl, xl, x2, x4))). 
+\end{verbatim}
+
+We now eliminate variable x2, obtaining
+\begin{verbatim}
+U: ({Xl) = (g(h(a, xs), h(a, x4)), g(h(a, x4), x3)),
+{x3} =6,
+(x4} = (b),
+{x5 ) = O};
+T: ( (x} = (f(xl, Xl, x2, x4)),
+{x2} = (h(a, x4))). 
+\end{verbatim}
+
+By eliminating variable xl, we get
+\begin{verbatim}
+U: {(x3} = (h(a, x4)),
+{x,, xs} = (b));
+T: ( (x} = (f(xl, xi, x2, x4)),
+(x2} = (h(a, x4)),
+(xl} = (g(h(a, x4), x3))). 
+\end{verbatim}
+
+Finally, by eliminating first the set {x4, xs} and then {x3}, we get the solved
+system
+\begin{verbatim}
+U: O;
+T: ((x} = (f(x~, Xl, X2, X4)),
+(X2) = (h(a, x4)),
+{Xl) = (g(h(a, x4), xz)),
+(x4, xs} = (b),
+{x3) = (h(a, b))). 
+\end{verbatim}
+
+We can now prove the correctness of Algorithm 2. 
+
+THEOREM 3.2. Algorithm 2 always terminates. If it stops with failure, then
+the given system has no unifier. If it stops with success, the resulting system is
+equivalent to the given system and has an empty unsolved part.
+
+PROOF. All transformations obtain systems equivalent to the given one. In fact,
+in step (1.4) multiequation reduction obtains a set of equations which (according
+to Theorem 3.1) is equivalent, and compactification transforms it again into a
+system. Step (1.5) applies substitution only to the terms in U, and its feasibility
+can be proved as in Theorem 2.2. Step (1.6) can be applied since the multiequation
+S = (C), introduced during multiequation reduction, has not been modified by
+compactification, due to the condition tested in step (1.3). For the same condition,
+transferring multiequation S = (C) from U to T still leaves a system. Step (2) is
+clearly feasible.
+
+If the algorithm stops with failure, then, by Theorem 3.1, the system presently
+denoted by R (equivalent to the given one) has no solution. Otherwise, the final
+system clearly has an empty U part. Finally, the algorithm always terminates
+since at every cycle some variable is eliminated from the U part. $\square$ 
+
+It is easy to see that, for a given system, the size of the final system depends
+heavily on the order of elimination of the multiequations. For instance, given the
+same system as discussed earlier,
+\begin{verbatim}
+U: {{xl) = ~,
+{x2} = (h(xl, Xl)),
+{x3} = (h(x2, x2)),
+{x,) = (h(x3, x3))};
+T:(), 
+\end{verbatim}
+
+and eliminating the variables in the order x2, xz, x4, Xx, we get the final system
+\begin{verbatim}
+U: 0;
+T: ({x2) -- (h(xm, Xl)),
+{x3} = (h(h(Xl, xl), h(Xl, xl))),
+{x4} = (h(h(h(Xl, Xl), h(xl, xl)), h(h(xl, xl), h(Xl, Xl)))),
+{x~ } = 0). 
+\end{verbatim}
+
+If instead we eliminate the variables in the order x4, x3, x2, xl, we get
+\begin{verbatim}
+U: O;
+T: ({x4} = (h(x3, x3)),
+(x3} = (h(x2, x2)),
+{x2} -- (h(Xl, Xx)),
+{x, } = O). 
+\end{verbatim}
