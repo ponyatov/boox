@@ -1,0 +1,229 @@
+\secrel{COMPARISONS WITH OTHER ALGORITHMS}\label{mmalg7}
+
+In this section we compare the performance of our algorithm with that of two
+well-known algorithms: Huet's algorithm [7], which has an almost linear time
+complexity, and Paterson and Wegman's algorithm [15], which is theoretically
+the best having a linear complexity.
+
+\paragraph{Figure 5}
+\begin{verbatim}
+procedure Compact(Frontier: ListOfTempMultEq; var U: UPart);
+var Vars: QueueOfVariables;
+V: Variable;
+Mult, Mult 1: MultiEquation ;
+procedure MergeMultEq(var Mult: MultiEquation ; Mult l: MultiEquation );
+vat Multt: MultiEquation;
+V: Variable;
+Vars : L istOfVariab les ;
+begin
+if not(Mult = Mult 1) then
+begin
+if Mult T. VarNumber < Mult 1T. VarNumber then
+begin
+Multt := Mult;
+Mult := Multl;
+Mult 1 := Multt
+end;
+MultT.Counter := MultT.Counter + Multl~.Counter;
+Mult T. VarNumber := Mult ~. VarNumber + Mult 1 T. VarNumber;
+Vars := Mult l T.S;
+repeat
+V := Vars'~.Value;
+Vars := VarsT.Next;
+V ~.M := Mult;
+Mult T.S := NewListOfVariables( V, Mult T.S)
+until Vars = Nil;
+MergeMultiTerms(MultT.M, Mult l T.M);
+U.MultEqNumber := U.MultEqNumber- 1
+end
+end (*MergeMultEq*);
+begin
+while not(Frontier = Nil) do
+begin
+Vars := Frontier T. ValueT.S;
+V := HeadOf(Vars);
+RemoveHead( Vars);
+Mult := VT.M;
+MultT.Counter := MultT.Counter - 1;
+while not IsEmpty(Vars) do
+begin
+V := HeadOf(Vars);
+RemoveHead( Vars);
+Multl :-- VT.M;
+Mult l T.Counter := Mult l ~.Counter - 1;
+MergeMultEq(Mult, Mult 1)
+end;
+MergeMulti Terms(Mult T.M, Frontier T. Value~.M ) ;
+ifMultT.Counter = 0 then
+U.ZeroCounterMultEq := NewListOfMultEq(Mult, U.ZeroCounterMultEq);
+Frontier := FrontierT.Next
+end
+end (*Compact*); 
+\end{verbatim} 
+
+\paragraph{Figure 6}
+\begin{verbatim}
+procedure MergeMultiTerms(var M: MultiTerm ; MI: MultiTerm);
+var Arg, Argl: ListOfTempMultEq;
+begin
+ifM = Nil then M := M1
+else if not(M1 = Nil) then
+begin
+if not (M "f .Fsymb = M l ~.Fsymb) then fail(' clash' )
+else
+begin
+Arg := M~.Args;
+Argl := MIT.Args;
+while not(Arg = Nil) do
+begin
+Append(Arg~. Value~.S, Argl ~. Value~.S);
+MergeMultiTerms(Arg~. Value~.M, Argl ~. Value~.M );
+Arg := ArgT.Next;
+Argl := ArglT.Next
+end
+end
+end
+end (*MergeMultiTerms*); 
+\end{verbatim}
+
+As an example of the assertion made at the end of Section 2, let us give a
+sketchy description of the two algorithms using the terminology of this paper.
+Both algorithms deal with sets of multiequations whose left-hand sides are
+disjoint and whose right-hand sides consist of only one term of depth one, that is, 
+of the form f(x,, ..., x,) where x, ..... Xn are variables. For instance, 
+\begin{verbatim}
+{x,} = f(x~, x3, x,); 
+{x2} --- a;
+(xa} = g(x2);
+(x4} = a;
+(x5} ffi f(x6, xT, xs);
+{x6} = a;
+{x7} = g(xa);
+(4)
+{xs} = O. 
+\end{verbatim}
+
+Furthermore, we have a set S of equations whose left- and right-hand sides are 
+variables; for instance, 
+\begin{verbatim}
+S: {x, = xs}. 
+\end{verbatim}
+
+A step of both algorithms consists of choosing an equation from S, merging the
+two corresponding multiequations, and adding to S the new equations obtained
+as the outcome of the merging. For instance, after the first step we have
+\begin{verbatim}
+{x,, xs} = f(x2, x~, x4);
+{X2} = a;
+{x3) = g(x2);
+{x4} = a;
+{x~} = a;
+{xv} = g(xa);
+{x8 } = O;
+S: {x2 = x6, x3 ffi x7, x4 = xs). 
+\end{verbatim}
+
+The two algorithms differ in the way they select the equation from S. In Huet's
+algorithm S is a list; at every step, the first element of it is selected, and the new
+equations are added at the end of the list. The algorithm stops when S is empty,
+and up to this point it has not yet checked the absence of cycles. Thus, there is
+a last step which checks whether the final multiequations are partially ordered. 
+
+The source of the nonlinear behavior of this algorithm is the same as for our
+algorithm, that is, the access to multiequations after they have been merged. To
+avoid this, Paterson and Wegman choose to merge two multiequations only when
+their variables are no longer accessible. For instance, from (5) their algorithm
+selects x3 = x7 because x2 and xs are still accessible from the third and sixth
+multiequation, respectively, getting
+\begin{verbatim}
+{xl, xs} = f(x2, x3, x,);
+{x2} = a;
+{x3, xT} = g(x2);
+{x4} = a;
+{x6} =- a;
+{xs} = O;
+S: {x2 = xs, x2 = x6, x4 = xs}. 
+\end{verbatim}
+
+To select the multiequations to be merged, this algorithm "climbs" the partial
+ordering among multiequations until it finds a multiequation which is "on top";
+thus the detection of cycles is intrinsic in this algorithm. 
+
+Let us now see how our algorithm works with the above example. The initial
+system of multiequations is
+\begin{verbatim}
+U: {[0] {Xl, X5} = f(( {x2, x6}, O), ({x3, xT}, gD), ({x4, xs}, ~)),
+[2] {x2} -= a,
+[1] {x3} = g(({x2), O)),
+[1] (x4} = a,
+[1] {x6} = a,
+[1] {xT} = g({{xs}, O)),
+[2] {xs ) = ~};
+T: (). 
+\end{verbatim}
+
+The next step is
+\begin{verbatim}
+U: {[1] {x2, x6} = a,
+[0] {x3, xT) = g(({x2, xs}, ~)),
+[1] {x4, xs} = a};
+T: ((x~, xs} = f(x2, x~, x4)),
+\end{verbatim}
+and so on. 
+
+In this algorithm the equations containing the pairs of variables to be unified
+are kept in the multiterms, and the mergings are delayed until the corresponding
+multiequation is eliminated. 
+
+An important difference between our algorithm and the others is that our
+algorithm may use terms of any depth. This fact entails a gain in efficiency,
+because it is certainly simpler to compute the common part and the frontier of
+deep terms than to merge multiequations step by step. Note, however, that this
+feature might also be added to the other algorithms. For instance, by adding the
+capability of dealing with deep terms to Paterson and Wegman's algorithm, we
+essentially obtain a linear algorithm which was independently discovered by the
+authors [13]. 
+
+In order to compare the essential features of the three algorithms, we notice
+that they can stop either with success or with failure for the detection of a cycle
+or with failure for the detection of a clash. Let Pm, Pc, and Pt be the probabilities
+of stopping with one of these three events, respectively. We consider three
+extreme cases: 
+
+(1) Pm >> Pc, Pt (very high probability of stopping with success). Paterson
+and Wegman's algorithm is asymptotically the best, because it has a linear
+complexity whereas the other two algorithms have a comparable nonlinear
+complexity. 
+
+However, in a typical application, such as, for example, a theorem prover, the
+unification algorithm is not used for unifying very large terms, but instead it is
+used a great number of times for unifying rather small terms each time. In this
+case we cannot exploit the asymptotically growing difference between linear and
+nonlinear algorithms, and the computing times of the three algorithms will be
+comparable, depending on the efficiency of the implementation. 
+
+An experimental comparison of these algorithms, together with others, was
+carried out by Trum and Winterstein [21]. The algorithms were implemented in
+the same language, PASCAL, with similar data structures, and tried on five
+different classes of unifying test data. Our algorithm had the lowest running time
+for all test data. In fact, our algorithm is more efficient than Huet's because it
+does not need a final acyclicity test, and it is more efficient than Paterson and
+Wegman's because it needs simpler data structures. 
+
+(2) Pc >> Pt >> Pm (very high probability of detecting a cycle). Paterson and
+Wegman's algorithm is the best because it starts merging two multiequations
+only when it is sure that there are no cycles above them. Our algorithm is also
+good because cycle detection is embedded in it. In contrast, Huet's algorithm
+must complete all mergings before being able to detect a cycle, and thus it has a
+very poor performance. 
+
+(3) Pt >> Pc >> Pm (very high probability of detecting a clash). Huet's algorithm
+is the best because, if it stops with a clash, it has not paid any overhead for
+cycle detection. Our algorithm is better than Paterson and Wegman's because
+clashes are detected during multiequation merging and because our algorithm
+may merge some multiequations earlier, like {x2, x6} and {x4, Xs} in the above
+example. On the other hand, mergings which are delayed by our algorithm, by
+putting them in multiterms, cannot be done earlier by the other algorithm
+because they refer to multiequations which are still accessible. The difference in
+the performance of the two algorithms may become quite large if terms of any
+depth are allowed.

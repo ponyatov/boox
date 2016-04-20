@@ -1,0 +1,114 @@
+\secrel{IMPLEMENTATION}\label{mmalg6}
+
+In order to describe the last details of our algorithm, we present here a PASCAL
+implementation. In Figure 1 we have the definitions of data types. All data
+structures used by the algorithm are dynamically created data structures connected
+through pointers. The UPart of a system has two lists of multiequations:
+Equations, which contains all initial multiequations, and ZeroCounterMultEq,
+which contains all multiequations with zero counter. Furthermore, the field
+MultEqNumber contains the number of multiequations in the UPart. A multiequation,
+besides having the fields Counter, S, and M, has a field VarNumber,
+which contains the number of variables in S and is used during compactification.
+The pairs Pi = (S i, Mi), which are the arguments of a multiterm, have type
+TempMultEq. Finally, all occurrences of a variable point to the same Variable
+object, which points to the multiequation containing it in its left-hand side. 
+
+\paragraph{Figure 2}
+\begin{verbatim}
+procedure Unify(R: System);
+var Mult: MultiEquation ;
+Frontier: ListOf TempMultEq ;
+begin
+repeat
+SelectMultiEquation(R ~. U, Mult);
+if not(Mult~.M=Nil) then
+begin
+Frontier := Nil;
+Reduce(Multi.M, Frontier);
+Compact(Frontier, R ~. U)
+end;
+R ~.T := NewListOfMultEq(Mult, R ~.T)
+until R ~. U.MultEqNumber = 0
+end (*Unify*);
+\end{verbatim}
+
+\paragraph{Figure 3}
+\begin{verbatim}
+procedure SelectMultiEquation(var U: UPart; var Mult: MultiEquation);
+begin
+if U.ZeroCounterMultEq = Nil then fail('cycle');
+Mult := U~eroCounterMultEq~. Value;
+U~eroCounterMultEq := U.ZeroCounterMultEqT.Next;
+U.MultEqNumber := U.MultEqNumber - 1
+end ( * SelectMultiEquation *);
+\end{verbatim}
+
+ject, which points to the multiequation containing it in its left-hand side.
+The types "ListOf... ," not given in Figure 1, are all implemented as records
+with two fields: Value and Next. Finally, QueueOfVariables is an abstract type
+with operations CreateListOfVars, IsEmpty, HeadOf, RemoveHead, and Append,
+which have a constant execution time. 
+
+In Figure 2 we rephrase Algorithm UNIFY as a PASCAL procedure. Procedure
+SelectMultiEquation selects from the UPart of the system a multiequation which
+is "on top" of the partial ordering, by taking it from the ZeroCounterMultEq list.
+Its implementation is given in Figure 3. 
+
+Procedure Reduce, given in Figure 4, computes the common part and the
+frontier of the selected multiequation. This procedure modifies the right-hand
+side of this multiequation so that it contains directly the common part. Note that
+the frontier is represented as a list of TempMultEq instead of as a list of
+multiequations. 
+
+Finally, in Figure 5 we give procedure Compact, which performs compactification
+by repeatedly merging multiequations. When two multiequations are
+merged, one of them is erased, and thus all pointers to it from its variables must
+be moved to the other multiequation. To minimize the computing cost, we always
+erase the multiequation with the smallest number of variables in its left-hand
+side. Procedure MergeMultiTerms is given in Figure 6. 
+
+A detailed complexity analysis of a similar implementation is given in [13].
+There it is proved that an upper bound to execution time is the sum of two terms,
+one linear with the total number of symbols in the initial system and another one
+n log n with the number of distinct variables. 
+
+\paragraph{Figure 4}
+\begin{verbatim}
+procedure Reduce(M: MultiTerm; var Frontier: ListOfTernpMultEq);
+var Arg" ListOfTempMultEq;
+begin
+Arg := MT.Args;
+while not(Arg = Nil) do
+begin
+if IsEmpty(Arg T. Value T.S) then Reduce(ArgO. Value T.M, Frontier)
+else
+begin
+Frontier := NewListOfTempMultEq(Arg T. Value, Frontier);
+ArgT. Value := NewTempMultEq( CreateQueueOfVars(HeadOf(Arg~. ValueT.S) ) , Nil)
+end;
+Arg := ArgT.Next
+end
+end (*Reduce*); 
+\end{verbatim}
+
+Here we want only to point out that the nonlinear behavior stems from the
+operation described above of moving all pointers directed from variables to
+multiequations, whenever two multiequations are merged. To see how this can
+happen, let us consider the problem of unifying the two terms
+\[f(xl, x3, xs, xT, xl, xs, xl)\]
+and
+\[f(x2, x4, x6, x8, x3, x7, x5).\]
+
+During the first iteration of Unify we get a frontier whose multiequations are
+the pairs (xl, x2), (x3, x4), (x~, x6), (xT, xs), (xl, x3), (xs, xT), and (xl, xs). By
+executing Compact with this frontier, we see that it moves one pointer for each
+of the first four elements of the frontier, two pointers for each of the next two
+elements, and four pointers for the last element. Thus, it has an n log n complexity. 
+
+As a final remark, we point out that we might modify the worst-case behavior
+of our algorithm with a different implementation of the operation of multiequation
+merging. In fact, we might represent sets of variables as trees instead of as lists,
+and we might use the well-known UNION-FIND algorithms [1] to add elements
+and to access them. In this case the complexity would be of the order of m. G(m),
+where G is an extremely slowly growing function (the inverse of the Ackermann
+function). However, m would be, in this case, the number of variable occurrences.  
