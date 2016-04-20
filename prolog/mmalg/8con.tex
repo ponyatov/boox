@@ -1,0 +1,20 @@
+\secrel{CONCLUSION}\label{mmalg8}
+
+A new unification algorithm has been presented. Its performance has been
+compared with that of other well-known algorithms in three extreme cases: high
+probability of stopping with success, high probability of detecting a cycle, and
+high probability of detecting a clash. Our algorithm was shown to have a good
+performance in all the cases, and thus presumably in all the intermediate cases,
+whereas the other algorithms had a poor performance in some cases. 
+
+Most applications of the unification algorithm, such as, for instance, a resolution
+theorem prover or the interpreter of an equation language, require repeated use
+of the unification algorithm. The algorithm described in this paper can be very
+efficient even in this case, as the authors have shown in [12]. There they have
+proposed to merge this unification algorithm with Boyer and Moore's technique
+for storing shared structures in resolution-based theorem provers [3] and have
+shown that, by using the unification algorithm of this paper instead of the
+standard one, an exponential saving of computing time can be achieved. Furthermore,
+the time spent for initializations, which might be heavy for a single
+execution of the unification algorithm, is there reduced through a close integration
+of the unification algorithm into the whole theorem prover. 
