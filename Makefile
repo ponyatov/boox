@@ -26,7 +26,8 @@ TEX += prolog/fisher/3_2.tex
 TEX += prolog/cohen/cohen.tex prolog/cohen/1intro.tex prolog/cohen/2parsing.tex 
 TEX += prolog/cohen/3syntax.tex prolog/cohen/4m.tex 
 TEX += prolog/cohen/5grammar.tex prolog/cohen/6lexical.tex
-TEX += prolog/cohen/7codegen.tex  
+TEX += prolog/cohen/7codegen.tex prolog/cohen/71polish.tex
+TEX += prolog/cohen/72trees.tex prolog/cohen/73independent.tex  
 
 #TEX += prolog/datomic/datomic.tex prolog/datomic/basic.tex
 #TEX += prolog/datomic/notation.tex

@@ -1,0 +1,164 @@
+\secrel{Generating Code from Polish }
+
+We start by describing a simple program that generates code for a single register
+computer having the usual arithmetic operations, as well as the LOAD Vur and
+STORE VW instructions, where Vur is the location of a variable. The DCG for
+performing the translation is basically that used to generate the postfixed Polish
+described in Section 4. The algorithm essentially operates as follows:
+
+(1) When a variable is recognized it is placed on a stack.
+
+(2) When an operation is recognized its two operands are on the top of the stack.
+If these are variables the following instructions are generated:
+\[LOAD 1st operand\]
+\[Operation 2nd operand\]
+
+Step (2) is continued by replacing the top elements of the stack with the mark
+ccc to indicate that, at execution time, the result will be in the accumulator. To
+take into account this mark we introduce the revised versions of (1) and (2),
+which handle the cases where one of the operands is an occ mark.
+
+(la) Before pushing a variable onto the stack it is necessary to check if the mark
+ccc occupies the position just below the top of the stack. This indicates the
+need of a temporary storage, since the accumulator was already utilized in
+a previous operation and it contains a result that should not be destroyed.
+Thus the mark act is replaced by Ti, the ith element of a pool of temporary
+locations, and the following instruction is generated: ST0 Tie It is then
+possible to push the recognized variable onto the stack.
+
+(lb) If the penultimate element in the stack is not ccc, the variable is simply
+pushed onto the stack.  
+
+As for operators, two cases need to be considered: one for commutative
+operations, the other for noncommutative ones. Let Sl be the top of the stack
+and S2 the element just below it.
+
+(2a) If neither Sl, nor S2 is an act, then code is generated as in step (2) above.
+
+(2b, c) For the commutative operations (addition and multiplication) it suffices
+to generate
+Operation Sl if S2 is an ccc, or to generate
+Operation S2 if Sl is an occ.
+
+(2d) Noncommutative operations (subtraction and division) will check if Sl
+is an act, in which case the instruction ST0 Ti has to be generated and
+the stack updated with Ti instead of ccc, as is done in (la). The generation
+proceeds as indicated in (2). The case where S2 is an ccc is processed as
+in the case of commutative operations (2b).
+
+The above description can be easily summarized in Prolog. For presentation
+purposes, we assume that the arithmetic expression has been parsed into postfixed
+Polish notation. We also assume that variables are represented by terms of the
+form u (Name) and operators by terms op(Op). In an actual implementation the
+semantic actions described below would be triggered directly from the DCG rules. 
+
+The procedure gen-code(Polish, Stack, Temps) traverses the list Polish and
+outputs the code as soon as it is generated. We remind the reader that a program
+that produces output using writes can easily be modified so that it stores the
+output in a list and thereby avoids relying on side effects to generate results (see
+Section 4). The gen-code procedure is initiated with a call to the procedure
+execute, defined by
+\[execute(l) :- gen-code\& [ 1, [O]).\]
+where L is the input in postfix. The operators and operands in the list L trigger
+calls to the corresponding operator and operand clauses, which modify the Stack
+as described above, and may either remove or return a location from the list 
+Temps of available temporary locations:
+\begin{verbatim}
+gen-code([op(Op) 1 Rest], Stack, Temps) :-
+operator(Op, Stack, NewStack, Temps, NewTemps),
+gen-code(Rest, NewStack, NewTemps).
+gen-code([u(X) 1 Rest], Stack, Temps) :-
+operand(X, Stack, NewStack, Temps, NewTemps),
+gen-code(Rest, NewStack, NewTemps).
+gen-code([ 1, AnyStack, AnyTemps). 
+\end{verbatim}
+
+The operator and operand clauses have five parameters:
+
+(1) the variable (or operator) being examined,
+
+(2,3) the starting and resulting stack configurations,
+
+(4,5) the starting and resulting lists of available temporary locations. 
+
+The following remarks will help in understanding the semantic actions of the
+procedures. The program assumes the availability of an unlimited number of
+temporary locations which are reused whenever possible: a temporary is returned
+to its stack after emitting an instruction of the type LOAD Ti or Op Tie The list
+of available temporary locations is initialized to contain only the location T,,.
+Whenever a new temporary is needed, it is taken from this list, and if the list
+contains only one element a new temporary is generated (see the second clause
+of get-temp below). The term t(X) is used to represent a temporary location.
+\begin{verbatim}
+% Case (la). ’
+operand(X, [A, act 1 Stack], [u(X), A, t(I) 1 Stack], Temps, NewTemps) :-
+get-temp(t(I), Temps, NewTemps),
+write(st0, t(I)).
+% Case (lb).
+operand(X, Stack, [u(X) 1 Stack], Temps, Temps). 
+\end{verbatim}
+The first clause of operand guarantees that the accumulator is always the first
+or second element of the stack, if it occurs at all. The other elements in the Stack
+are either temporaries or variables:   
+\begin{verbatim}
+% Case (2b).
+operator(Op, [A, act I Stack], [act 1 Stack], Temps, NewTemps) :-
+codeop(Op, Instruction, AnyOpType),
+gen-instr(Instruction, A, Temps, NewTemps).
+% Case (2~).
+operator(Op, [act, A I Stack], [act I Stack], Temps, NewTemps) :-
+codeop(Op, Instruction, commute),
+gen-instr(Instruction, A, Temps, NewTemps).
+% Case (2d).
+operator(Op, [act, A I Stack], [act I Stack], Temps, NewTemps) :-
+codeop (Op, Instruction, rumcommute),
+get-temp(t(Z), Temps, TempsO),
+write(st0, t(Z)),
+gen-instr(load, A, TempsO, Tempsl),
+gen-instr(Instruction, t(I), Tempsl, NewTemps).
+% Case (2a).
+operator(Op, [A, B I Stack], [act I Stack], Temps, NewTemps) :- ’
+A#acc,B#acc,
+codeop(Op, Instruction, OpType),
+gen-instr(load, B, Temps, Tempsl),
+gen-instr(Instruction, A, Tempsl, NewTemps).
+\end{verbatim}
+
+Notice that at most one of the clauses for operator can succeed, since there can
+be at most one act in the stack. Thus the ordering of the clauses is unimportant,
+and there is no need for cuts. 
+
+The remainder of the program consists of a few auxiliary procedures. The
+procedure get-temp simulates the pop operation for a stack containing the
+currently available temporary locations. Temporary locations are returned to the
+stack by the first clause of gen-instr.
+\begin{verbatim}
+codeop(+, add, commute).
+codeop (-, sub, noncommute).
+codeop(*, mult, commute).
+codeop(/, diu, noncommute).
+gen-temp(tU), V, J I RI, [J I fW.
+getj%y?y), 14, [Jl) :-
+genhstr(Znstruction, t(Z), Temps, [I 1 Temps]) :-
+write(Znstruction, t(Z)).
+gen-instr(Znstruction, v(A), Temps, Temps) :- write(Znstruction, A). 
+\end{verbatim}
+
+The code generated for the expression A * (A * B + C - C* D) is
+\begin{verbatim}
+LOAD A
+MULT B
+ADD C
+ST0 To
+LOAD C
+MULT D
+ST0 Tl
+LOAD T,,
+SUB Tl
+MULT A 
+\end{verbatim}
+
+An alternative approach to the method presented here is to generate new
+Prolog variables to represent the temporaries as they are needed and to ensure,
+in a subsequent pass, that their usage is optimized. 
+

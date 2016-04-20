@@ -1,0 +1,170 @@
+
+\secrel{A Machine-Independent Algorithm for Code Generation }
+
+An alternate approach to code generation is that proposed by Glanville and
+Graham [15, 16]. It is assumed that by syntax-directed translation a source
+program is translated into its prefix Polish counterpart. A second syntax-directed
+translation of the prefix code then produces actual machine code. The interesting
+feature of this approach is that the grammar used to recognize the prefix takes
+into consideration the description of the machine for which code is generated.
+Consider a register machine whose operations are of the type
+\[LOAD M, R\]
+\[ADD R1, R2 or ADD M, R\]
+\[ST0 R, M\]
+\[ADDI C, R\]
+where M is a memory address, C is a constant, and R is a register, and the first
+argument is the source, the second the destination. To simplify the presentation,
+we assume an unlimited pool of registers. The problem of dealing with a limited
+number of registers is discussed in the next section.
+
+The grammar rule
+\[R + op R var 1 var\]
+describes a prefix string in which the last operand is always a variable, (e.g., as
+in + + a b c). The code to be generated in this case can be triggered by semantic
+actions corresponding to the rules 
+
+\[R + var\]
+Action: Load variable into register r
+
+\[R + op R var\]
+Action: 1. recognize (recursively) the left operand R assuming that it will
+use register r
+
+2. generate the code: op var r
+
+Similar grammar rules are applicable for generating code when the last operand
+is a constant. The more general case corresponds to the grammar rule
+\[R + op R R 1 var 1 const\]
+
+In this case a new register is needed before recursing to the second R. Also, a
+register becomes available after recognizing the second R. A natural way of
+implementing the Glanville-Graham approach is through the use of DCGs. The
+following simplified grammar rules express assignments:
+\[A + := var R\]
+\[R+opRvar~opRconst\]
+\[R-+opRR\]
+\[R + var I const\]
+
+Note that this is an ambiguous grammar, and therefore the use of cuts at the end
+of each clause is recommended to avoid generating multiple solutions. The
+recursive descent compiler generated from the DCGs opts, whenever possible, to
+the first rule defining R, instead of the more general second rule. 
+
+The procedures listed below specify the syntax-directed translation of prefix
+Polish into assembly language according to the above grammar rules. The
+procedure reg corresponds to the nonterminal R and has three parameters:
+
+(1) generated assembly language sequence,
+
+(2) register containing the final result,
+
+(3) dictionary for storing variables.   
+
+Although the presented program assumes an unlimited number of registers, it is
+fairly straightforward to modify it to consider a finite number only. This can be
+done by adding extra parameters to the procedure reg. 
+
+The first two clauses of reg treat the special cases where the second parameter
+is a variable or a constant:
+\begin{verbatim}
+% Rule:R+OpRvar.
+reg([Sl, imtr(Op, Addr, Rl)], Rl, D) --+
+arithop(Op, Optwe),
+regC% RL D),
+[uar(Var)l,
+(lookup( Var, D, Addr), !).
+\end{verbatim}
+\begin{verbatim}
+% Rule: R --, Op R const.
+reg([Sl, instr(Constop, C, Rl)], Rl, D) --+
+arithop(Op, Optwe),
+redsl, RI, D),
+bdC)l,
+{constop(op, Con-stop), !). 
+\end{verbatim}
+
+where arithop and constop are defined as
+\begin{align*}
+arithop(sub, noncommute) &\rightarrow\ [-I. &arithopbdd, commute) --+ [+I.\\
+arithop(diu, noncommute) &\rightarrow\ [/I. &arithp(nult, commute) --+ [*I.\\
+constop(sub, subi). &&constop(diu, diui).\\
+constop(add, addi). &&constop(mult, multi). \\
+\end{align*}
+
+It is possible to perform some optimization in the case of commutative operations.
+For that purpose two additional DCG clauses are included to process the rules:
+\[R + op var R and R + op const R\]
+
+The DCG clause for the first of these rules is given below.
+\begin{verbatim}
+% Rule: R -+ op uar R(op is commutatiue).
+reg([Sl, instr(Op, Addr, Rl)], Rl, D) --+
+arithop(Op, commute),
+[udVar)l,
+reg(S1, RI, D),
+(lookup( Var, Addr, D), !I.  
+\end{verbatim}
+
+The more complex DCG given below corresponds to the rule R + op R R.
+\begin{verbatim}
+% Rule:R-*opRR.
+reg([Sl, S2, instr(Op, R2, Rl)], Rl, D) --+
+arithop(Op),
+redS1, RI, D),
+(R2 is Rl + 1),
+reg(S2, R2, D), (!). 
+\end{verbatim}
+
+Two recursive calls are made to reg to determine the subsequences Sl and S2
+representing the code for calculating the two operands. The simple DCG clauses
+for the rules R + uar and R + const generate the necessary instructions that
+load a register with a variable or with a constant.
+\begin{verbatim}
+% Rule: R + var.
+reg(instr(load, Addr, Rl), Rl, D) --+
+[MVar)l,
+{lookup( Var, D, Addr), !).
+% Rule: R + const.
+reg(instr(hzdc, C, Rl), Rl, D) --+
+[co=dC)l, 1% 
+\end{verbatim}
+
+Finally, we present the DCG clause for generating an assignment expressed in
+prefix by the rule
+\[A + := var R.\]
+\begin{verbatim}
+% Code generator for assignments.
+instruction([Sl, instr(store, 1, Addr)], D) --+
+[assign, uar (Vur)],
+red% 0, D),
+(lookup( Var, Addr, D)]. 
+\end{verbatim}
+
+Notice that the chosen grammar relies extensively on backtracking for recognizing
+the appropriate rule. For example, consider the two rules
+\[R --+ Op R const\]
+\[R --+ Op R var\]
+and the input string (+ + 5 c d). Although the first rule will not apply, it will
+nonetheless be tried, and the code for the expression (+ 5 c) will be generated
+before backtracking. The same code will then have to be regenerated when the
+second rule is applied. This can be avoided by considering the following transformed
+equivalent grammar:
+\[R --+ Op R R2\]
+\[R2 --+ Var 1 Const\]
+
+This transformation can be easily generalized to the case at hand, and the
+resulting parser will not rely on backtracking so there will be no need to insert
+cuts into the program. 
+
+An example of the code generated by this technique for the expression
+,*(A* B + C - C*(D - E)) is
+\begin{verbatim}
+LOAD B, RO
+MULT A, RO
+ADD C, RO
+LOAD D, Rl
+SUB E, Rl
+MULT C, RI
+SUB Rl, RO
+MULT A. RO  
+\end{verbatim}
