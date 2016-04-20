@@ -58,7 +58,7 @@ TEX += prolog/mmalg/2unification.tex prolog/mmalg/31basic.tex
 TEX += prolog/mmalg/32trans.tex prolog/mmalg/33solving.tex
 TEX += prolog/mmalg/34uni.tex prolog/mmalg/4eff.tex 
 TEX += prolog/mmalg/5improv.tex prolog/mmalg/6impl.tex
-TEX += prolog/mmalg/7compar.tex prolog/mmalg/8con.tex
+TEX += prolog/mmalg/7compar.tex prolog/mmalg/8con.tex prolog/mmalg/ref.tex
 
 TEX += prolog/adventure/adventure.tex prolog/adventure/preface.tex
 TEX += prolog/adventure/tools.tex prolog/adventure/getstart.tex
