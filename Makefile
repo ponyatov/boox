@@ -31,6 +31,7 @@ TEX += prolog/cohen/5grammar.tex prolog/cohen/6lexical.tex
 TEX += prolog/cohen/7codegen.tex prolog/cohen/71polish.tex
 TEX += prolog/cohen/72trees.tex prolog/cohen/73independent.tex
 TEX += prolog/cohen/74labeled.tex  
+TEX += prolog/cohen/8optimizations.tex prolog/cohen/81compiletime.tex
 
 #TEX += prolog/datomic/datomic.tex prolog/datomic/basic.tex
 #TEX += prolog/datomic/notation.tex

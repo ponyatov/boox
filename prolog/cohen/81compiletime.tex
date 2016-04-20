@@ -1,0 +1,47 @@
+\secrel{Compile-Time Evaluation }\label{cohen81}
+
+Compile-time evaluation of numerical expressions and algebraic simplification
+are easily performed by transforming the syntax-trees of arithmetic expressions
+into equivalent trees containing fewer nodes. Both of the procedures evaluate
+and simplify have as arguments the initial and final trees. They also have a
+similar structure: recursive calls are made to process the left and right branches
+until the leaves are reached. Then the auxiliary procedure simp is called to
+perform the actual simplifications. This allows successive simplifications to be
+performed. 
+\begin{lstlisting}[language=prolog]
+% leaves are left unchanged
+evaluute(const(X), const(X)).
+evahte(var(X), var(X)). 
+% internal nodes are optimized after each of its subtrees
+% has been optimized
+evaluate(expr(Op, Left, Right), Optexp) :-
+	eualuate(left, Optleft),
+	evaluate(Right, Optright),
+	simp(expr(Op, Optkft, Optright), Optexp).
+simp(expr(Op, const(X), const(Y)), const(Z)) :-
+	Temp =. . [Op, X, Y], Z is Temp. 
+\end{lstlisting}
+
+(In the Edinburgh syntax [6], the operation Temp =. . [Op, X, Y] binds Temp to
+the term Op(X, Y)). Note that, unfortunately, this procedure is unable to simplify
+expressions such as a + 3 + 2 into a + 5. This may be achieved by writing a
+simple procedure that transforms left-associative expressions into equivalent
+right-associative expressions. The procedure that performs algebraic simplifications
+is
+\begin{lstlisting}[language=prolog]
+simplify(expr(Op, X, Y), U) :-
+	simplify(X, Left),
+	simplify( Y, Right),
+	simp(expr(Op, Left, Right), U).
+simplify(X, X). 
+\end{lstlisting}
+
+As before, the auxiliary procedure simp performs the actual simplifications.
+\begin{lstlisting}[language=prolog]
+simp(expr(Op, X, const(O)), X) :- addop(Op).
+simp(expr(Op, X, const(l)), X) :- multop(Op).
+simp(expr(*, X, const(O)), const(0)).
+simp(expr(*, const(O), X), const(0)).
+simp(X, X).
+addop(+). addop(-). muZtop(*). m&top(/). 
+\end{lstlisting}
