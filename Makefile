@@ -53,7 +53,8 @@ TEX += prolog/crew/astlog.tex prolog/crew/follow.pl
 
 TEX += prolog/pelin/pelin.tex
 
-TEX += prolog/mmalg/mmalg.tex
+TEX += prolog/mmalg/mmalg.tex prolog/mmalg/1intro.tex 
+TEX += prolog/mmalg/2unification.tex
 
 TEX += prolog/adventure/adventure.tex prolog/adventure/preface.tex
 TEX += prolog/adventure/tools.tex prolog/adventure/getstart.tex

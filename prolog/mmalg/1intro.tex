@@ -1,0 +1,56 @@
+\secrel{INTRODUCTION}\label{mmalg1}
+
+In its essence, the unification problem in first-order logic can be expressed as
+follows: Given two terms containing some variables, find, if it exists, the
+simplest substitution (i.e., an assignment of some term to every variable) which
+makes the two terms equal. The resulting substitution is called the \term{most
+general unifier} and is unique up to variable renaming.
+
+Unification was first introduced by Robinson [17, 18] as the central step of the
+inference rule called resolution. This single, powerful rule can replace all the
+axioms and inference rules of the first-order predicate calculus and thus was
+immediately recognized as especially suited to mechanical theorem provers. In
+fact, a number of systems based on resolution were built and tried on a variety
+of different applications [5]. Even though further research made it apparent
+that resolution systems are difficult to direct during proof search and thus are
+often prone to combinatorial explosion [6], new impetus to the research in this
+area was given by Kowalski's idea of interpreting predicate logic as a
+programming language [10]. Here predicate logic clauses are seen as procedure
+declarations, and procedure invocation represents a resolution step. From this
+viewpoint, theorem provers can be regarded as interpreters for programs written
+in predicate logic, and this analogy suggests efficient implementations [3, 25].
+
+Resolution, however, is not the only application of the unification algorithm.
+In fact, its pattern matching nature can be exploited in many cases where
+symbolic expressions are dealt with, such as, for instance, in interpreters for
+equation languages [4, 11], in systems using a database organized in terms of
+productions [19], in type checkers for programming languages with a complex type
+structure [14], and in the computation of critical pairs for term rewriting
+systems [9].
+
+The unification algorithm constitutes the heart of all the applications listed
+above, and thus its performance affects in a crucial way the global efficiency
+of each. The unification algorithm as originally proposed can be extremely
+inefficient; therefore, many attempts have been made to find more efficient
+algorithms [2, 7, 13, 15, 16, 22]. Unification algorithms have also been
+extended to the case of higher order logic [8] and to deal directly with
+associativity and commutativity [20]. The problem was also tackled from a
+computational complexity point of view, and linear algorithms were proposed
+independently by Martelli and Montanari [13] and Paterson and Wegman [15].
+
+In the next section we give some basic definitions by representing the
+unification problem as the solution of a system of equations. A nondeterministic
+algorithm, which comprehends as special cases most known algorithms, is then
+defined and proved correct. In Section 3 we present a new version of this
+algorithm obtained by grouping together all equations with some member in
+common, and we derive from it a first version of our unification algorithm.
+
+In Sections 4 and 5 we present the main ideas which make the algorithm
+efficient, and the last details are described in Section 6 by means of a PASCAL
+implementation.
+
+Finally, in Section 7, the performance of this algorithm is compared with that
+of two well-known algorithms, Huet's [7] and Paterson and Wegman's [15]. This
+analysis shows that our algorithm has uniformly good performance for all classes
+of data considered.
+
