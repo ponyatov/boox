@@ -1,0 +1,98 @@
+\secrel{The Unification Algorithm}
+
+Looking at Algorithm 2, it is clear that the main source of complexity is step
+(1.5), since it may make many copies of large terms. In the following--and this is
+the heart of our algorithm--we show that, if the system has unifiers, then there
+always exists a multiequation in U (if not empty) such that by selecting it we do
+not need step (1.5) of the algorithm, since the variables in its left-hand side do
+not occur elsewhere in U. We need the following definition. 
+
+Given a system R, let us consider the subset Vu of variables obtained by making
+the union of all left-hand sides Si of the multiequations in the U part of R. Since
+the sets Si are disjoint, they determine a partition of Vu. We now define a relation
+on the classes Si of this partition: we say that Si < Sj iff there exists a variable
+of Si occurring in some term of Mj, where Mj is the right-hand side of
+the multiequation whose left-hand side is Sj. We write <* for the transitive closure
+of <. 
+
+Now we can prove the following theorem and corollary. 
+
+THEOREM 3.3. If a system R has a unifier, then the relation <* is a partial
+ordering.
+PROOF. If Si < \$i, then, in all unifiers of the system, the term substituted
+for every variable in Si must be a strict subterm of the term substituted for every
+variable in Sj. Thus, if the system has a unifier, the graph of the relation < cannot
+have cycles. Therefore, its transitive closure must be a partial ordering.
+$\square$
+
+COROLLARY. If the system R has a unifier and its U part is nonempty, there
+exists a multiequation S ffi M such that the variables in S do not occur elsewhere
+inU.
+
+PROOF. Let S = M be a multiequation such that S is "on top" of the partial
+ordering < * (i.e., ~3Si, S < Si). The variables in S occur neither in the other lefthand
+sides of U (since they are disjoint) nor in any right member Mi of U, since
+otherwise S < Si. $\square$
+
+We can now refine the nondeterministic Algorithm 2 giving the general version
+of our unification algorithm for a system of multiequations R = (T, U). 
+
+Algorithm 3: UNIFY, the Unification Algorithm
+\begin{enumerate}
+  \item 
+(1) repeat
+\begin{enumerate}
+  \item 
+(1.1) Select a multiequation S = M of U such that the variables in S do not occur
+elsewhere in U. If a multiequation with this property does not exist, stop with
+failure (cycle).
+  \item 
+(1.2) ifMis empty
+then transfer this multiequation from U to the end of T.
+else begin
+\begin{enumerate}
+  \item 
+(1.2.1) Compute the common part C and the frontier F of M. If M has
+no common part, stop with failure (clash).
+  \item 
+(1.2.2) Transform U using multiequation reduction on the selected
+multiequation and compactification.
+  \item 
+(1.2.3) Transfer the multiequation S = (C) from U to the end of T.
+end
+until the U part of R
+\end{enumerate}
+\end{enumerate}
+(2) stop with success.  
+\end{enumerate}
+ 
+A few comments are needed. Besides step (1.5) of Algorithm 2, we have also
+erased step (1.3) for the same reason. Furthermore, in Algorithm 2 we were forced
+to wait to transfer multiequations with empty right-hand sides since substitution
+in that case would have required a special treatment. 
+
+By applying Algorithm UNIFY to the system which was previously solved with
+Algorithm 2, we see that we must first eliminate variable x, then variable x,, then
+variables x2 and x3 together, and, finally, variables x4 and x5 together, getting the
+following final system:
+\begin{verbatim}
+U:~
+T: ({x} = (f(xl, xl, x2, x,)),
+{Xl} = (g(x2, x3)),
+{x2, x3} = (h(a, x4)),
+{x,, xs} = (b)).  
+\end{verbatim}
+
+Note that the solution obtained using Algorithm UNIFY is more concise than
+the solution previously obtained using Algorithm 2, for two reasons. First,
+variables x2 and x3 have been recognized as equivalent; second, the right member
+of x~ is more factorized. This improvement is not casual but is intrinsic in the
+ordering behavior of Algorithm UNIFY.
+
+To summarize, Algorithm UNIFY is based mainly on the two ideas of keeping
+the solution in a factorized form and of selecting at each step a multiequation in
+such a way that no substitution ever has to be applied. Because of these two
+facts, the size of the final system cannot be larger than that of the initial one.
+Furthermore, the operation of selecting a multiequation fails if there are cycles
+among variables, and thus the so-called occur-check is built into the algorithm,
+instead of being performed at the last step as in other algorithms [2, 7]. 

@@ -56,6 +56,7 @@ TEX += prolog/pelin/pelin.tex
 TEX += prolog/mmalg/mmalg.tex prolog/mmalg/1intro.tex 
 TEX += prolog/mmalg/2unification.tex prolog/mmalg/31basic.tex
 TEX += prolog/mmalg/32trans.tex prolog/mmalg/33solving.tex
+TEX += prolog/mmalg/34uni.tex
 
 TEX += prolog/adventure/adventure.tex prolog/adventure/preface.tex
 TEX += prolog/adventure/tools.tex prolog/adventure/getstart.tex
