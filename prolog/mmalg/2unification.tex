@@ -114,5 +114,116 @@ following conditions:
 A set of equations in solved form has the obvious unifier
 \[\vartheta = {(t_1,x_1),(t_2,x_2),..,(t_k,x_k)}\]
 
+If there is any other unifier, it can be obtained as
+\[0 = {(t,, x~), (t2, x2) .... , (tk, xk)} U a\]
+where a is any substitution which does not rewrite variables xl .... , xk. Thus t~
+is called a most general unifier (mgu ).  
+
+The following nondeterministic algorithm shows how a set of equations can be
+transformed into an equivalent set of equations in solved form. 
+
+\paragraph{Algorithm 1 }\ \\
+
+Given a set of equations, repeatedly perform any of the following transformations. If no
+transformation applies, stop with success. 
+
+(a) Select any equation of the form
+\[t=x\]
+where t is not a variable and x is a variable, and rewrite it as 
+\[x=t.\]
+
+(b) Select any equation of the form
+\[X=X\] 
+where x is variable, and erase it.  
+
+(c) Select any equation of the form
+\[t' = t"\]
+where t' and t" are not variables. If the two root function symbols are different, stop with
+failure; otherwise, apply term reduction. 
+
+(d) Select any equation of the form
+\[x=t\]
+where x is a variable which occurs somewhere else in the set of equations and
+where t \# x. If x occurs in t, then stop with failure; otherwise, apply variable elimination. 
+
+As an example, let us consider the following set of equations:
+\[g(x2) = xl;\]
+\[f(xl, h(xl), x2) = f(g(x3), x4, x3).\]
+
+By applying transformation (c) of Algorithm 1 to the second equation we get
+\[g(x2) = xl;\]
+\[xl = g(x3);\]
+\[h(x~) = x4;\]
+\[X2 =X3.\]
+
+By applying transformation (d) to the second equation we get
+\[g(x2) = g(xs);\]
+\[xl = g(x3);\]
+\[h(g(x3)) = x4;\]
+\[X2 ~- X3.\]
+
+We now apply transformation (c) to the first equation and transformation (a) to
+the third equation:
+\[X2 ~ X3\]
+\[xl = g(x3);\]
+\[Xa = h(g(x3));\]
+\[X2 ----X3.\]
+
+Finally, by applying transformation (d) to the first equation and transformation
+(b) to the last equation, we get the set of equations in solved form:
+\[X2 ~- X3 ;\]
+\[xl = g(x3);\]
+\[x4 = h(g(x3)).\]
+
+Therefore, an mgu of the given system is
+\[= {(g(x~), x~), (x3, x2), (h(g(x3)), x4)}.\] 
+
+The following theorem proves the correctness of Algorithm 1. 
+
+\paragraph{THEOREM 2.3}. Given a set of equations S,
+
+(i) Algorithm 1 always terminates, no matter which choices are made.
+
+(ii) If Algorithm 1 terminates with failure, S has no unifier. If Algorithm 1
+terminates with success, the set S has been transformed into an equivalent
+set in solved form. 
  
-  
+\paragraph{PROOF}.\\
+
+(i) Let us define a function F mapping any set of equations S into a triple of
+natural numbers (nl, n2, n3). The first number, n~, is the number of variables in
+S which do not occur only once as the left-hand side of some equation. The
+second number, n2, is the total number of occurrences of function symbols in S.
+The third number, n3, is the sum of the numbers of equations in S of type x = x
+and of type t = x, where x is a variable and t is not. Let us define a total ordering
+on such triples as follows:
+\begin{align*}
+(n~, n~, n~) > (n~', n2, " n~')\ if\ &n~ > n~'\\
+&or\ n~ = n~\ and\ n2 > n2\\
+&or\ n~=n" 1 a n- 1 n2 ' ---- n2 "\ and\ n3 ' > n3.\\ 
+\end{align*}   
+
+With the above ordering, N 3 becomes a well-founded set, that is, a set where no
+infinite decreasing sequence exists. Thus, if we prove that any transformation of
+Algorithm 1 transforms a set S in a set S' such that F(S') < F(S), we have
+proved the termination. In fact, transformations (a) and (b) always decrease n3
+and, possibly, n~. Transformation (c) can possibly increase n3 and decrease nl,
+but it surely decreases n2 (by two). Transformation (d) can possibly change n3
+and increase n2, but it surely decreases n~. 
+
+(ii) If Algorithm 1 terminates with failure, the thesis immediately follows from
+Theorems 2.1 and 2.2. If Algorithm 1 terminates with success, the resulting set of
+equations S' is equivalent to the given set S. In fact, transformations (a) and (b)
+clearly do not change the set of unifiers, while for transformations (c) and (d) this
+fact is stated in Theorems 2.1 and 2.2. Finally, S' is in solved form. In fact, if (a),
+(b), and (c) cannot be applied, it means that the equations are all in the form
+x = t, with t \# x. If (d) cannot be applied, that means that every v.arialSle
+which is the left-hand side of some equation occurs only there.
+$\square$\bigskip
+
+The above nondeterministic algorithm provides a widely general version from
+which most unification algorithms [2, 3, 7, 13, 15, 16, 18, 22-24] can be derived by
+specifying the order in which the equations are selected and by defining suitable
+concrete data structures. For instance, Robinson's algorithm [18] might be
+obtained by considering the set of equations as a stack. 
+
