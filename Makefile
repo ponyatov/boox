@@ -65,7 +65,10 @@ TEX += prolog/adventure/fig31.pl
 TEX += prolog/adventure/compound.tex
 TEX += prolog/adventure/appendix.tex
 
-TEX += prolog/dcg/dcg.tex
+TEX += prolog/dcg/dcg.tex prolog/dcg/1intro.tex
+TEX += prolog/dcg/2def.tex prolog/dcg/3left.tex prolog/dcg/4right.tex
+TEX += prolog/dcg/5impli.tex prolog/dcg/6parsing.tex
+TEX += prolog/dcg/7implement.tex prolog/dcg/8error.tex prolog/dcg/9few.tex
 
 TEX += tree/papegaij/papegaij.tex tree/papegaij/intro.tex
 
