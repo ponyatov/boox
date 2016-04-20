@@ -1,0 +1,193 @@
+\secrel{USING PROPOSED EXTENSIONS }\label{cohen9}\secdown
+
+Several extensions have been proposed to enhance the capabilities of Prolog. The
+reader is referred to [S] for a brief description of some of these extensions. ‘Iwo
+of them are of special interest in compiler construction and are dealt with in this
+section: the use of the built-in predicate freeze and unification involving infinite
+trees. These features are available in Prolog II [lo], in the interpreter developed
+by Carlsson [4] and in MU-Prolog [23]\,\note{One purpose of presenting them here
+is to generate interest, so that they will become more generally available. }.
+
+The predicate freeze (also referred to as lazy evaluation, or coroutining) has
+the form
+\[freeze ( Var, Procedure)\]
+Its action is to immediately activate the given Procedure if the variable Var is
+bound. Otherwise, the Procedure becomes a dormant goal until Var is bound. In
+that event, Procedure becomes the next goal to be activated. It is straightforward
+to write a metalevel interpreter that simulates the effect of freeze [8]. This
+interpreter is admittedly inefficient. Nevertheless, when compiled, it is usable
+for processing small examples. 
+
+We illustrate the use of freeze in two contexts: (1) coroutining the scanning,
+parsing, and code generation phases of a compiler, and (2) error detection and
+recovery. 
+
+The coroutining of the phases is particularly useful when parallel processing
+is available: it allows the intermediate results of one phase to be transmitted to 
+the subsequent phase and therefore speed-up the computation by triggering
+simultaneous executions whenever possible. (In Warren’s compiler [31] the
+phases are strictly sequential.) Consider the simple procedure
+\begin{lstlisting}[language=prolog]
+readlkt(L) :- read(X), readrest(X, L).
+readrest(stop, [ I).
+readrest(X, [X 1 L]) :- readrest(  
+\end{lstlisting}
+The built-in predicate read reads individual atoms, and readlist assembles them
+into a list. The atom stop is used as a flag to terminate the reading. 
+
+The availability of freeze allows one to write a writelist procedure which outputs
+the elements of a list as soon as they are read:
+\begin{verbatim}
+writelist ([ I).
+writeZist([H 1 T]) :- freeze(H, write(H)), freeze(T, writelist(T)).
+\end{verbatim}
+The query is: \verb|?- freeze(L, writelist(L readlist(|
+
+ The same ideas can be used to alternately transfer control among the scanner,
+the parser, and the code generator. The main procedure compile is
+\begin{lstlisting}[language=prolog]
+compile :- freeze (Tree, encode-statement (Tree, Diet, Code)),
+	freeze(List, parse(Lkt, Tree)),
+	scan(List).
+\end{lstlisting}
+The above states that purse can only be activated as soon as (a part of) a List is
+available. Similarly, encodestatement is activated as soon as a (partially) instantiated
+syntax-tree becomes available. It is of course necessary to “sprinkle”
+additional freezes within parse and encode-statement. This is illustrated below
+by examples. The translated DCG rule for parsing a while statement becomes
+\begin{lstlisting}[language=prolog]
+stutement(whik(Test, Do), [while 1 Dl], 04) :-
+freeze(D1, test(Test, Dl, D2)),
+freeze(D2, eq(D2, [do 1 D3])),
+freeze(D3, statement(Do, D3,04)).  
+\end{lstlisting}
+The second and third parameters of statement and test are the difference lists for
+parsing strings derived from the corresponding nonterminals. The procedure eq
+is simply the unit clause eq(X, X) which unifies its arguments. The effect of
+freezing on Dl, 02, and 03 is to allow test and the recursive call of statement to
+be activated only when the pertinent information becomes available. Similarly,
+the code generator for a while node of the syntax-tree (see Section 7.2) becomes
+\begin{lstlisting}[language=prolog]
+encode-statement(while(Test, Do), Diet, . . .) :-
+freeze(Test, encode-test(Test, Diet, L2, Testcode)),
+freeze(Do, encode-statement(Do, Diet, Docode)). 
+\end{lstlisting}
+
+Figure 1 shows the alternating flow of control among the scanner, parser, and
+code generator while compiling a small program using the coroutining technique.
+The reader might have already suspected that the introduction of freezes could
+be done automatically. We have indeed developed programs that perform this
+task, based on user-specified mode declarations (input or output) for each
+parameter of a procedure. 
+
+Another usage of freeze is in error detection and recovery. The following
+example just illustrates the main ideas, which are based on the work of Mickunas 
+and Modry [22]. At the top level the procedure recover has two parameters:
+(1) the possibly erroneous input string and (2) the corrected string.
+\begin{lstlisting}[language=prolog]
+recover ( Tokens, Tree) :-
+freeze(Filtered-tokens, parse(Filtered-tokens, Tree)),
+correct( Tokens, Filtered-tokens, 0). 
+\end{lstlisting}
+
+\paragraph{Figure 1}\ \\\bigskip
+
+The variable Filtered-tokens is initially unbound; purse will call the corresponding
+procedures that use the difference lists. The third parameter of correct is the
+initial cost of correction. The approach consists of attempting to insert or to
+delete tokens in the input string so that an erroneous string becomes parsable. If
+necessary, different costs for insertion and deletion, applicable to specific terminals,
+can be specified by the designer. In the simplified version of correct listed
+below, a unit cost is used for both operations. The database contains a unit clause
+cost-ok(nax) in which mar is a number that controls the amount of backtracking. 
+\begin{lstlisting}[language=prolog]
+% final scan
+correct([ 1, [ 1, Cost).
+70 normal scan
+correct([X 1 R], [X 1 Rl], Cost) :- correct(R, Rl, Cost).
+% deletion
+correct([X 1 R], Rl, Cost) :-
+cost-ok(Cost),
+Cost1 is cost + 1,
+correct(R, Rl, Costl).
+% insertion
+correct(R, [I 1 Rl], Cost) :-
+cost-ok(Cost),
+Cost1 is cost + 1,
+correct(R, Rl, Costl).
+\end{lstlisting}
+Note that the variable I in the insertion clause will be bound by the parser
+according to the grammar rules. 
+
+A more elaborate version of correct could reduce the amount of nondeterminism
+by making insertions and deletions based on examining the (fragments of the) 
+parse tree constructed prior to encountering an error. This is the approach
+described in [ 22]. 
+
+In addition to the two above uses of freeze, we have explored its application in
+dataflow analysis. The iterative methods described in [l] can be implemented
+using a variant of freeze in which the frozen variables simulate the incoming and
+outgoing flow of information for each block. 
+
+The other proposed extension of Prolog that is useful in compiler design deals
+with the so-called infinite trees. It is Colmerauer’s contention that grammars,
+flowcharts, and programs frequently specify loops or recursion [ll], which can
+be conveniently described using directed graphs. Their use within Prolog requires
+that the unification operation be extended to handle circular structures instead
+of trees. 
+
+An elegant and novel approach for implementing a scanner generator using
+infinite trees has been developed by students of the University of Marseilles [12]
+under the guidance of A. Colmerauer. It consists of using a special type of
+unification to produce the minimal finite state automaton directly from a given
+regular expression. Most Prolog interpreters perform unification only on trees.
+A notable exception is the interpreter developed at Marseilles, which can unify
+special kinds of graphs called infinite trees [lo]. For example, when the unit
+clause eq (X, X) is matched with eq (A, stute(a(A ))), the resulting unification is
+expressed by the infinite tree: 
+
+%\fig{}{}{}
+
+Terms representing states have an additional component specifying whether
+the state is final or not. The procedure to translate a regular expression into the
+corresponding minimal finite state automaton takes as input the expression given
+by its syntax-tree and produces as result the infinite tree corresponding to the
+minimal automaton. The highlights of this translation are given in what follows. 
+
+If a node of the syntax-tree is a conc(L.eft, Right), one recursively determines
+the automata corresponding to the Left and Right branches and “concatenates”
+the two automata to obtain the result. Concatenation of two automata Al and
+A2 is performed by checking whether the starting state of Al is final or not-find.
+In the first case the resulting automata is the union of the automata A2 with the
+concatenation of automata Al’ and A2, in which Al’ is a modified copy of Al in
+which the starting state is considered to be not-find. In the second case the
+concatenation of the two automata consists of specifying the proper transitions
+between the final states of Al directly to the states that stem from the initial
+state of A2. The union and star operations are processed similarly. 
+
+A dictionary is “carried along” as a parameter to provide the information
+needed to keep a single copy of each of the generated subautomata needed to
+construct the desired one. Therefore, before proceeding to generate an automaton
+corresponding to a subpart of a regular expression, the dictionary is used to check
+if the translation has already been done. If so, the desired subautomaton is
+retrieved from the dictionary. Otherwise, the automaton is determined and the
+corresponding entry is placed in the dictionary. This per se does not guarantee
+the construction of a minimal automaton. The program that “prints” the desired
+infinite tree is actually the one responsible for the minimization [26]. Again with
+the use of a dictionary, the printing program keeps unique copies of each subtree
+of the given infinite tree and uses them every time identical subtrees are found.
+This process has been proved to terminate [ll], and for the particular problem
+at hand it yields the desired minimal automaton. 
+
+The authors of this program [12] extended its capabilities to handle the
+difference and intersection of regular expressions. The program hardly exceeds
+three pages of code; it also uses another feature that is only available in Marseilles’
+interpreters: the constraint \&\&ff(X, Y), meaning X \# Y is valid even when X
+and Y are uninstantiated, therefore allowing the program’s execution to continue in
+the forward mode. Backtracking is thus postponed until it is found that the
+ensemble of constraints becomes unsatisfiable. 
+
+
+ 
+
+\secup

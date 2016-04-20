@@ -1,0 +1,54 @@
+\secrel{Peephole Optimization}\label{cohen82}
+
+Table I summarizes some of the typical peephole optimizations that can be
+performed after code generation. The table also indicates the source program
+segments, resulting in code that can be optimized in this manner. 
+
+We first note that if Warren’s approach (Section 7.2) is used for code generation,
+an additional pass is needed to “flatten” the list that makes up the generated
+code. This list contains sublists resulting from the order in which the clauses
+endcode statements are activated. Assuming that the code consists of a list of
+elements separated by (right-associative) semicolons, it is a simple matter to
+express in Prolog the optimizations in Table I:
+\begin{lstlisting}[language=prolog]
+% if pattern is found perform the optimization.
+peep([instr(sto, X), instr(load, X) 1 L], [instr(sto, X) 1 M]) :-peep&, M).
+peep([instr(subi, 0) I L], M) :-peep@, M).
+peep([lubel(A), instr(jump, A) 1 L], M) :- peep([instr(jump, A), L], M).
+% keep trying with tail of list.
+ped[X I Ll, IX I Ml) :-peep& MI.
+pw([ I, 1 I).
+\end{lstlisting}
+
+\paragraph{Table I. Peephole Optimization}\ \\
+\begin{tabular}{l l l}
+\hline
+Source code & Compiled code & Optimization code \\
+\hline
+a := \ldots & STO a & STO a \\
+b := a \ldots & LOAD a & \\
+\hline
+if a<0 then \ldots & SUBI 0 & $\varepsilon$ \\
+\hline
+while \ldots do & JUMP a & JUMP b \\
+if \ldots then \ldots else; & \ldots & \ldots \\
+& a: JUMP b & a: JUMP b \\
+\hline 
+\end{tabular}\bigskip
+
+Note that the above program can handle the nondeterministic situations arising
+when the code to be inspected using the first parameter renders more than one
+peep clause applicable. The resulting nondeterministic searches could result in 
+longer processing times. It is up to the designer to decide whether this overhead
+brings significant gains in the execution of the optimized code. A careful ordering
+of the clauses and a judicious introduction of cuts can reduce some of the
+overhead. It is also possible to control the amount of backtracking by introducing
+and tallying costs which, when exceeded, trigger the choice of alternate paths
+(see Section \ref{cohen9}). 
+
+Finally, it should be mentioned that David Hildum and the first author were
+able to implement, using Prolog, all of the (over one hundred) peephole optimizations
+applicable to a P-code-like intermediate language [27]. This was achieved
+by prototyping a language for specifying the transformations. An interesting
+aspect of this implementation is that DCG rules are used to generate another set
+of DCG rules needed to match and replace patterns. 
