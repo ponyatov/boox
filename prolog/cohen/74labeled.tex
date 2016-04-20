@@ -1,0 +1,111 @@
+\secrel{Code Generation from a Labelled Tree}\label{cohen74}
+
+We conclude this section by presenting the Prolog programs implementing the
+optimal code generation applicable to labelled trees as described in [ 1] 
+
+The labelling phase consists of a postorder walk on a syntax-tree in which left
+leaves are labelled with a 1 and right leaves with a 0. Interior nodes are labelled
+by max(left, right) if the left label is different from the right one; otherwise the
+interior node is labelled with right + 1. The label of the root specifies the total
+(optimal) number of registers needed to code the syntax-tree without using
+temporary locations. In Prolog the labelling is accomplished by the clause Zubel,
+having four parameters: (1) the original syntax-tree, (2) a mark denoting a left
+or right branch, (3) the generated labelled tree, and (4) the node label itself. 
+\begin{verbatim}
+label(uar(X), left, uar(X, l), 1).
+lubel(uar(X), right, uar(X, 0), 0).
+label(expr(Op, Left, Right), 2, expr(Op, El, E2, Label), N) :-
+hbel(L.eft, left, El, L.ubell),
+lubel(Right, right, E2, LabelZ),
+nmx(Label1, LabelP, Label).
+mux(N, N, Nl) :- Nl is N + 1.
+m&N, Nl, N) :- N > Nl.
+max(N1, N, N) :- N-c Nl. 
+\end{verbatim}
+
+The actual code generation algorithm is practically the same as that presented
+on p. 544 of [l]. The parameters of gencode are (1) the labelled syntax-tree,
+(2) the register stack, (3) the maximum number of registers, and (4) the next
+available temporary location. The procedure will output code for the expression
+in such a way that the result of the expression is stored in the register at the top
+of the register stack. (We remind the reader that any program that uses write to
+produce its results can easily be modified to store the results in a list, as described
+in Section 4). 
+
+The first two clauses consider the simplest cases dealing with leaves. The third
+clause is applicable only when the right subexpression is a tree. It finds the labels
+of the two subexpressions and calls gencodel which generates code using the
+minimal number of registers and temporaries. We purposely avoided the use of
+cuts by ensuring that each of the clauses deal with mutually exclusive cases, and
+so no backtracking is possible. 
+
+\begin{lstlisting}[language=prolog]
+% case 0: left expression is a leaf.
+gencode(var(X, l), [Reg ] RestR], Max, Temp) :- print(moue, X, Reg).
+% case 1: right expression is a leaf.
+gencode(expr(Op, X, uar( Y, 0), Label), [Reg ] RestR], Max, Temp) :-
+	gencode(X, [Reg ] RestR], Max, Temp),
+	write(Op, Y, Reg).
+% cases 2a, 2b, and 2c: left and right expressions are trees.
+gencode(expr(Op, L, R, Any-Label), Regs, Max, Temp) :-
+	labelvalue(L, NL),
+	labelvalue(R, NR), NR > 0
+	gencodel(expr(Op, L, R, Any-Label), Regs, Max, NL, NR, Temp).
+% case 2a: Left expression can be computed without temporaries.
+gencodel(expr(Op, L, R, Any-Label), [Regl, Reg2 ] RestR], Max, Nl, N2, Temp) :-
+	Nl < N2, Nl < Max,
+	gencode(R, [RegZ, Regl ] RestR], Max, Temp),
+	gencode(L, [Regl ] RestR], Max, Temp),
+	write (Op, Reg2, Regl).
+% case 2b: Right expression can be computed without temporaries.
+gencodel(expr(Op, L, R, Any-Label), [Regl, Reg2 ] RestR], Max, Nl, N2, Temp) :-
+	N2 =< Nl, N2 <Max,
+	gencode(L, [Regl, Reg2 ] RestR], Max, Temp),
+	gencode(R, [Reg:! ] RestR], Max, Temp),
+	write(Op, Reg2, Regl).
+% case 2~: temporaries are required.
+gencodel(expr(Op, L, R, Any-Label), [Reg ] RestR], Max, Nl, N2, Temp) :-
+	Nl 2 Max, N2 > Max,
+	gencode(R, [Reg ] RestR], Max, Temp),
+	write(move, Reg, t (Temp)),
+	NextTemp is Temp + 1,
+	gencode(L, [Reg ] RestR], Max, NextTemp),
+	write(Op, t(Temp), Reg).
+% miscellaneous.
+labelvalue(expr(Any1, Any2, Any3, N), N).
+labelvalue(var(Any1, N), N). 
+\end{lstlisting}
+
+Assuming that two registers are available, the code generated for the expression
+((A - B)/(C - D))l((E - J’MG - f0) is
+\begin{verbatim}
+MOVE E, R0
+SUB F, Ro
+MOVE G, R,
+SUB H, RI
+DIV RI, Ro
+MOVE R,,, T,,
+MOVE A, R,,
+SUB B, R,,
+MOVE C, R,
+SUB D, R,
+DIV RI, Ro
+DIV To, Ro
+\end{verbatim}
+
+We conclude this section by pointing out that Cattell’s method of code generation
+is a prime candidate for prototyping using Prolog. In his dissertation,
+Cattell [5] proposes a method for formalizing and automatically deriving code
+generators from machine descriptions. The method consists of constructing a
+syntax-tree-like description for each instruction in the machine’s repertoire.
+A special tree-matching program then generates code sequences by combining
+the available instruction syntax-trees so that they match the syntax-tree representing
+a source program. Cattell’s approach combines AI techniques with those
+in current use in compiler construction. 
+
+Although the code generators described herein are specialized to the case of
+Algol-like programs, Prolog has already proved its usefulness in writing Prolog
+compilers [3]. At Brandeis we have developed a Prolog compiler that compiles
+Prolog programs into equivalent C programs [8]. A remarkable feature of these
+compilers is their conciseness and the ease with which they can be changed to
+generate code in various target languages. 
