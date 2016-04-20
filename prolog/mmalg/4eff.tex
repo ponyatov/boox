@@ -1,0 +1,54 @@
+\secrel{ EFFICIENT MULTIEQUATION SELECTION }\label{mmalg4}
+
+In this section we show how to implement efficiently the operation of selecting a
+multiequation "on top" of the partial ordering in step (1.1) of Algorithm 3. 
+
+The idea is to associate with every multiequation a counter which contains the
+number of other occurrences in U of the variables in its left-hand side. This
+counter is initialized by scanning the whole U part at the beginning. Of course, a
+multiequation whose counter is set to zero is on top of the partial ordering. 
+
+For instance, let us again consider system (3):
+\begin{verbatim}
+U: {[0] {x} = (f(xl,g(x2, x3), x2, b), f(g(h(a, x~), xe), xl,
+h(a, x4), x4)),
+[2] {xl} = 6,
+[3] {x2} = 6,
+[1] (x3} = 6,
+[2] {x4} = 6,
+[1] {xa} -- 6};
+T:(). 
+\end{verbatim}
+
+Here square brackets enclose the counters associated with each multiequation.
+Since only the first multiequation has its counter set to zero, it is selected to be
+transferred. Counters of the other multiequations are easily updated by 
+decrementing them whenever an occurrence of the corresponding variable appears in
+the left-hand side of a multiequation in the frontier computed in step (1.2.1).
+When two or more multiequations in U are merged in the compactification phase,
+the counter associated with the new multiequation is obviously set to a value
+which is the sum of the contents of the old counters. 
+
+The next steps are as follows:
+\begin{verbatim}
+U: {[0] (Xl} = (g(h(a, x~), x2), g(x2, x3)),
+[2] {x2} = (h(a, x4)),
+[1] (x~) = o,
+[1] {x,} = (b),
+[1] {x~} = ~};
+T: ( (x} = (f(xl, x~, x2, x4))).
+U: {[0] {x2, x3} = (h(a, x4), h(a, x~)),
+[1] {x4} = (b),
+[1] {x~} = o};
+T: ({x} = (f(x,, x,, x2, x,)),
+{x,} = (g(x2, x3))).
+U: {[0] {x4, xs} = (b)};
+T: ({x} = (f(x,, xl, x2, x4)),
+{x,} = (g(x2, x3)),
+{x2, x3} = (h(a, x4))).
+U: ~;
+T: ({x} = (f(xl, xl, x2, x4)),
+{xl} = (g(x2, x3)),
+{x2, x3} = (h(a, x4)),
+{x4, x~} = (b)). 
+\end{verbatim}

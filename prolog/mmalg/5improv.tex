@@ -1,0 +1,105 @@
+\secrel{IMPROVING THE UNIFICATION ALGORITHM FOR NONUNIFYING DATA}\label{mmalg5}
+
+In the case of nonunifying data, Algorithm 3 can stop with failure in two ways:
+either in step (1.1) if a cycle has been detected, or in step (1.2.1) if a clash occurs.
+In this section we show how to anticipate the latter kind of failure without
+altering the structure of the algorithm. 
+
+Let us first give the following definition. Two terms are consistent iff either at
+least one of them is a variable or they are both nonvariable terms with the same
+root function symbol and pairwise consistent arguments. This definition can be
+extended to the case of more than two terms by saying that they are consistent
+iff all pairs of terms are consistent. For instance, the three terms f(x, g(a, y)),
+f(b, x), and f(x, y) are consistent although they are not unifiable. 
+
+We now modify Algorithm UNIFY by requiring all terms in the right-hand
+side of a multiequation to be consistent, for every multiequation. Thus, we stop
+with clash failure as soon as this requirement is not Satisfied. This new version of
+the algorithm is still correct since, if there are two inconsistent terms in the same
+multiequation, they will never unify. 
+
+In this way, clashes are detected earlier. In fact, in the Algorithm 3 version of
+UNIFY a clash can be detected while computing the common part and the
+frontier of the right-hand side of the selected multiequation, whereas in the new
+version of UNIFY the same error is detected in the compactification phase of a
+previous iteration. 
+
+An efficient implementation of the consistency check when two multiequations
+are merged requires a suitable representation for right-hand sides of multiequations.
+Thus, instead of choosing the obvious solution of representing every righthand
+side as a list of terms, we represent it as a multiterm, defined as follows. 
+
+A multiterm can be either empty or of the form f(P1 ..... Pn) where f E A, and
+Pi (i = 1 ..... n) is a pair (Si, Mi) consisting of a set of variables Si and a
+multiterm ]Vii. Furthermore, Si and Mi cannot both be empty. 
+
+For instance, the multiset of consistent terms
+\[(f(x, g(a, y)), f(b, x), f(x, y))\]
+can be represented with the multiterm
+\[f(((x), b), ({x,y},g((O, a), ((y), ~)))).\]
+
+ By representing right-hand sides in this way we have no loss of information,
+since the only operations which we have to perform on them are the operation of
+merging two right-hand sides and the operation of computing the common part
+and the frontier, which can be described as follows:
+\begin{verbatim}
+MERGE (M', M " ) =
+case M' of
+O: M";
+f'((Si M~), , tS' M' ~"
+case M" of
+O: M';
+f"((S~',M~') ..... (Sn", M~")):
+iff' -- f" and MERGE(M~, M[') # failure (i -- 1 ..... n)
+then f'((Si O S~', MERGE(MI, M;')) .....
+(S~ ~J S t'n, MERGE(M~', M,,))"~
+else failure
+endcase
+endcase
+COMMONPART(f((S1, M1) ..... (S,, Mn))) = f(P1, --., Pn)
+where Pi = if Si = ~ then COMMONPART(Mi)
+else ANYOF(SD (i = 1 .... , n) 
+\end{verbatim}
+\begin{verbatim}
+where function ANYOF(S~) returns an element of set Si. 
+\end{verbatim}
+\begin{verbatim}
+UPart = record
+MultEqNumber: Integer;,
+ZeroCounterMultEq, Equations: ListOfMultEq
+end;
+System = TPSystem;
+PSystem = record
+T: ListOfMultEq;
+U: UPart
+end;
+MultiTerm = ~PMultiTerm;
+PMultiTerm = record
+Fsymb: FunName;
+Args: ListOfTempMultEq
+end;
+MultiEquation = ~PMultiEquation;
+PMultiEquation = record
+Counter, VarNumber: Integer;
+S: ListOfVariables;
+M: Multi Term
+end;
+TempMultEq = ~PTempMultEq;
+PTempMultEq = record
+S: QueueOfVariables;
+M: MultiTerrn
+end;
+Variable = TPVariable;
+P Variable = record
+Name: VarName;
+M: MultiEquation
+end; 
+\end{verbatim}
+\begin{verbatim}
+FRONTIER(f((S,, M1) ..... (Sn, Mn) )) = F1 [..J ... (.J Fn
+where Fi = if Si = O then FRONTIER(M/)
+else {Si = Mi} (i = 1, ..., n). 
+\end{verbatim}
+
+Note that the common part and the frontier are defined only for nonempty
+multiterms and that they always exist. 
