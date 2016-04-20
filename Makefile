@@ -33,6 +33,7 @@ TEX += prolog/cohen/72trees.tex prolog/cohen/73independent.tex
 TEX += prolog/cohen/74labeled.tex  
 TEX += prolog/cohen/8optimizations.tex prolog/cohen/81compiletime.tex
 TEX += prolog/cohen/82peephole.tex prolog/cohen/9proposed.tex
+TEX += prolog/cohen/10final.tex
 
 #TEX += prolog/datomic/datomic.tex prolog/datomic/basic.tex
 #TEX += prolog/datomic/notation.tex

@@ -1,0 +1,87 @@
+\secrel{FINAL REMARKS }\label{cohen10}
+
+In the previous sections we described in Prolog several algorithms that play an
+important role in the design and construction of compilers. We hope it has
+become apparent to the reader that the descriptions using Prolog are substantially
+more concise than those which appear in current textbooks. For example, Aho
+and Ullman often use a mixture of English, the language of sets, and control
+primitives usually found in Pascal-like languages. The reader is urged to compare
+some of their descriptions to those presented in this paper. 
+
+The experience we gained with Prolog has convinced us of its effectiveness as
+a language for rapid prototyping compilers and for developing ancillary tools.
+Presently, the highest gains are achieved in the development of tools in which
+performance is not of prime consideration. This is the case of automatically
+producing code generators, parsers, and scanners. Even if the generation of these
+components takes considerable computer time (say a few hours), the combined
+man-machine effort may be inexpensive when compared to the human resources
+needed to produce their hand-coded counterparts. Another area in which the
+language has proved its usefulness is in the writing of compilers for Prolog itself.
+It is fair to say that most Prolog compilers are written in Prolog. The gains are
+substantial, especially because they have to process relatively short programs,
+and compilation can be done incrementally as the procedures are developed. 
+
+Yet another advantage of using Prolog programs is their ability to perform
+computations both in the forward and reverse directions. It should therefore be
+possible to decompile target code to obtain the corresponding source code.
+Although this is in principle feasible, the use of “impure” Prolog features
+such as the cut and the assignment (is) render the reverse execution impossible.
+These problems may be circumvented by using the generalized diff, mentioned in
+Section 9, and by ensuring that simple assignments such as those incrementing
+the values of variables become backtrackable. 
+
+Among the shortcomings of Prolog, it should be mentioned that the language
+is still in evolution and that, presently, a suitable environment for developing
+larger Prolog programs is not yet available. The language also suffers from the
+nonexistence of a methodology for documentation, the lack of scoping for variables,
+the ever-increasing number of parameters, and the resulting profusion of
+identifier names. 
+
+Benchmarks of the parsers and code generators described in this paper showed
+that their interpretation is indeed slower than the compiled equivalent programs
+written in C or in Pascal. Compiled Prolog programs running on a dedicated
+workstation exhibit 5- to lo-fold speed-ups compared to their interpreted versions.
+For example, the compiled version of Warren’s minicompiler enabled us
+to generate code for sample programs containing a few hundred statements in a
+couple of minutes. Such compilation speeds are still admittedly below those
+attained by equivalent compilers written in C. However, we feel that there is a
+great potential for improving considerably the performance of compilers written
+in Prolog. The justifying arguments are as follows. 
+
+The advantages of Prolog basically stem from the use of unification and
+nondeterminism. The present price paid for the advantages are increasing demands
+in memory and execution time. Since compilers are usually designed to
+avoid nondeterministic situations, it is important to reduce Prolog’s interpreter
+(or compiled code) overhead for dealing with these situations. Once it is known
+that a Prolog program is deterministic, several optimizations can be carried out.
+One of them is to eliminate the need of saving choice points for backtracking
+purposes. The optimized program can then achieve the efficiency of the corresponding
+programs written in a functional language (see [30]). 
+
+In a recent paper, Mellish [21] provides weak conditions for determining
+automatically if a set of Prolog procedures is deterministic. His method is based
+on a dataflow analysis in which properties of programs are determined by
+iteratively solving a system of equations. The efficiency of the compiled code can
+also be increased by having the user supply, by a mode declaration, the nature
+(input or output) of each parameter of a procedure. This allows the compiler not
+only to discard certain nondeterministic situations, but also to replace costly
+unifications by the simpler operations of assignments and conditionals. 
+
+A possibility that should not be overlooked in the quest to speed-up Prolog
+programs is the use of parallel processing. In contrast with most other languages,
+Prolog offers an embarrassment of riches for exploiting parallelism. The experience
+gained by empirical or theoretical analysis of parallel Prolog compilers may
+therefore help to shed some light as to which particular approach yields better
+speed-up gains. 
+
+We feel that the initial investment spent in learning Prolog is largely compensated
+for by the advantages accrued in having a shorter program-development
+stage and achieving program descriptions that can easily be tried and tested in a
+computer. It is also possible that other higher level languages such as SETL
+could be used with the same purpose. What seems certain is that the availability
+of these languages will make program description less verbose and more accurate.
+In addition, they will spur the development of optimization techniques capable
+of rendering efficient the descriptions that are not directly presented in an
+efficient form. The history of the development of Fortran and other languages
+indicates that this is not only a desirable goal but likely an unavoidable one. 
+
