@@ -1,0 +1,43 @@
+\secrel{Basic Definitions}
+
+In this section we present an extension of the previous formalism to model our
+algorithm more closely. We first introduce the concept of multiequation. A multiequation
+is the generalization of an equation, and it allows us to group together
+many terms which should be unified. To represent multiequations we use the
+notation S -- M where the left-hand side S is a nonempty set of variables and the
+right-hand side M is a multiset 1 of nonvariable terms. An example is
+\[{xl, x2, x3} = (tl, t2).\]
+\note{A multiset is a family of elements in which no ordering exists but in which many identical elements
+may occur.}
+
+The solution (unifier) of a multiequation is any substitution which makes all
+terms in the left- and right-hand sides identical. 
+
+A multiequation can be seen as a way of grouping many equations together.
+For instance, the set of equations
+\[Xl ---- X2;\]
+\[X3 = Xl;\]
+\[tl = Xl;\]
+\[X2 ---- t2;\]
+\[tl = t2\]
+can be transformed into the above multiequation, since every unifier of this set
+of equations makes the terms of all equations identical. To be more precise, given
+a set of equations SE, let us define a relation RSE between pairs of terms as
+follows: tl RSE t2 iff the equation tl = t2 belongs to SE. Let/tSE be the reflexive,
+symmetric, and transitive closure of RSE. 
+
+Now we can say that a set of equations SE corresponds to a multiequation
+S = M iff all terms of SE belong to S U M and for every tr and ts E S U M we have
+tr RSE t,. 
+
+It is easy to see that many different sets of equations may correspond to a
+given multiequation and that all these sets are equivalent. Thus the set of
+solutions (unifiers) of a multiequation coincides with the set of solutions of any
+corresponding set of equations. 
+
+Similar definitions can be given for a set of multiequations Z by introducing a
+relation Rz between pairs of terms which belong to the same multiequation. A set
+of equations SE corresponds to a set of multiequations Z iff
+\[ti/~SE tj ** ti Rz tj\]
+for all terms t~, tj of SE or Z.  
+ 
