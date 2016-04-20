@@ -1,0 +1,78 @@
+\secrel{Solving Systems of Multiequations}
+
+For convenience, in what follows, we want to give a structure to a set of
+multiequations. Thus we introduce the concept of system of multiequations. A
+system R is a pair (T, U), where T is a sequence and U is a set of multiequations
+(either possibly empty), such that
+
+(1) the sets of variables which constitute the left-hand sides of all multiequations
+in both T and U contain all variables and are disjoint;
+
+(2) the right-hand sides of all multiequations in T consist of no more than one
+term; and
+
+(3) all variables belonging to the left-hand side of some multiequation in T can
+only occur in the right-hand side of any preceding multiequation in T. 
+
+We now present an algorithm for solving a given system R of multiequations.
+When the computation starts, the T part is empty, and every step of the following
+Algorithm 2 consists of "transferring" a multiequation from the U part, that is,
+the unsolved part, to the T part, that is, the triangular or solved part of R. When
+the Upart of R is empty, the system is essentially solved. In fact, the solution can
+be obtained by substituting the variables backward. Notice that, by keeping a
+solved system in this triangular form, we can hope to find efficient algorithms for
+unification even when the mgu has a size which is exponential with respect to the
+size of the initial system. For instance, the mgu of the set of multiequations
+\begin{verbatim} 
+{{Xl} = ~,
+{x~} = ~,
+{x3} = 0,
+{x4} = (h(x3, h(x2, x2)), h(h(h (xl, xl), x2), x3))} 
+\end{verbatim}
+is
+\begin{verbatim}
+{(h(xl, Xl), x2), (h(h(xl, Xl), h(Xl, Xl)), x3),
+(h(h(h(Xl, Xl), h(xl, Xl)), h(h(xl, Xl), h(Xl, Xl))), X4)}. 
+\end{verbatim} 
+However, we can give an equivalent solved system with empty U part and whose
+T part is
+\begin{verbatim}
+({x,} --- (h(x3, x3)),
+{x3} = (h(x2, x2)),
+{X2) = (h(Xl, xl)),
+{xl} = o), 
+\end{verbatim}
+from which the mgu can be obtained by substituting backward. 
+
+Given a system R = (T, U) with an empty T part, an equivalent system with
+an empty U part can be computed with the following algorithm. 
+
+\paragraph{Algorithm 2}\ \\
+\begin{enumerate}
+  \item 
+(1) repeat
+\begin{enumerate}
+  \item 
+(1.1) Select a multiequation S = M of U with M \# ~5.
+  \item 
+(1.2) Compute the common part C and the frontier F ofM. IfM has no common part,
+stop with failure (clash).
+  \item 
+(1.3) If the left-hand sides of the frontier of M contain some variable of S, stop with
+failure (cycle).
+  \item 
+(1.4) Transform U using multiequation reduction on the selected mnltiequation and
+compactification.
+  \item 
+(1.5) Let S = \{xl ..... Xn). Apply the substitution ~ = {(C, xl) ..... (C, x,)}
+to all terms in the right-hand side of the multiequations of U.
+  \item 
+(1.6) Transfer the multiequation S = (C) from U to the end of T.
+until the U part of R contains only multiequations, if any, with empty right-hand
+sides.
+\end{enumerate}
+  \item 
+(2) Transfer all the mnltiequations of U (all with M = ~D) to the end of T, and stop with
+success. 
+\end{enumerate}
+ 

@@ -1,0 +1,106 @@
+\secrel{Transformations of Sets of Multiequations}
+
+We now introduce a few transformations of sets of multiequations, which are
+generalizations of the transformations presented in Section 2. 
+
+We first define the common part and the frontier of a multiset of terms
+(variables or not). The common part of a multiset of terms M is a term which,
+intuitively, is obtained by superimposing all terms of M and by taking the part
+which is common to all of them starting from the root. For instance, given the
+multiset of terms
+\[(f(xl, g(a, f(xs, b))), f(h(c), g(x2, f(b, xs))), f(h(x4), g(x6, x3))),\]
+the common part is
+\[f(xl, g(x2, x3)).\]
+
+The frontier is a set of multiequations, where every multiequation is associated
+with a leaf of the common part and consists of all subterms (one for each term of 
+M) corresponding to that leaf. The frontier of the above multiset of terms is
+\begin{verbatim}
+{{x~} = (h(c), h(x4)),
+{x2, x6} = (a),
+{x3} = (f(xs, b), f(b, xD)).
+\end{verbatim}
+
+Note that if there is a clash of function symbols among some terms of a multiset
+of terms M, then M has no common part and frontier. In this case the terms of M
+are not unifiable. 
+
+The common part and the frontier can be defined more precisely by means of
+a function DEC which takes a multiset of terms M as argument and returns either
+"failure," in which case M has neither common part nor frontier, or a pair (C(M),
+F(M) ) where C(M) is the common part of M and F(M) is the frontier of M. 
+
+In the definition of DEC we use the following notation: 
+
+\begin{tabular}{l l}
+head(t) & is the root function symbol of term t, for t ~ V. \\
+Pi & is the ith projection, defined by\\&
+\verb|\[Pi(f(tl .... ,tn))=ti for f~An and l\_<i\_n;\]|\\
+make&is a function which transforms a multiset of terms M into a multiequa\\
+multeq & tion whose left-hand side is the set of all variables in M and whose\\
+&right-hand side is the multiset of all terms in M which \\&are not variables;
+and \\
+$U$ & is the union for multisets. \\
+\end{tabular}
+\begin{lstlisting}
+DEC(M) = ff 3t ~ M, t E V
+	then (t, {makemulteq(M)} )
+	else if 3n, 3 f E A,, Yt E M, head(t) = f
+		then if n ffi 0
+		then ( f, O)
+		else if Vi (1 __ i _ n), DEC(Mi) ~ failure
+		where Mi -- OteM Pi(t)
+		then (f(C(M1) ..... C(M,)), UTffil F(Mi))
+		else failure
+		else failure.   
+\end{lstlisting}
+
+We can now define the following transformation: 
+
+Multiequation Reduction. Let Z be a set of multiequations containing a
+multiequation S -- M such that M is nonempty and has a common part C and a
+frontier F. The new set Z' of multiequations is obtained by replacing S = M with
+the union of the multiequation S = (C) and of all the multiequations of F:
+\[Z'ffi(Z- {SffiM})U{S=(C)} UF.\]
+
+THEOREM 3.1. Let S = M (M nonempty) be a multiequation of a set Z of
+multiequations. If M has no common part, or if some variable in S belongs to
+the left-hand side of some multiequation in the frontier F of M, then Z has no 
+unifier. Otherwise, by applying multiequation reduction to the multiequation
+S = M we get an equivalent set Z' ofmultiequations. 
+
+PROOF. If the common part of M does not exist, then the multiequation S -- M
+has no unifier, since two terms should be made equal having a different function
+symbol in the corresponding subterms. Moreover, if some variable x of S occurs
+in some left-hand side of the frontier, then it also occurs in some term t of M, and
+thus the equation x = t, with x occurring in t, belongs to a set of equations
+equivalent to Z. But, according to Theorem 2.2, this set has no unifier. 
+
+To prove that Z and Z' are equivalent, we show first that a unifier of Z is also
+a unifier of Z'. In fact, if a substitution ~ makes all terms of M equal, it also
+makes equal all the corresponding subterms, in particular, all terms and variables
+which belong to left- and right-hand sides of the same multiequation in the
+frontier. The multiequation S = (C) is also satisfied by construction. Conversely,
+if ~ satisfies Z', then the multiequation S -- M is also satisfied. In fact, all terms
+in S and M are made equal--in their upper part (the common part) due to the
+multiequation S -- (C) and in their lower part (the subterms not included in the
+common part) due to the set of multiequations F. $\square$
+
+We say that a set Z of multiequations is compact iff
+\begin{verbatim}
+\[Y(S =M), (S' =M'} ~Z: SA S' = ~.\]
+\end{verbatim}
+We can now introduce a second transformation, which derives a compact set of
+multiequations. 
+
+Compactification. Let Z be a noncompact set of multiequations. Let R be a
+relation between pairs of multiequations of Z such that iS = M) R iS' = M') iff
+S n S' \# O, and let/t be the transitive closure of R. The relation/~ partitions
+the set Z into equivalence classes. To obtain the final compact set Z', all multiequations
+belonging to the same equivalence class are merged; that is, they are
+transformed into single multiequations by taking the union of their left- and
+right-hand sides. 
+
+Clearly, Z and Z' are equivalent, because the relation /~z between pairs of
+terms, defined in Section 3.1, does not change by passing from Z to Z'. 
+  
