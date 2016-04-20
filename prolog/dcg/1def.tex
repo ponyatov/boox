@@ -1,0 +1,93 @@
+\secrel{1 Definite Clause Grammars}\secdown
+
+A Prolog \termdef{definite clause grammar}{\prolog!definite clause grammar}
+(\termdef{DCG}{\prolog!DCG}) \emph{describes a Prolog list}.
+
+Operationally, DCGs can be used to parse and generate lists.
+
+\secrel{1 DCG rules}
+
+A DCG is defined by DCG rules. A DCG rule has the form:
+\begin{lstlisting}[language=prolog]
+head --> body.
+\end{lstlisting}
+Analogous to normal Prolog rules with:
+
+\begin{lstlisting}[language=prolog]
+head :- body.
+\end{lstlisting}
+A rule's head is a (non variable) Prolog term.
+
+A rule's body is a sequence of terminals and nonterminals, separated by commas.
+
+A terminal is a Prolog list, which stands for the elements it contains.
+
+\begin{lstlisting}[language=prolog]
+some_terminals -->
+     [this, is, a, teminal],
+     [so, is, this],
+     "code strings are also lists, so this too is a terminal".
+\end{lstlisting}
+A nonterminal refers to a DCG rule or other language construct, which stand for
+the elements they themselves describe.
+
+Declaratively, we can read the comma as "and then" in DCGs.
+
+\fig{}{prolog/dcg/syntaxofdcg.png}{width=0.7\textwidth}
+
+As an example, let us describe lists that only contain the atom 'a'. We shall
+use the nonterminal as//0 to refer to such lists:
+
+\begin{lstlisting}[language=prolog]
+   as --> [].
+   as --> [a], as.
+\end{lstlisting}
+The first rule says: The empty list is such a list. The second rule says: A list
+containing the atom 'a' and then only atoms 'a' is also such a list.
+
+To execute a grammar rule, we use Prolog's built-in phrase/2 predicate. The
+first argument is a DCG body. phrase(Body, Ls) is true iff Body describes the
+list Ls.
+
+The most general query asks for all solutions:
+
+\begin{lstlisting}[language=prolog]
+  ?- phrase(as, Ls).
+  Ls = [] ;
+  Ls = [a] ;
+  Ls = [a, a] ;
+  Ls = [a, a, a] ;
+  Ls = [a, a, a, a] ;
+  etc.
+\end{lstlisting}
+Examples of more specific queries and the system's answers:
+
+\begin{lstlisting}[language=prolog]
+  ?- phrase(as, [a,a,a]).
+  true.
+
+  ?- phrase(as, [b,c,d]).
+  false.
+
+  ?- phrase(as, [a,X,a]).
+  X = a.
+\end{lstlisting}
+
+Exercises:
+1) run 1\_1. Add another DCG that creates an alternating series of a's and b's,
+so your output should look like:
+\begin{lstlisting}[language=prolog]
+  Ls = [] ;
+  Ls = [a] ;
+  Ls = [a, b] ;
+  Ls = [a, b, a] ;
+  Ls = [a, b, a, b] ;
+  etc.
+\end{lstlisting}
+2) Try the queries above in 'examples of more specific queries'
+
+\secrel{2 More DCG Syntax}
+\secrel{3 Capturing Input}
+\secrel{4 Variables in Body}
+
+\secup
