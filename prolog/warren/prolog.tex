@@ -1,9 +1,44 @@
-\secrel{4 Prolog 33}\label{warren4}\secdown
+\secrel{Prolog}\label{warren4}\secdown
 
-\secrel{4.1 Environment protection . . . . . . . . . . . . . . . . . . . . . . .
-34}
+The language L (resp., the machine M) corresponds to pure Prolog, as it extends
+the language L (resp., the machine M) to allow disjunctive definitions.
+As in L, an L program is a set of procedure definitions. In L, a definition is
+an ordered sequence of clauses (i.e., a sequence of facts or rules) consisting of
+all and only those whose head atoms share the same predicate name. That name
+is the name of the procedure specified by the definition. L queries are the same
+as those of L. The semantics of L operates using top-down leftmost resolution,
+an approximation of SLD resolution. Thus, in L, a failure of unification no
+longer yields irrevocable abortion of execution but considers alternative choices
+of clauses in the order in which they appear in definitions. This is done by chronological
+backtracking; i.e., the latest choice at the moment of failure is reexamined
+first.
 
-\secrel{4.2 What’s in a choice point . . . . . . . . . . . . . . . . . . . . . .
-36}
+It is necessary to alter M’s design so as to save the state of computation at each
+procedure call offering alternatives to restore upon backtracking to this point of
+choice. We call such a state a choice point. We thus need to analyze what information
+must be saved as a choice point in order to create a record (a choice
+point frame) wherefrom a correct state of computation can be restored to offer
+another alternative, with all effects of the failed computation undone. Note that
+choice point frames must be organized as a stack (just like environments) in order
+to reflect the compounding of alternatives as each choice point spawns potentially
+more alternatives to try in sequence.
+
+To distinguish the two stacks, let us call the environment stack the AND-stack and
+the choice point stack the OR-stack. As with the AND-stack, we organize the
+OR-stack as a linked list. The head of this list always corresponds to the latest
+choice point, and will be kept in a new global register B, such that upon failure,
+computation is made to resume from the state recovered from the choice point
+frame indicated by B. When the latest frame offers no more alternatives, it is
+popped off the OR-stack by resetting B to its predecessor if one exists, otherwise
+computation fails terminally
+
+Clearly, if a definition contains only one clause, there is no need to create a choice
+point frame, exactly as was the case in M. For definitions with more than one
+alternative, a choice point frame is created by the first alternative; then, it is updated
+(as far as which alternative to try next) by intermediate (but non ultimate)
+alternatives; finally, it is discarded by the last alternative.
+
+\input{prolog/warren/41env}
+\input{prolog/warren/42what}
 
 \secup

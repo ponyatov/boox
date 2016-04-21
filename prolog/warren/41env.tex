@@ -1,0 +1,88 @@
+\secrel{Environment protection}
+
+Before we go into the details of what exactly constitutes a choice frame, we must
+ponder carefully the interaction between the AND-stack and the OR-stack. As
+long as we considered (deterministic) L program definitions, it was clearly safe
+to deallocate an environment frame allocated to a rule after successfully falling
+off the end of the rule. Now, the situation is not quite so straightforward as later
+failure may force reconsidering a choice from a computation state in the middle
+of a rule whose environment has long been deallocated. This case is illustrated by
+the following example program:
+\begin{verbatim}
+a :- bX0
+cX00
+bX0
+:- eX00
+c
+00
+eX0
+:- f X00
+eX0
+:- gX00
+f
+00
+g
+00
+\end{verbatim}
+
+Executing ‘?-a0’ allocates an environment for a, then calls b. Next, an environment
+for b is allocated, and e is called. This creates a choice point on the
+OR-stack, and an environment for e is pushed onto the AND-stack. At this point
+the two stacks look thus:\note{In these diagrams, the stacks grow downwards;
+i.e., the stack top is the lower part.}
+\[E  Environment for e\]
+\[B  Choice point for e\]
+
+The following call to f succeeds binding X to 	. The environment for e is deallocated,
+then the environment for b is also deallocated. This leads to stacks looking
+thus:
+\[E  Environment for a\]
+\[B  Choice point for e\]
+
+Next, the continuation follows up with execution of a’s body, calling c, which
+immediately hits failure. The choice point indicated by B shows an alternative
+clause for e, but at this point b’s environment has been lost. Indeed, in a more
+involved example where c proceeded deeper before failing, the old stack space for
+b’s environment would have been overwritten by further calls in c’s body
+
+Therefore, to avoid this kind of misfortune, a setup must be found to prevent
+unrecoverable deallocation of environment frames whose creation chronologically
+precedes that of any existing choice point. The idea is that every choice point
+must “protect” from deallocation all environment frames already existing before
+its creation. Now, since a stack reflects chronological order, it makes sense to
+use the same stack for both environments and choice points. A choice point now
+caps all older environments. In effect, as long as it is active, it forces allocation of
+further environments on top of it, preventing the older environments’ stack space
+to be overwritten even though they may explicitly be deallocated. This allows
+their safe resurrection if needed by coming back to an alternative from this choice
+point. Moreover, this “protection” lasts just as long as it is needed since as soon as
+the choice point disappears, all explicitly deallocated environments can be safely
+overwritten.
+
+Hence, there is no need to distinguish between the AND-stack from the OR-stack,
+calling the single one the stack. Choice point frames are stored in the stack along
+with environments, and thus B’s value is an address in the stack.
+
+Going back to our example above, the snapshot of the single stack at the same first
+instant looks thus:
+\[Environment for a\]
+\[Environment for b\]
+\[B  Choice point for e\]
+\[E  Environment for e\]
+and at the same second instant as before, the stack is such that having pushed on
+it the choice point for e protects b’s deallocated environment (which may still be
+needed by future alternatives given by e’s choice point), looking thus:
+\[E  Environment for a\]
+\[Deallocated environment for b\]
+\[B  Choice point for e\]
+
+Now, the computation can safely recover the state from the choice point for e
+indicated by B, in which the saved environment to restore is the one current at
+the time of this choice point’s creation—i.e., that (still existing) of b. Having no
+more alternative for e after the second one, this choice point is discarded upon
+backtracking, (safely) ending the protection. Execution of the last alternative for
+e proceeds with a stack looking thus:
+\[B \]
+\[Environment for a\]
+\[Environment for b\]
+\[E  Environment for e\]
