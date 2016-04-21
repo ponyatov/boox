@@ -1,2 +1,22 @@
-\secrel{3.1 Facts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . 26}
+\secrel{Facts}
+
+Let us first only consider L facts. Note that L0 is all contained in L.
+Therefore, it is natural to expect that the exact same compilation scheme for
+facts carries over untouched from L0 to L. This is true up to a wee detail
+regarding the proceed instruction. It must be made to continue execution, after
+successfully returning from a call to a fact, back to the instruction in the
+goal sequence following the call. To do this correctly, we will use another
+global register CP, along with P, set to contain the address (in the code area)
+of the next instruction to follow up with upon successful return from a call
+(i.e., set to P instruction size P at procedure call time). Then, having exited
+the called procedure’s code sequence, execution could thus be resumed as
+indicated by CP. Thus, for L’s facts, we need to alter the effect of M0’s call
+pn to:
+cal
+\[pn  CP  P  instruction sizeP0\]
+\[P  pn0\]
+and that of proceed to:
+\[P  CP\]
+As before, when the procedure pn is not defined, execution fails.
+In summary, with the simple foregoing adjustment, L facts are translated exactly
+as were L0 facts.
