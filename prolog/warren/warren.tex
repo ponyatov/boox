@@ -95,34 +95,7 @@ Hassan A\"it-Kaci. Эту книгу приятно читать. Она объ�
 
 Февраль 1991
 
-\secly{Реализация машины вывода на \cpp}
-
-В перевод книги Варрена мной\note{\email{dponyatov@gmail.com}} добавлен пример
-реализации виртуальной машины вывода на \cpp. Исходные тексты находятся в
-каталоге
-\href{https://github.com/ponyatov/boox/tree/master/prolog/warren}{\dir{prolog/warren/}}.
-Для вставки отдельных частей исходника по ходу книги полные файлы
-\file{hpp.hpp}\ и \file{cpp.cpp} разделены на отдельные небольшие фрагменты в
-каталогах \dir{hpp/} и \dir{cpp/}. Файл сборки \file{prolog/warren/Makefile}
-содержит не только  
-\lst{\file{Makefile}: запуск программы и генерация
-\file{log.log}}{prolog/warren/mk/exec.mk}{make}
-\lst{\file{Makefile}: типовой блок компиляции \term{лексической}
-программы}{prolog/warren/mk/lexprog.mk}{make}
-\lst{\file{Makefile}: генерация кода
-\term{синтаксического анализатора}}{prolog/warren/ypp/ypp.mk}{make}
-\lst{\file{Makefile}: генерация кода
-\term{лексера}}{prolog/warren/lpp/lpp.mk}{make} но и скрипты склейки файлов
-исходников из частей в каталогах \dir{hpp/} \dir{cpp/} \dir{mk/}.
-
-\lst{\file{hpp.hpp}: обертка одиночного
-\#include}{prolog/warren/hpp/head.hpp}{C++}
-\lst{\file{hpp.hpp}}{prolog/warren/hpp/foot.hpp}{C++}
-\lst{\file{hpp.hpp}: типовые \#include}{prolog/warren/hpp/stdinc.hpp}{C++}
-\lst{\file{hpp.hpp}: базовый класс для
-структур WAM}{prolog/warren/hpp/wam.hpp}{C++}
-
-\lst{\file{cpp.cpp}}{prolog/warren/cpp/main.cpp}{C++}
+\input{prolog/warren/cpp}
 
 \input{prolog/warren/intro}
 \input{prolog/warren/unification.tex}
