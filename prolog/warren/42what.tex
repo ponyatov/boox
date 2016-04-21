@@ -1,2 +1,217 @@
-\secrel{4.2 What’s in a choice point . . . . . . . . . . . . . . . . . . . . . .
-36}
+\secrel{What’s in a choice point}
+
+When a chosen clause is attempted among those of a definition, it will create
+side effects on the stack and the heap by binding variables residing there. These
+effects must be undone when reconsidering the choice. A record must be kept of
+those variables which need to be reset to ‘unbound’ upon backtracking. Hence,
+we provide, along with the heap, the stack, the code area, and the PDL, a new
+(and last!) data area called the trail (TRAIL). This trail is organized as an array
+of addresses of those (stack or heap) variables which must be reset to ‘unbound’
+upon backtracking. Note that it also works as a stack, and we need a new global
+register TR always set to contain the top of the trail.
+
+It is important to remark that not all bindings need to be remembered in the trail.
+Only conditional bindings do. A conditional binding is one affecting a variable
+existing before creation of the current choice point. To determine this, we will use
+a new global register HB set to contain the value of H at the time of the latest choice
+point.\note{Strictly speaking, register HB can in fact be dispensed with since, as we see next, its value is
+that of H which will have been saved in the latest choice point frame.} Hence only bindings of heap (resp., stack) variables whose addresses
+are less than HB (resp., B) need be recorded in the trail. We shall write traila
+when
+that this operation is performed on store address a. As mentioned before, it is
+done as part of the bind operation.
+
+Let us now think about what constitutes a computation state to be saved in a choice
+point frame. Upon backtracking, the following information is needed:
+\begin{description}
+\item[The argument registers] A
+, ..., An, where n is the arity of the procedure offering
+alternative choices of definitions. This is clearly needed as the argument registers,
+loaded by put instructions with the values of arguments necessary for goal being
+attempted, are overwritten by executing the chosen clause.
+\item[The current environment] (value of register E), to recover as a protected environment
+as explained above.
+\item[The continuation pointer] (value of register CP), as the current choice will overwrite
+it.
+\item[The latest choice point] (value of register B), where to backtrack in case all alternatives
+offered by the current choice point fail. This acts as the link connecting
+choice points as a list. It is reinstated as the value of the B register upon discarding
+the choice point.
+\item[The next clause], to try in this definition in case the currently chosen one fails.
+This slot is updated at each backtracking to this choice point if more alternatives
+exist.
+\item[The current trail pointer] (value of register TR), which is needed as the boundary
+where to unwind the trail upon backtracking. If computation comes back to this
+choice point, this will be the address in the trail down to which all variables that
+must be reset have been recorded.
+\item[The current top of heap] (value of register H), which is needed to recover (garbage)
+heap space of all the structures and variables constructed during the failed attempt
+which will have resulted in coming back to this choice point.
+\end{description}
+
+In summary, a choice point frame is allocated on the stack looking thus:\note{In [War83], 
+David Warren does not include the arity in a choice point, as we do here. He sets
+up things slightly differently so that this number can always be quickly computed. He can do this
+by making register B (and the pointers linking the choice point list) reference a choice point frame
+at its end, rather than its start as is the case for environment frames. In other words, register B
+contains the stack address immediately following the latest choice point frame, whereas register
+E contains the address of the first slot in the environment. Thus, the arity of the latest choice
+point predicate is always given by n
+B  STACK[B  ]  . For didactic reasons, we chose
+to handle E and B identically, judging that saving one stack slot is not really worth the entailed
+complication of the code implementing the instructions.}
+\begin{verbatim}
+B n number
+of arguments
+B  
+ A
+ argument
+register 
+
+.
+.
+.
+B  n An argument
+register n
+B  n  
+ CE continuation
+environment
+B  n  	 CP continuation
+pointer
+B  n   B previous
+choice point
+B  n   BP next
+clause
+B  n   TR trail
+pointer
+B  n   H heap
+pointer
+\end{verbatim}
+
+Note in passing that M’s explicit definition for allocate N must be altered in
+order to work forM. This is because the top of stack is now computed differently
+depending on whether an environment or choice point is the latest frame on the
+stack. Namely, in M:
+\begin{verbatim}
+allocate N  if E  B
+then newE  E  STACK[E  	]  
+else newE  B  STACK[B]  
+STACK[newE]  E
+STACK[newE  
+]  CP
+STACK[newE  	]  N
+E  newE
+P  P  instruction sizeP
+\end{verbatim}
+
+To work with the foregoing choice point format, three new I instructions are
+added to those already in I. They are to deal with the choice point manipulation
+needed for multiple clause definitions. As expected, these instructions correspond,
+respectively, to (1) a first, (2) an intermediate (but non ultimate), and (3) a last,
+clause of a definition. They are:
+
+1. try me else L
+
+2. retry me else L
+
+3. trust me
+
+where L is an instruction label (i.e., an address in the code area). They have for
+effect, respectively:
+
+1. to allocate a new choice point frame on the stack setting its next clause field
+to L and the other fields according to the current context, and set B to point
+to it;
+
+2. having backtracked to the current choice point (indicated by the current
+value of the B register), to reset all the necessary information from it and
+update its next clause field to L; and,
+
+3. having backtracked to the current choice point, to reset all the necessary
+information from it, then discard it by resetting B to its predecessor (the
+value of the link slot).
+
+With this setup, backtracking is effectively handled quite easily. All instructions
+in which failure may occur (i.e., some unification instructions and all procedure
+calls) must ultimately test whether failure has indeed occurred. If such is the case,
+they must then set the instruction counter accordingly. That is, they perform the
+following operation:
+\[backtrack  P  STACK[B  STACK[B]  ]\]
+as opposed to having P be unconditionally set to follow its normal (successful)
+course. Naturally, if no more choice point exists on the stack, this is a terminal
+failure and execution aborts. All the appropriate alterations of instructions regarding
+this precaution are given in Appendix B.
+
+The three choice point instructions are defined explicitly in Figures 4.1, 4.2, and 4.3,
+respectively. In the definition of try me else L, we use a global variable
+num of args giving the arity of the current procedure. This variable is set by
+call that we must accordingly modify for M from its M form as follows:\note{As for num of args, it is legitimate to ask why this is not a global register like E, P, etc.,
+in the design. In fact, the exact manner in which the number of arguments is retrieved at choice
+point creation time is not at all explained in [War83, War88]. Moreover, upon private inquiry,
+David H. D. Warren could not remember whether that was an incidental omission. So we chose to
+introduce this global variable as opposed to a register as no such explicit register was specified for
+the original WAM.}
+\[call pn  CP  P  instruction sizeP\]
+\[num of args  n\]
+\[P  pn\]
+
+As we just explained, we omit treating the case of failure (and therefore of backtracking)
+where pn is not defined in this explicit definition of call pn. Its
+obvious complete form is, as those of all instructions of the full WAM, given in
+Appendix B.
+
+Finally, the definitions of retry me else L and trust me, use an ancillary
+operation, unwind trail, to reset all variables since the last choice point to an unbound
+state. Its explicit definition can be found in Appendix B.
+
+In conclusion, there are three patterns of code translations for a procedure definition
+in L, depending on whether it has one, two, or more than two clauses. The
+code generated in the first case is identical to what is generated for an L program
+on M. In the second case, the pattern for a procedure pn is:
+\[pn : try me else L\]
+\[code for first clause\]
+\[L : trust me\]
+\[code for second clause\]
+\begin{verbatim}
+pn : try me else L
+code for first clause
+L : retry me else L
+code for second clause .
+.
+. Lk
+: retry me else Lk
+code for penultimate clause
+Lk : trust me
+code for last clause
+\end{verbatim}
+where each clause is translated as it would be as a single L clause for M. For
+example, M code for the definition:
+\begin{verbatim}
+pX
+a
+pb
+X
+pX
+Y  :- pX
+a
+pb
+Y 
+\end{verbatim}
+is given in Figure 4.4.
+
+\paragraph{Figure 4.1: M choice point instruction try me else}
+
+\paragraph{Figure 4.2: M choice point instruction retry me else}
+
+\paragraph{Figure 4.3: M choice point instruction trust mentioned}
+
+\paragraph{Figure 4.4: M code for a multiple clause definition}
+
+\paragraph{Exercise 4.1} Trace the execution of L query ?-pc d with code in
+Figure 4.4, giving all the successive states of the stack, the heap, and the trail.
+
+\paragraph{Exercise 4.2} It is possible to maintain separate AND-stack and
+OR-stack.
+Discuss the alterations that would be needed to the foregoing setup to do so, ensuring a
+correct management of environments and choice points.
+
