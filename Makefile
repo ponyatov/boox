@@ -46,6 +46,7 @@ TEX += prolog/warren/appendixA.tex prolog/warren/appendixB.tex
 TEX += prolog/warren/termrepr.tex prolog/warren/fig21.pdf
 TEX += prolog/warren/compiling.tex prolog/warren/cpp.tex
 TEX += prolog/warren/23compiLprog.tex prolog/warren/24argregs.tex
+TEX += prolog/warren/31facts.tex prolog/warren/32rules.tex
 
 TEX += prolog/warren/hpp.hpp prolog/warren/cpp.cpp prolog/warren/Makefile
 TEX += prolog/warren/ypp.ypp prolog/warren/lpp.lpp prolog/warren/log.log

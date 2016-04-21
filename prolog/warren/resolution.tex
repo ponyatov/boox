@@ -1,9 +1,47 @@
 \secrel{3 Flat Resolution 25}\label{warren3}\secdown
 
-\secrel{3.1 Facts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . 26}
+We now extend the language L0 into a language L where procedures are no longer
+reduced only to facts but may also have bodies. A body defines a procedure as a
+conjunctive sequence of atoms. Said otherwise, L is Prolog without backtracking.
 
-\secrel{3.2 Rules and queries . . . . . . . . . . . . . . . . . . . . . . . . .
-. 27}
+An L program is a set of procedure definitions or (definite) clauses, at most
+one per predicate name, of the form ‘a :- a0000an0’ where n 0  and the ai’s are
+atoms. As before, when n  , the clause is called a fact and written without
+the ‘:-’ implication symbol. When n  , the clause is called a rule, the atom a
+is called its head, the sequence of atoms a0000an is called its body and atoms
+composing this body are called goals. A rule with exactly one body goal is
+called a chain (rule). Other rules are called deep rules. L queries are
+sequences of goals, of the form ‘?-g0000gk0’ where k 0 . When k  , the query
+is called the empty query. As in Prolog, the scope of variables is limited to
+the clause or query in which they appear.
+
+Executing a query ‘?-g0000gk0’ in the context of a program made up of a set of
+procedure-defining clauses consists of repeated application of leftmost
+resolution until the empty query, or failure, is obtained. Leftmost resolution
+amounts to unifying the goal g0 with its definition’s head (or failing if none
+exists) and, if this succeeds, executing the query resulting from replacing g0
+by its definition body, variables in scope bearing the binding side-effects of
+unification. Thus, executing a query in L either terminates with success (i.e.,
+it simplifies into the empty query), or terminates with failure, or never
+terminates. The “result” of an L query whose execution terminates with success
+is the (dereferenced) binding of its original variables after termination.
+
+Note that a clause with a non-empty body can be viewed in fact as a conditional
+query. That is, it behaves as a query provided that its head successfully
+unifies with a predicate definition. Facts merely verify this condition, adding
+nothing new to the query but a contingent binding constraint. Thus, as a first
+approximation, since an L query (resp., clause body) is a conjunctive sequence
+of atoms interpreted as procedure calls with unification as argument passing,
+instructions for it may simply be the concatenation of the compiled code of each
+goal as an L0 query making it up. As for a clause head, since the semantics
+requires that it retrieves arguments by unification as did facts in L0,
+instructions for L0’s fact unification are clearly sufficient.
+
+Therefore, M0 unification instructions can be used for L clauses, but with two
+measures of caution: one concerning continuation of execution of a goal
+sequence, and one meant to avoid conflicting use of argument registers.
+
+\input{prolog/warren/31facts}
+\input{prolog/warren/32rules}
 
 \secup
