@@ -72,3 +72,32 @@ $X_i=f/n,X_{i_1},..,X_{i_n}$ такую что после регистра ас�
 создать на куче новую ячейку и копировать в нее значение регистра.
 \end{enumerate}
 
+Each of these three actions specifies the effect of respective instructions of
+the machine $M_0$ that we note:
+\begin{enumerate}
+  \item 
+put structure f n Xi
+  \item 
+set variable Xi
+  \item 
+set value Xi
+\end{enumerate}
+respectively.
+
+From the preceding considerations, it has become clear that the heap is implicitly
+used as a stack for building terms. Namely, term parts being constructed are
+incrementally piled on top of what already exists in the heap. Therefore, it is
+necessary to keep the address of the next free cell in the heap somewhere, precisely
+as for a stack.\note{As a matter of fact, in [War83], Warren refers to the heap
+as the \emph{global stack}.} Adding to M a global register H containing at all
+times the next available address on the heap, these three instructions are given explicitly
+in Figure 2.2. For example, given that registers are allocated as above, the
+sequence of instructions to build the query term $pZh$
+is shown in Figure 2.3.
+
+\paragraph{Exercise 2.1} Verify that the effect of executing the sequence of
+instructions shown in Figure 2.3 (starting with H 
+ )
+does indeed yield a correct heap representation
+for the term $pZh$ the one shown earlier as Figure 2.1, in
+fact.
