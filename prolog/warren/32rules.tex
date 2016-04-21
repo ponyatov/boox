@@ -1,2 +1,162 @@
-\secrel{3.2 Rules and queries . . . . . . . . . . . . . . . . . . . . . . . . .
-. 27}
+\secrel{Rules and queries}
+
+We now must think about translating rules. A query is a particular case of a rule
+in the sense that it is one with no head. It is translated exactly the same way,
+but without the instructions for the missing head. The idea is to use L0’s instructions,
+treating the head as a fact, and each goal in the body as an L0 query term
+in sequence; that is, roughly translate a rule ‘p0000
+:- p00000000pn00000’
+following the pattern:
+\begin{verbatim}
+get arguments of p
+put arguments of p0
+call p0
+.
+.
+.
+put arguments of pn
+call pn
+\end{verbatim}
+
+Here, in addition to ensuring correct continuation of execution, we must arrange
+for correct use of argument registers. Indeed, since the same registers are used by
+each goal in a query or body sequence to pass its arguments to the procedure it
+invokes, variables that occur in many different goals in the scope of the sequence
+need to be protected from the side effects of put instructions. For example, consider
+the rule ‘pX
+Y 0 :- qX
+Z0
+rZ
+Y 00’ If the variables YZ
+were allowed
+to be accessible only from an argument register, no guarantee could be made that
+they still would be after performing the unifications required in executing the body
+of p.
+
+Therefore, it is necessary that variables of this kind be saved in an environment
+associated with each activation of the procedure they appear in. Variables which
+occur in more than one body goal are dubbed permanent as they have to outlive
+the procedure call where they first appear. All other variables in a scope that are
+not permanent are called temporary. We shall denote a permanent variable as Yi,
+and use Xi as before for temporary variables. To determine whether a variable is
+permanent or temporary in a rule, the head atom is considered to be part of the
+first body goal. This is because get and unify instructions do not load registers
+for further processing. Thus, the variable X in the example above is temporary as
+it does not occur in more than one goal in the body (i.e., it is not affected by more
+than one goal’s put instructions).
+
+Clearly, permanent variables behave like conventional local variables in a procedure.
+The situation is therefore quite familiar. As is customary in programming
+languages, we protect a procedure’s local variables by maintaining a run-time
+stack of procedure activation frames in which to save information needed for the
+correct execution of what remains to be done after returning from a procedure call.
+We call such a frame an environment frame. We will keep the address of the latest
+environment on top of the stack in a global register E.\note{In [War83], this stack is called the local stack to distinguish it from the global stack (see
+Footnote 1 at the bottom of Page 13).}
+
+As for continuation of execution, the situation for rules is not as simple as that
+for facts. Indeed, since a rule serves to invoke further procedures in its body, the
+value of the program continuation register CP, which was saved at the point of
+its call, will be overwritten. Therefore, it is necessary to preserve continuation
+information by saving the value of CP along with permanent variables.
+
+Let us recapitulate: M is an augmentation of M0 with the addition of a new data
+area, along with the heap (HEAP), the code area (CODE), and the push-down list
+(PDL). It is called the stack (STACK) and will contain procedure activation frames.
+Stack frames are called environments. An environment is pushed onto STACK
+upon a (non-fact) procedure entry call, and popped from STACK upon return.
+Thus, an allocate/deallocate pair of instructions must bracket the code
+generated for a rule in order to create and discard, respectively, such environment
+frames on the stack. In addition, deallocate being the ultimate instruction
+of the rule, it must connect to the appropriate next instruction as indicated by
+the continuation pointer that had been saved upon entry in the environment being
+discarded.
+
+Since the size of an environment varies with each procedure in function of its
+number of permanent variables, the stack is organized as a linked list through a
+continuation environment slot; i.e., a cell in each environment frame bearing the
+stack index of the environment previously pushed onto the stack.
+
+To sum up, two new I instructions for M are added to the ones we defined for
+I0:
+
+1. allocate
+
+2. deallocate
+
+with effect, respectively:
+
+1. to allocate a new environment on the stack, setting its continuation environment
+field to the current value of E, and its continuation point field to that
+of CP; and,
+
+2. to remove the environment frame at stack location E from the stack and
+proceed, resetting P to the value of its CP field and E to the value of its CE
+field.
+
+To have proper effect, an allocate instruction needs to have access to the size
+of the current environment in order to increment the value of E by the right stack
+offset. The necessary piece of information is a function of the calling clause (i.e.,
+the number of permanent variables occurring in the calling clause). Therefore, it
+is easily statically available at the time the code for the calling clause is generated.
+Now, the problem is to transmit this information to the called procedure that, if
+defined as a rule (i.e., starting with an allocate), will need it dynamically,
+depending on which clause calls it. A simple solution is to save this offset in the
+calling clause’s environment frame from where it can be retrieved by a callee that
+needs it. Hence, in M, an additional slot in an environment is set by allocate
+to contain the number of permanent variables in the clause in question.
+
+Summing up again, an M stack environment frame contains:
+
+1. the address in the code area of the next instruction to execute upon (successful)
+return from the invoked procedure;
+
+2. the stack address of the previous environment to reinstate upon return (i.e.,
+where to pop the stack to);
+
+3. the offset of this frame on the stack (the number of permanent variables);
+and,
+
+4. as many cells as there are permanent variables in the body of the invoked
+procedure (possibly none).
+
+Such an M environment frame pushed on top of the stack looks thus:
+\[E CE continuation environment\]
+
+This necessitates giving allocate an explicit argument that is the number of
+permanent variables of the rule at hand, such that, in M:
+\[allocate N =\]
+
+Similarly, the explicit definition of M’s deallocate is:
+\[deallocate  =\]
+
+With this being set up, the general translation scheme into M instructions for an
+L rule ‘p0000
+:- p00000000pn00000’
+with N permanent variables will follow
+the pattern:
+\[p allocate N\]
+
+For example, for L clause ‘pX
+Y 0 :- qX
+Z0
+rZ
+Y 00’, the corresponding
+M code is shown in Figure 3.1.
+
+\paragraph{Figure 3.1: M machine code for rule pX
+Y 0 :- qX
+Z0
+rZ
+Y 00}
+\begin{verbatim}
+
+\end{verbatim}
+
+\paragraph{Exercise 3.1} GiveM code for L facts qa0 b and rb0 c and L query
+?-pU0 V , then trace the code shown in Figure 3.1 and verify that the solution produced is
+U 
+ a0 V 
+ c.
+C  
+
