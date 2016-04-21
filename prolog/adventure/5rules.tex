@@ -24,4 +24,32 @@ where_food(X,Y) :-
 It states ``There is something X to eat in room Y if X is located in Y, and X
 is edible''.
 
+We can now use the new rule directly in a query to find things to eat in a room. As before, the semicolon (;) after an answer is used to find all the answers.
+\begin{verbatim}
+?- where_food(X, kitchen).
+X = apple ;
+X = crackers ;
+no
+\end{verbatim}
+\begin{verbatim}
+?- where_food(Thing, 'dining room').
+no
+\end{verbatim}
+Or it can check on specific things.
+\begin{verbatim}
+?- where_food(apple, kitchen).
+yes
+\end{verbatim}
+Or it can tell us everything.
+\begin{verbatim}
+?- where_food(Thing, Room).
+Thing = apple
+Room = kitchen ;
+\end{verbatim}
+\begin{verbatim}
+Thing = crackers
+Room = kitchen ;
+no
+\end{verbatim}
+
 \secup
