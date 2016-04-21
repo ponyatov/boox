@@ -363,5 +363,93 @@ Goal: location(X, kitchen), write(X), nl, fail.
     no
 \end{verbatim}
 
+\secrel{Exercises}\secdown
+
+\secrel{Nonsense Prolog}
+
+1- Consider the following Prolog logicbase.
+\begin{verbatim}
+easy(1).
+easy(2).
+easy(3).
+
+gizmo(a,1).
+gizmo(b,3).
+gizmo(a,2).
+gizmo(d,5).
+gizmo(c,3).
+gizmo(a,3).
+gizmo(c,4).
+
+harder(a,1).
+harder(c,X).
+harder(b,4).
+harder(d,2).
+\end{verbatim}
+
+Predict the results of the following queries. Then try them and trace them to
+see if you were correct.
+\begin{verbatim}
+?- gizmo(a,X),easy(X).
+?- gizmo(c,X),easy(X).
+?- gizmo(d,Z),easy(Z).
+
+?- easy(Y),gizmo(X,Y).
+
+?- write('report'), nl, easy(T), write(T), 
+    gizmo(M,T), tab(2), write(M), fail.
+
+?- write('buggy'), nl, easy(Z), write(X), 
+    gizmo(Z,X), tab(2), write(Z), fail.
+
+?- easy(X),harder(Y,X).
+?- harder(Y,X),easy(X).
+\end{verbatim}
+
+\secrel{Adventure Game}
+
+2- Experiment with the queries you have seen in this chapter.
+
+3- Predict the results of this query before you execute it. Then try it. Trace
+it if you were wrong.
+\begin{verbatim}
+?- door(kitchen, R), write(R), nl, location(T,R), 
+    tab(3), write(T), nl, fail.
+\end{verbatim}
+
+\secrel{Genealogical Logicbase}
+
+4- Compound queries can be used to find family relationships in the genealogical
+logicbase. For example, find someone's mother with
+\begin{verbatim}
+?- parent(X, someone), female(X).
+\end{verbatim}
+Write similar queries for fathers, sons, and daughters. Trace these queries to
+understand their behavior (or misbehavior if they are not working right for
+you).
+
+5- Experiment with the ordering of the goals. In particular, contrast the
+queries.
+\begin{verbatim}
+?- parent(X, someone), female(X).
+?- female(X), parent(X, someone).
+\end{verbatim}
+Do they both give the same answer? Trace both queries and see which takes more
+steps.
+
+6- The same predicate can be used multiple times in the same query. For example,
+we can find grandparents
+\begin{verbatim}
+?- parent(X, someone), parent(GP, X).
+\end{verbatim}
+7- Write queries which find grandmothers, grandfathers, and great-great
+grandparents.
+
+\secrel{Customer Order Entry}
+
+8- Write a query against the item and inventory records that returns the
+inventory level for an item when you only know the item name.
+
+\secup
      
 \secup
