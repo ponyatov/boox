@@ -1,0 +1,138 @@
+\secrel{Argument registers}
+
+Since we have in mind to use unification in Prolog for procedure invocation, we
+can introduce a distinction between atoms (terms whose functor is a predicate)
+and terms (arguments to a predicate). We thus extend L into a language L0
+similar to L but where a program may be a set of first-order atoms each defining
+at most one fact per predicate name. Thus, in the context of such a program,
+execution of a query connects to the appropriate definition to use for solving a
+given unification equation, or fails if none exists for the predicate invoked.
+
+\paragraph{Figure 2.7: The \term{unify} operation}
+\begin{verbatim}
+
+\end{verbatim}
+
+The set of instructions I contains all those in I.
+In M, compiled code is stored in a code area (CODE), an addressable array of
+data words, each containing a possibly labeled instruction over one or more
+memory words consisting of an opcode followed by operands. For convenience, the
+size of an instruction stored at address a (i.e., CODE[a]) will be assumed given
+by the expression instruction sizea.
+Labels are symbolic entry points into the code area that may be used as operands
+of instructions for transferring control to the code labeled accordingly.
+Therefore, there is no need to store a procedure name in the heap as it denotes
+a key into a compiled instruction sequence. Thus, a new instruction call pn can
+be used to pass control over to the instruction labeled with pn, or fail if none
+such exists.
+
+A global register P is always set to contain the address of the next instruction to
+execute (an instruction counter). The standard execution order of instructions is
+sequential. Unless failure occurs, most machine instructions (like all those seen
+before) are implicitly assumed, to increment P by an appropriate offset in the
+code area as an ultimate action. This offset is the size of the instruction at address
+P. However, some instructions have for purpose to break the sequential order of
+execution or to connect to some other instruction at the end of a sequence. These
+instructions are called control instructions as they typically set P in a non-standard
+way. This is the case of call pn, whose explicit effect, in the machine M0, is:
+\[call pn  P  pnwhe\]
+where the notation pn stands for the address in the code area of instruction
+labeled pn. If the procedure pn is not defined (i.e., if that address is not
+allocated in the code area), a unification failure occurs and overall execution
+aborts. W
+
+We also introduce another control instruction, proceed, which indicates the end
+of a fact’s instruction sequence. These two new control instructions’ effects are
+trivial for now, and they will be elaborated later. For our present purposes, it is
+sufficient that proceed be construed as a no-op (i.e., just a code terminator),
+and call pn as an unconditional “jump” to the start address of the instruction
+sequence for program term with functor pn.
+
+Having eliminated predicate symbols from the heap, the unification problem between
+fact and query terms amounts to solving, not one, but many equations,
+simultaneously. Namely, there are as many term roots in a given fact or query as
+there are arguments to the corresponding predicate. Therefore, we must organize
+registers quite specifically so as to reflect this situation. As we privileged X
+ before
+to denote the (single) term root, we generalize the convention to registers X
+
+to Xn which will now always refer to the first to n-th arguments of a fact or
+query atom. In other words, registers X
+Xn are systematically allocated to term roots of an n-ary predicate’s arguments.
+To emphasize this, we use a conspicuous notation, writing a register Ai rather
+than Xi when it is being used as an argument of an atom. In that case, we refer
+to that register as an argument register. Otherwise, where register Xi is not
+used as an argument register, it is written Xi, as usual. Note that this is just
+notation as the Ai’s are not new registers but the same old Xi’s used thus far.
+For example, registers are now allocated for the variables of the atom pZ hZW f
+W as follows:
+\[A1\]
+\[A2\]
+\[A3\]
+\[A4=W\]
+
+Observe also that a new situation arises now as variables can be arguments and
+thus must be handled as roots. Therefore, provision must be made for variables
+to be loaded into, or extracted from, argument registers for queries and facts,
+respectively. As before, the necessary instructions correspond to when a variable
+argument is a first or later occurrence, either in a query or a fact. In a query,
+
+1. the first occurrence of a variable in i-th argument position pushes a new
+unbound REF cell onto the heap and copies it into that variable’s register as
+well as argument register Ai; and,
+
+2. a later occurrence copies its value into argument register Ai. Whereas, in a
+fact,
+
+3. the first occurrence of a variable in i-th argument position sets it to the value
+of argument register Ai; and,
+
+4. a later occurrence unifies it with the value of Ai.
+
+The corresponding instructions are, respectively:
+
+1. put variable Xn
+Ai
+
+2. put value Xn
+Ai
+
+3. get variable Xn
+Ai
+
+4. get value Xn
+Ai
+
+and are given explicitly in Figure 2.8. For example, Figure 2.9 shows code
+generated for query ?- pZ hZW f W and Figure 2.10 that for fact pf X hY f a
+Y .
+
+\paragraph{Figure 2.8: $M_0$ instructions for variable arguments}
+\begin{verbatim}
+
+\end{verbatim}
+
+\paragraph{Exercise 2.6} Verify that the effect of executing the sequence of M
+instructions shown in Figure 2.9 produces the same heap representation as that produced by
+the M code of Figure 2.3 (see Exercise 2.1).
+
+\paragraph{Exercise 2.7} Verify that the effect of executing the sequence of M
+instructions shown in Figure 2.10 right after that in Figure 2.9 produces the MGU of the
+terms p Z h ZW  f  W   and p f  X  h Y f  a   Y  . That is, the binding W
+ f  a , X f  a , Y f  f  a  , Z f  f  a  .
+ 
+\paragraph{Exercise 2.8} What are the respective sequences of M0 instructions
+for L query term ?-p f  X  h Y f  a   Y   and L program term p Z h ZW  f  W  ?
+
+\paragraph{Exercise 2.9} After doing Exercise 2.8, verify that the effect of
+executing the sequence you produced yields the same solution as that of Exercise 2.7.
+
+\paragraph{Figure 2.9: Argument registers for L query ?-pZ hZW f W}
+\begin{verbatim}
+
+\end{verbatim}
+
+\paragraph{Figure 2.10: Argument registers for L0 fact pf X hY f a Y }
+\begin{verbatim}
+
+\end{verbatim}
