@@ -1,1 +1,50 @@
 \secrel{Heap representation}
+
+As many readers of [AK90] did, this reader may have wondered about the necessity
+of the extra level of indirection systematically introduced in the heap by
+an STR cell for each functor symbol. In particular, Fernando Pereira [Per90]
+suggested that instead of that shown in Figure 2.1 on Page 11, a more economical
+heap representation for pZ
+hZW
+f W
+ought to be that of Figure 5.1, where
+reference to the term from elsewhere must be from a store (or register) cell of the
+form h STR
+ i. In other words, there is actually no need to allot a systematic STR
+cell before each functor cell.
+
+As it turns out, only one tiny modification of one instruction is needed in order to
+accommodate this more compact representation. Namely, the put structure
+instruction is simplified to:
+\begin{verbatim}
+put structure f n
+Xi  HEAP[H]  f n
+Xi  h STR
+H i
+H  H  
+\end{verbatim}
+
+Clearly, this is not only in complete congruence with WAM Principle 1, but it also
+eliminates unnecessary levels of indirection and hence speeds up dereferencing.
+
+The main reason for our not having used this better heap representation in Section
+2.1 was essentially didactic, wishing to avoid having to mention references
+from outside the heap (e.g., from registers) before due time. In addition, we did
+not bother bringing up this optimization in [AK90] as we are doing here, as we
+had not realized that so little was in fact needed to incorporate it.\note{After dire reflection seeded by discussions with Fernando Pereira, we eventually realized that
+this optimization was indeed cheap—a fact that had escaped our attention. We are grateful to him
+for pointing this out. However, he himself warns [Per90]:
+
+“Now, this representation (which, I believe, is the one used by Quintus, SICStus
+Prolog, etc.) has indeed some disadvantages:
+
+1. If there aren’t enough tags to distinguish functor cells from the other
+cells, garbage collection becomes trickier, because a pointed-to value does not in
+general identify its own type (only the pointer does).
+
+2. If you want to use [the Huet-Fages] circular term unification algorithm,
+redirecting pointers becomes messy, for the [same] reason...
+In fact, what [the term representation in Section 2.1 is] doing is enforcing a convention
+that makes every functor application tagged as such by the appearance of a
+STR cell just before the functor word.”}
+

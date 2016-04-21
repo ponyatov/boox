@@ -48,6 +48,18 @@ TEX += prolog/warren/compiling.tex prolog/warren/cpp.tex
 TEX += prolog/warren/23compiLprog.tex prolog/warren/24argregs.tex
 TEX += prolog/warren/31facts.tex prolog/warren/32rules.tex
 TEX += prolog/warren/41env.tex prolog/warren/42what.tex
+TEX += prolog/warren/51heap.tex
+TEX += prolog/warren/52const.tex
+TEX += prolog/warren/53note.tex
+TEX += prolog/warren/54regalloc.tex
+TEX += prolog/warren/55lastcall.tex
+TEX += prolog/warren/56chain.tex
+TEX += prolog/warren/57env.tex
+TEX += prolog/warren/58stack.tex
+TEX += prolog/warren/59var.tex
+TEX += prolog/warren/5Aindexing.tex
+TEX += prolog/warren/5Bcut.tex
+
 
 TEX += prolog/warren/hpp.hpp prolog/warren/cpp.cpp prolog/warren/Makefile
 TEX += prolog/warren/ypp.ypp prolog/warren/lpp.lpp prolog/warren/log.log
