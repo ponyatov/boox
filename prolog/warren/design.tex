@@ -1,44 +1,51 @@
-\secrel{5 Optimizing the Design 45}\label{warren5}\secdown
+\secrel{Optimizing the Design}\label{warren5}\secdown
 
-\secrel{5.1 Heap representation . . . . . . . . . . . . . . . . . . . . . . . .
-. 46}
+Now that the reader is hopefully convinced that the design we have reached forms
+an adequate target language and architecture for compiling pure Prolog, we can
+begin transforming it in order to recover Warren’s machine as an ultimate design.
+Therefore, since all optimizations considered here are part of the definitive design,
+we shall now refer to the abstract machine gradually being elaborated as the WAM.
+In the process, we shall abide by a few principles of design pervasively motivating
+all the conception features of the WAM. We will repeatedly invoke these principles
+in design decisions as we progress toward the full WAM engine, as more evidence
+justifying them accrues.
 
-\secrel{5.2 Constants, lists, and anonymous variables . . . . . . . . . . . . .
-47}
+\textsc{WAM PRINCIPLE 1} Heap space is to be used as sparingly as possible, as
+terms built on the heap turn out to be relatively persistent.
 
-\secrel{5.3 A note on set instructions . . . . . . . . . . . . . . . . . . . . .
-52}
+\textsc{WAM PRINCIPLE 2} Registers must be allocated in such a way as to avoid
+unnecessary data movement, and minimize code size as well.
 
-\secrel{5.4 Register allocation . . . . . . . . . . . . . . . . . . . . . . . .
-. 54}
+\textsc{WAM PRINCIPLE 3} Particular situations that occur very often, even
+though correctly handled by general-case instructions, are to be accommodated by special
+ones if space and/or time may be saved thanks to their specificity.
 
-\secrel{5.5 Last call optimization . . . . . . . . . . . . . . . . . . . . . . .
-. 56}
+In the light of WAM Principles 1, 2, and 3, we may now improve on M.
 
-\secrel{5.6 Chain rules . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. 57}
+\paragraph{Figure 5.1: Better heap representation for term pZ hZW f W}
+\begin{verbatim}
 
-\secrel{5.7 Environment trimming . . . . . . . . . . . . . . . . . . . . . . .
-58}
+h
+ REF 
+ REF
+ f 
+ REF
+ p
+ REF 
+ STR
+ STR
+\end{verbatim}
 
-\secrel{5.8 Stack variables . . . . . . . . . . . . . . . . . . . . . . . . . .
-. 60}\secdown
-
-\secrel{5.8.1 Variable binding and memory layout . . . . . . . . . . . . 62}
-
-\secrel{5.8.2 Unsafe variables . . . . . . . . . . . . . . . . . . . . . . 64}
-
-\secrel{5.8.3 Nested stack references . . . . . . . . . . . . . . . . . . . 67}
-
-\secup
-
-\secrel{5.9 Variable classification revisited . . . . . . . . . . . . . . . . .
-. . 69}
-
-\secrel{5.10 Indexing . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . 75}
-
-\secrel{5.11 Cut . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-. . 83}
+\input{prolog/warren/51heap}
+\input{prolog/warren/52const}
+\input{prolog/warren/53note}
+\input{prolog/warren/54regalloc}
+\input{prolog/warren/55lastcall}
+\input{prolog/warren/56chain}
+\input{prolog/warren/57env}
+\input{prolog/warren/58stack}
+\input{prolog/warren/59var}
+\input{prolog/warren/5Aindexing}
+\input{prolog/warren/5Bcut}
 
 \secup
