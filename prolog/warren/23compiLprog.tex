@@ -1,0 +1,182 @@
+\secrel{2.3 Compiling $L_0$ programs}
+
+Compiling a program term p is just a bit trickier, although not by much. Observe
+that it assumes that a query ?-q will have built a term on the heap and set register
+X
+ to contain its address. Thus, unifying q to p can proceed by following the term
+structure already present in X
+ as long as it matches functor for functor the structure
+of p. The only complication is that when an unbound REF cell is encountered
+in the query term in the heap, then it is to be bound to a new term that is built on
+the heap as an exemplar of the corresponding subterm in p. Therefore, an L
+program
+functions in two modes: a read mode in which data on the heap is matched
+against, and a write mode in which a term is built on the heap exactly as is a
+query term.
+
+\paragraph{Figure 2.2: M machine instructions for query terms}
+\begin{verbatim}
+put structure f n
+Xi
+\end{verbatim}
+
+\paragraph{Figure 2.3: Compiled code for L query ?-pZh}
+\begin{verbatim}
+put structure h
+X % ?-X 
+ h
+set variable X 
+set variable X
+put structure f
+ f
+set value 
+put structure p
+ p
+set value X % 
+set value X % X
+set value X
+\end{verbatim}
+
+As with queries, register allocation precedes translation of the textual form of a
+program term into a machine instruction sequence. For example, the following
+registers are allocated to program term pfhy
+\begin{verbatim}
+x1
+..
+x7
+\end{verbatim}
+
+
+Recall that compiling a query necessitates ordering its flattened form in such a
+way as to build a term once its subterms have been built. Here, the situation is
+reversed because query data from the heap are assumed available, even if only in
+the form of unbound REF cells. Hence, a program term’s flattened form follows
+a top-down order. For example, the program term pfhy
+is put into the flattened sequence: X1..x7
+ 
+As with query compiling, the flattened form of a program is tokenized for left-toright
+processing and generates three kinds of machine instructions depending on
+whether is met:
+
+1. a register associated with a structure functor;
+
+2. a first-seen register argument; or,
+
+3. an already-seen register argument.
+
+These instructions are,
+
+1. get structure f n Xi
+
+2. unify variable Xi
+
+3. unify value Xi
+
+respectively.
+
+\paragraph{Figure 2.4: Compiled code for L program pfhY}
+\begin{verbatim}
+
+\end{verbatim}
+
+Taking for example the program term pf
+, the M
+machine
+instructions shown in Figure 2.4 are generated. Each of the two unify instructions
+functions in two modes depending on whether a term is to be matched
+from, or being built on, the heap. For building (write mode), the work to be
+done is exactly that of the two set query instructions of Figure 2.2. For matching
+(read mode), these instructions seek to recognize data from the heap as those
+of the term at corresponding positions, proceeding if successful and failing otherwise.
+In L,
+failure aborts all further work. In read mode, these instructions set
+a global register S to contain at all times the heap address of the next subterm to
+be matched.
+
+Variable binding creates the possibility that reference chains may be formed.
+Therefore, dereferencing is performed by a function deref which, when applied
+to a store address, follows a possible reference chain until it reaches either an unbound
+REF cell or a non-REF cell, the address of which it returns. The effect of
+dereferencing is none other than composing variable substitutions. Its definition
+is given in Figure 2.5. We shall use the generic notation STORE[a] to denote the
+contents of a term data cell at address a (whether heap, X register, or any other
+global structure, yet to be introduced, containing term data cells). We shall use
+specific area notation (e.g., HEAP[a]) whenever we want to emphasize that the
+address a must necessarily lie within that area.
+
+\paragraph{Figure 2.5: The deref operation}
+\begin{verbatim}
+function deref 
+then return deref
+else return a
+end deref 
+F
+\end{verbatim}
+
+Mode is set by get structure f n
+Xi as follows: if the dereferenced value
+of Xi is an unbound REF cell, then it is bound to a new STR cell pointing to f n
+pushed onto the heap and mode is set to write; otherwise, if it is an STR cell
+pointing to functor f n, then register S is set to the heap address following that
+functor cell’s and mode is set to read. If it is not an STR cell or if the functor
+is not f n, the program fails. Similarly, in read mode, unify variable Xi
+sets register Xi to the contents of the heap at address S; in write mode, a new
+unbound REF cell is pushed on the heap and copied into Xi. In both modes, S is
+then incremented by one. As for unify value Xi, in read mode, the value of
+Xi must be unified with the heap term at address S; in write mode, a new cell is
+pushed onto the heap and set to the value of register Xi. Again, in either mode, S
+is incremented. All three instructions are expressed explicitly in Figure 2.6.
+In
+
+In the definition of get structure f n
+Xi, we write bindaddr
+H to effectuate
+the binding of the heap cell rather than HEAP[addr]  h REF
+H i for reasons
+that will become clear later. The bind operation is performed on two store
+addresses, at least one of which is that of an unbound REF cell. Its effect, for
+now, is to bind the unbound one to the other—i.e., change the data field of the
+unbound REF cell to contain the address of the other cell. In the case where both
+are unbound, the binding direction is chosen arbitrarily. Later, this will change
+as a correctness-preserving measure in order to accommodate an optimization.
+Also, we will see that bind is the logical place, when backtracking needs to be
+considered, for recording effects to be undone upon failure (see Chapter 4, and
+appendix Section B.2 on Page 113). If wished, bind may also be made to perform
+the occurs-check test in order to prevent formation of cyclic terms (by failing at
+that point). However, the occurs-check test is omitted in most actual Prolog implementations
+in order not to impede performance.
+
+\paragraph{Figure 2.6: M machine instructions for programs}
+\begin{verbatim}
+
+\end{verbatim}
+
+We must also explicate the unify operation used in the matching phase (in read
+mode). It is a unification algorithm based on the UNION/FIND method [AHU74],
+where variable substitutions are built, applied, and composed through dereference
+pointers. In M
+(and in all later machines that will be considered here), this
+unification operation is performed on a pair of store addresses. It uses a global
+dynamic structure, an array of store addresses, as a unification stack (called PDL,
+for Push-Down List). The unification operation is defined as shown in Figure 2.7,
+where empty, push, and pop are the expected stack operations.
+
+\paragraph{Exercise 2.2} Give heap representations for the terms fXgX and f b Y.
+Let a and a be their respective heap addresses, and let aX and aY be the heap
+addresses corresponding to variables X and Y , respectively. Trace the effects
+of executing unifya a, verifying that it terminates with the eventual
+dereferenced bindings from aX and aY corresponding to X
+ b and Y g b a .
+ 
+\paragraph{Exercise 2.3} Verify that the effect of executing the sequence of
+instructions shown in Figure 2.4 right after that in Figure 2.3 produces the MGU
+of the terms p Z h ZW  f  W and p f  X  h Yf  a   Y  . That is, the
+(dereferenced) bindings corresponding to W
+ f  a , X f  a , Y f  f  a  , Z f  f  a  .
+
+\paragraph{Exercise 2.4} What are the respective sequences of M instructions for
+L query term ?-p f  X  h Y f  a   Y   and program term p Z h ZW  f  W  ?
+
+\paragraph{Exercise 2.5} After doing Exercise 2.4, verify that the effect of
+executing the sequence you produced yields the same solution as that of Exercise
+2.3.
