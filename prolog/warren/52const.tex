@@ -1,2 +1,150 @@
-\secrel{5.2 Constants, lists, and anonymous variables . . . . . . . . . . . . .
-47}
+\secrel{Constants, lists, and anonymous variables}
+
+To be fully consistent with the complete WAM unification instruction set and in
+accordance with WAM Principle 3, we introduce special instructions for the specific
+handling of -ary structures (i.e., constants), lists, and variables which appear
+only once within a scope—so-called anonymous variables. These enhancements
+will also be in the spirit of WAM Principles 1 and 2 as savings in heap space, code
+size, and data movement will ensue.
+
+Constants and lists are, of course, well handled by the structure oriented get,
+put, and unify instructions. However, work and space are wasted in the process,
+that need not really be. Consider the case of constants as, for instance, the
+code in Figure 2.10, on Page 24. There, the sequence of instructions:
+\[unify variable X\]
+\[get structure a,X7\]
+simply binds a register and proceeds to check the presence of, or build, the constant
+a on the heap. Clearly, one register can be saved and data movement optimized
+with one specialized instruction: unify constant a. The same 
+situation in a query would simplify a sequence:
+\[put structure c\]
+\[Xi\]
+into one specialized instruction set constant c. Similarly, put and get instructions
+can thus be specialized from those of structures to deal specifically with
+constants. Thus, we define a new sort of data cells tagged CON, indicating that the
+cell’s datum is a constant. For example, a heap representation starting at address
+
+ for the structure f b
+ga
+could be:
+\begin{verbatim}
+ g
+	 CON a
+
+f
+ CON b
+ STR 
+E
+\end{verbatim}
+
+\paragraph{Exercise 5.1} Could the following (smaller) heap representation
+starting at address
+
+be an alternative for the structure f b ga? Why?
+
+\begin{verbatim}
+f
+ CON b
+ g
+ CON a
+He
+\end{verbatim}
+
+Heap space for constants can also be saved when loading a register with, or binding
+a variable to, a constant. Rather than systematically occupying a heap cell
+to reference, a constant can be simply assigned as a literal value. The following
+instructions are thus added to I:
+
+1. put constant c Xi
+
+2. get constant c Xi
+
+3. set constant c
+
+4. unify constant c
+
+and are explicitly defined in Figure 5.2.
+
+\paragraph{Figure 5.2: Specialized instructions for constants}
+
+\paragraph{Figure 5.3: Specialized instructions for lists}
+
+Programming with linear lists being so privileged in Prolog, it makes sense to
+tailor the design for this specific structure. In particular, non-empty list functors
+need not be represented explicitly on the heap. Thus again, we define a fourth sort
+for heap cells tagged LIS, indicating that the cell’s datum is the heap address of
+the first element of a list pair. Clearly, to respect the subterm contiguity convention,
+the second of the pair is always at the address following that of the first. The
+following instructions (defined explicitly in Figure 5.3) are thus added to I:
+
+1. put list Xi
+
+2. get list Xi
+
+For example, the code generated for query ?-pZ
+ZW
+f W,
+using Prolog’s
+notation for lists, is shown in Figure 5.4 and that for fact pf
+X
+Y
+f a
+Y ,
+in Figure 5.5. Note the hidden presence of the atom  as list terminator.
+Of c
+
+Of course, having introduced specially tagged data cells for constants and nonempty
+lists will require adapting accordingly the general-purpose unification algorithm
+given in Figure 2.7. The reader will find the complete algorithm in appendix
+Section B.2, on Page 117.
+
+\paragraph{Exercise 5.2} In [War83], Warren also uses special instructionsput
+nil Xi, get nil Xi, and to handle the list terminator constant . Define the effect of these instructions, and give explicit pseudo-code implementing them. Discuss their worth being
+provided as opposed to using put constant  Xi, get constant  Xi,
+set constant , and unify constant .
+
+\paragraph{Figure 5.4: Specialized code for query ?-pZ
+ZW
+f W
+p}
+
+\paragraph{Figure 5.5: Specialized code for fact pf
+X
+Y
+f a
+Y }
+
+Last in the rubric of specialized instructions is the case of single-occurrence variables
+in non-argument positions (e.g., X in Figure 2.4 on Page 16, Figure 2.10 on
+Page 24, and Figure 5.5 on Page 51). This is worth giving specialized treatment
+insofar as no register need be allocated for these. In addition, if many occur in
+a row as in f, say, they can be all be processed in one swoop, saving in
+generated code size and time. We introduce two new instructions:
+
+1. set void n
+
+2. unify void n
+
+whose effect is, respectively:
+
+1. to push n new unbound REF cells on the heap;
+
+2. in write mode, to behave as set void n and, in read mode, to skip the
+next n heap cells starting at location S.
+
+These are given explicitly in Figure 5.6.
+
+Note finally, that an anonymous variable occurring as an argument of the head of
+a clause can be simply ignored. Then indeed, the corresponding instruction:
+\[get variable Xi\]
+is clearly vacuous. Thus, such instructions are simply eliminated. The code for
+fact p
+
+gX
+f
+
+Y
+, for example, shown in Figure 5.7, illustrates this point.
+
+\paragraph{Exercise 5.3} What is the machine code generated for the fact p  
+? What about the query ?-p   ?
