@@ -310,9 +310,58 @@ The final \verb'no' means the query failed, as it was destined to, due to the
 Figure 4.7 shows the control flow through this query.
 
 \fig{\\Figure 4.7. Flow of control through query with built-in 
-predicates}{prolog/adventure/fig47.png}{width=0.3\textwidth}
+predicates}{prolog/adventure/fig47.png}{width=0.7\textwidth}
 
+\paragraph{Figure 4.8. Trace of query with built-in predicates}
+\begin{verbatim}
+Goal: location(X, kitchen), write(X), nl, fail.
 
+1 CALL location(X, kitchen)
+1 EXIT (2) location(apple, kitchen)
+2 CALL write(apple)
+    apple
+2 EXIT write(apple)
+3 CALL nl
+
+3 EXIT nl
+4 CALL fail
+4 FAIL fail
+3 REDO nl
+3 FAIL nl
+2 REDO write(apple)
+2 FAIL write(apple)
+1 REDO location(X, kitchen)
+1 EXIT (6) location(broccoli, kitchen)
+2 CALL write(broccoli)
+    broccoli
+2 EXIT write(broccoli)
+3 CALL nl
+
+3 EXIT nl
+4 CALL fail
+4 FAIL fail
+3 REDO nl
+3 FAIL nl
+2 REDO write(broccoli)
+2 FAIL write(broccoli)
+1 REDO location(X, kitchen)
+1 EXIT (7) location(crackers, kitchen)
+2 CALL write(crackers)
+    crackers
+2 EXIT write(crackers)
+3 CALL nl
+
+3 EXIT nl
+4 CALL fail
+4 FAIL fail
+3 REDO nl
+3 FAIL nl
+2 REDO write(crackers)
+2 FAIL write(crackers)
+1 REDO location(X, kitchen)
+1 FAIL location(X, kitchen)
+    no
+\end{verbatim}
 
      
 \secup
