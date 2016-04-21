@@ -1,2 +1,25 @@
-\secrel{5.3 A note on set instructions . . . . . . . . . . . . . . . . . . . . .
-52}
+\secrel{A note on \var{set} instructions}
+
+Defining the simplistic language L
+has allowed us to introduce, independently
+of other Prolog considerations, all WAM instructions dealing with unification.
+Strictly speaking, the set instructions we have defined are not part of the WAM
+as described in [War83] or in [War88]. There, one will find that the corresponding
+unify instructions are systematically used where we use set instructions.
+The reason is, as the reader may have noticed, that indeed this is possible provided
+that the put structure and put list instructions set mode to write.
+Then, clearly, all set instructions are equivalent to unify instructions in write
+mode. We chose to keep these separate as using set instructions after put instructions
+is more efficient (it saves mode setting and testing) and makes the code
+more perspicuous. Moreover, these instructions are more natural, easier to explain
+and motivate as the data building phase of unification before matching work
+comes into play.
+
+\paragraph{Figure 5.6: Anonymous variable instructions}
+
+\paragraph{Figure 5.7: Instructions for fact pgXY}
+
+Incidentally, these instructions together with their unify homologues, make “onthe-fly”
+copying part of unification, resulting in improved space and time consumption,
+as opposed to the more naıve systematic copying of rules before using
+them.
