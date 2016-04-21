@@ -1,4 +1,4 @@
-\secly{Реализация машины вывода на \cpp}
+\secly{Реализация машины вывода на \cpp}\secdown
 
 В перевод книги Варрена мной\note{\email{dponyatov@gmail.com}} добавлен пример
 реализации виртуальной машины вывода на \cpp. Исходные тексты находятся в
@@ -6,8 +6,15 @@
 \href{https://github.com/ponyatov/boox/tree/master/prolog/warren}{\dir{prolog/warren/}}.
 Для вставки отдельных частей исходника по ходу книги полные файлы
 \file{hpp.hpp}\ и \file{cpp.cpp} разделены на отдельные небольшие фрагменты в
-каталогах \dir{hpp/} и \dir{cpp/}. Файл сборки \file{prolog/warren/Makefile}
-содержит не только  
+каталогах \dir{hpp/} и \dir{cpp/}.
+
+\secrel{\file{Makefile}} 
+
+Файл сборки \file{prolog/warren/Makefile} содержит не только типовые заклинания
+для \term{лексической} программы, используещей связку Flex/Bison для парсера
+входного языка, но и скрипты склейки файлов исходников из частей в каталогах
+\dir{ypp/} \dir{lpp/} \dir{hpp/} \dir{cpp/} \dir{mk/} .
+
 \lst{\file{Makefile}: запуск программы и генерация
 \file{log.log}}{prolog/warren/mk/exec.mk}{make}
 \lst{\file{Makefile}: типовой блок компиляции \term{лексической}
@@ -15,8 +22,9 @@
 \lst{\file{Makefile}: генерация кода
 \term{синтаксического анализатора}}{prolog/warren/ypp/ypp.mk}{make}
 \lst{\file{Makefile}: генерация кода
-\term{лексера}}{prolog/warren/lpp/lpp.mk}{make} но и скрипты склейки файлов
-исходников из частей в каталогах \dir{hpp/} \dir{cpp/} \dir{mk/}.
+\term{лексера}}{prolog/warren/lpp/lpp.mk}{make}
+
+\secrel{\file{hpp.hpp}}
 
 \lst{\file{hpp.hpp}: обертка одиночного
 \#include}{prolog/warren/hpp/head.hpp}{C++}
@@ -25,5 +33,20 @@
 \lst{\file{hpp.hpp}: базовый класс для
 структур WAM}{prolog/warren/hpp/wam.hpp}{C++}
 
-\lst{\file{cpp.cpp}}{prolog/warren/cpp/main.cpp}{C++}
+\secrel{\file{cpp.cpp}}
 
+\lst{\file{cpp.cpp}}{prolog/warren/cpp/main.cpp}{C++}
+\lst{callback для обработки ошибок синтаксического
+анализатора}{skelex/cpp/error.cpp}{C++}
+\lst{реализация методов \class{WAM}}{prolog/warren/cpp/wam.cpp}{C++}
+
+\secrel{\file{ypp.ypp}/\file{lpp.lpp}: синтаксический анализатор}
+
+Ввод входных данных и их синтаксис немного отиличается от классического \prolog:
+исходные тексты программ и команды \prolog-машины читаются с \var{stdin}
+аналогично другим скриптовым языкам, и не поддерживается традиционная для
+\prolog\ кнопка \keys{;}. 
+Для ускорения (и упрощения) синтаксического разбора входного потока была
+использована классическая связка \prog{flex}/\prog{bison}.
+
+\secup
