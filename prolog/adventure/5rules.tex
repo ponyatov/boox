@@ -1,0 +1,27 @@
+\secrel{Rules}\label{adv5}\secdown
+
+We said earlier a predicate is defined by clauses, which may be facts or rules. A rule is no more than a stored query. Its syntax is
+\begin{verbatim}
+head :- body.
+\end{verbatim}
+where
+\begin{description}
+\item[head]\ \\
+a predicate definition (just like a fact)
+\item[:-]\ \\
+the neck symbol, sometimes read as "if"
+\item[body]\ \\
+one or more goals (a query)
+\end{description}
+
+For example, the compound query that finds out where the good things to eat are
+can be stored as a rule with the predicate name \verb'where_food/2'.
+\begin{verbatim}
+where_food(X,Y) :-  
+  location(X,Y),
+  edible(X).
+\end{verbatim}
+It states ``There is something X to eat in room Y if X is located in Y, and X
+is edible''.
+
+\secup
