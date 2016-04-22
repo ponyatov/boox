@@ -24,7 +24,8 @@ where_food(X,Y) :-
 It states ``There is something X to eat in room Y if X is located in Y, and X
 is edible''.
 
-We can now use the new rule directly in a query to find things to eat in a room. As before, the semicolon (;) after an answer is used to find all the answers.
+We can now use the new rule directly in a query to find things to eat in a room.
+As before, the semicolon (;) after an answer is used to find all the answers.
 \begin{verbatim}
 ?- where_food(X, kitchen).
 X = apple ;
@@ -52,4 +53,18 @@ Room = kitchen ;
 no
 \end{verbatim}
 
+Just as we had multiple facts defining a predicate, we can have multiple rules
+for a predicate. For example, we might want to have the broccoli included in
+where_food/2. (Prolog doesn't have an opinion on whether or not broccoli is
+legitimate food. It just matches patterns.) To do this we add another
+where_food/2 clause for things that 'taste_yucky.'
+\begin{verbatim}
+where_food(X,Y) :-
+  location(X,Y),
+  edible(X).
+where_food(X,Y) :-
+  location(X,Y),
+  tastes_yucky(X).
+\end{verbatim}
+  
 \secup
