@@ -82,6 +82,7 @@ TEX += prolog/adventure/facts.tex prolog/adventure/query.tex
 TEX += prolog/adventure/fig31.pl
 TEX += prolog/adventure/compound.tex
 TEX += prolog/adventure/5rules.tex prolog/adventure/6arith.tex
+TEX += prolog/adventure/7managing.tex
 TEX += prolog/adventure/appendix.tex
 
 TEX += prolog/dcg/dcg.tex prolog/dcg/intro.tex
