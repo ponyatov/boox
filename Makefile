@@ -92,6 +92,18 @@ TEX += prolog/dcg/6implement.tex prolog/dcg/7error.tex prolog/dcg/8few.tex
 TEX += prolog/dcg/9hints.tex
 
 TEX += prolog/lpn/lpn.tex
+TEX += prolog/lpn/1facts.tex
+TEX += prolog/lpn/2unification.tex
+TEX += prolog/lpn/3recustion.tex
+TEX += prolog/lpn/4lists.tex
+TEX += prolog/lpn/5arithm.tex
+TEX += prolog/lpn/6morelists.tex
+TEX += prolog/lpn/7dcg.tex
+TEX += prolog/lpn/8moredcg.tex
+TEX += prolog/lpn/9terms.tex
+TEX += prolog/lpn/10cuts.tex
+TEX += prolog/lpn/11db.tex
+TEX += prolog/lpn/12files.tex
 
 TEX += tree/papegaij/papegaij.tex tree/papegaij/intro.tex
 
