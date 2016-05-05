@@ -136,7 +136,96 @@ then Prolog will respond
 
 exactly as we would expect.
    
-\secrel{   Knowledge Base 2} 
+\secrel{   Knowledge Base 2}
+
+Here is KB2, our second knowledge base:
+\begin{verbatim} 
+   happy(yolanda). 
+   listens2Music(mia). 
+   listens2Music(yolanda):-  happy(yolanda). 
+   playsAirGuitar(mia):-  listens2Music(mia). 
+   playsAirGuitar(yolanda):-  listens2Music(yolanda).
+\end{verbatim}
+There are two facts in KB2, listens2Music(mia) and happy(yolanda) . The last
+three items it contains are rules.
+
+Rules state information that is conditionally true of the situation of interest.
+For example, the first rule says that Yolanda listens to music if she is happy,
+and the last rule says that Yolanda plays air guitar if she listens to music.
+More generally, the :- should be read as “if”, or “is implied by”. The part on
+the left hand side of the :- is called the head of the rule, the part on the
+right hand side is called the body. So in general rules say: if the body of the
+rule is true, then the head of the rule is true too. And now for the key point:
+
+If a knowledge base contains a rule head  :-  body, and Prolog knows that body
+follows from the information in the knowledge base, then Prolog can infer head.
+
+This fundamental deduction step is called \term{modus ponens}.
+
+Let’s consider an example. Suppose we ask whether Mia plays air guitar:
+
+\begin{verbatim} 
+   ?-  playsAirGuitar(mia).
+\end{verbatim}
+Prolog will respond yes. Why? Well, although it can’t find playsAirGuitar(mia)
+as a fact explicitly recorded in KB2, it can find the rule
+
+\begin{verbatim} 
+   playsAirGuitar(mia):-  listens2Music(mia).
+\end{verbatim}
+   
+Moreover, KB2 also contains the fact listens2Music(mia) . Hence Prolog can use
+the rule of modus ponens to deduce that playsAirGuitar(mia) .
+
+Our next example shows that Prolog can chain together uses of modus ponens.
+Suppose we ask:
+
+\begin{verbatim} 
+   ?-  playsAirGuitar(yolanda).
+\end{verbatim}
+Prolog would respond yes. Why? Well, first of all, by using the fact
+happy(yolanda) and the rule
+
+\begin{verbatim} 
+   listens2Music(yolanda):-  happy(yolanda).
+\end{verbatim}
+Prolog can deduce the new fact listens2Music(yolanda) . This new fact is not
+explicitly recorded in the knowledge base — it is only implicitly present (it is
+inferred knowledge). Nonetheless, Prolog can then use it just like an explicitly
+recorded fact. In particular, from this inferred fact and the rule
+
+\begin{verbatim} 
+   playsAirGuitar(yolanda):-  listens2Music(yolanda).
+\end{verbatim}
+   
+it can deduce playsAirGuitar(yolanda) , which is what we asked it. Summing up:
+   any fact produced by an application of modus ponens can be used as input to
+   further rules. By chaining together applications of modus ponens in this way,
+   Prolog is able to retrieve information that logically follows from the rules
+   and facts recorded in the knowledge base.
+   
+The facts and rules contained in a knowledge base are called clauses. Thus KB2
+contains five clauses, namely three rules and two facts. Another way of looking
+at KB2 is to say that it consists of three predicates (or procedures). The three
+predicates are:
+
+\begin{verbatim} 
+   listens2Music 
+   happy 
+   playsAirGuitar
+\end{verbatim}
+The happy predicate is defined using a single clause (a fact). The listens2Music
+and playsAirGuitar predicates are each defined using two clauses (in one case,
+two rules, and in the other case, one rule and one fact). It is a good idea to
+think about Prolog programs in terms of the predicates they contain. In essence,
+the predicates are the concepts we find important, and the various clauses we
+write down concerning them are our attempts to pin down what they mean and how
+they are inter-related.
+
+One final remark. We can view a fact as a rule with an empty body. That is, we
+can think of facts as conditionals that do not have any antecedent conditions,
+or degenerate rules.   
+ 
 \secrel{   Knowledge Base 3} 
 \secrel{   Knowledge Base 4} 
 \secrel{   Knowledge Base 5} 
