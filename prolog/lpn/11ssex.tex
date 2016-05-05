@@ -1,0 +1,143 @@
+\secrel{ 1.1 Some Simple Examples}\secdown 
+
+There are only three basic constructs in Prolog: facts, rules, and queries. A
+collection of facts and rules is called a knowledge base (or a database) and
+Prolog programming is all about writing knowledge bases. That is, Prolog
+programs simply are knowledge bases, collections of facts and rules which
+describe some collection of relationships that we find interesting.
+
+So how do we use a Prolog program? By posing queries. That is, by asking
+questions about the information stored in the knowledge base.
+
+Now this probably sounds rather strange. It’s certainly not obvious that it has
+much to do with programming at all. After all, isn’t programming all about
+telling a computer what to do? But as we shall see, the Prolog way of
+programming makes a lot of sense, at least for certain tasks; for example, it is
+useful in computational linguistics and Artificial Intelligence (AI). But
+instead of saying more about Prolog in general terms, let’s jump right in and
+start writing some simple knowledge bases; this is not just the best way of
+learning Prolog, it’s the only way.
+
+\secrel{   Knowledge Base 1}
+
+Knowledge Base 1 (KB1) is simply a collection of facts. Facts are used to state
+ things that are unconditionally true of some situation of interest. For
+ example, we can state that Mia, Jody, and Yolanda are women, that Jody plays
+ air guitar, and that a party is taking place, using the following five facts:
+
+\begin{verbatim} 
+ woman(mia). 
+   woman(jody). 
+   woman(yolanda). 
+   playsAirGuitar(jody). 
+   party.
+\end{verbatim}
+   
+This collection of facts is KB1. It is our first example of a Prolog program.
+Note that the names mia , jody , and yolanda , the properties woman and
+playsAirGuitar , and the proposition party have been written so that the first
+letter is in lower-case. This is important; we will see why a little later on.
+
+How can we use KB1? By posing queries. That is, by asking questions about the
+information KB1 contains. Here are some examples. We can ask Prolog whether Mia
+is a woman by posing the query:
+
+\begin{verbatim} 
+   ?-  woman(mia).
+\end{verbatim}
+
+Prolog will answer
+
+\begin{verbatim} 
+   yes
+\end{verbatim}
+   
+for the obvious reason that this is one of the facts explicitly recorded in KB1.
+Incidentally, we don’t type in the ?- . This symbol (or something like it,
+depending on the implementation of Prolog you are using) is the prompt symbol
+that the Prolog interpreter displays when it is waiting to evaluate a query. We
+just type in the actual query (for example woman(mia) ) followed by . (a full
+stop). The full stop is important. If you don’t type it, Prolog won’t start
+working on the query.
+
+Similarly, we can ask whether Jody plays air guitar by posing the following
+query:
+
+\begin{verbatim} 
+  ?-  playsAirGuitar(jody).
+\end{verbatim}
+
+Prolog will again answer yes, because this is one of the facts in KB1. However,
+suppose we ask whether Mia plays air guitar:
+
+\begin{verbatim} 
+   ?-  playsAirGuitar(mia).
+\end{verbatim}
+
+We will get the answer
+
+\begin{verbatim} 
+   no
+\end{verbatim}
+
+Why? Well, first of all, this is not a fact in KB1. Moreover, KB1 is extremely
+simple, and contains no other information (such as the rules we will learn about
+shortly) which might help Prolog try to infer (that is, deduce) whether Mia
+plays air guitar. So Prolog correctly concludes that playsAirGuitar(mia) does
+not follow from KB1.
+
+Here are two important examples. First, suppose we pose the query:
+
+\begin{verbatim} 
+   ?-  playsAirGuitar(vincent).
+\end{verbatim}
+
+Again Prolog answers no. Why? Well, this query is about a person (Vincent) that
+it has no information about, so it (correctly) concludes that
+playsAirGuitar(vincent) cannot be deduced from the information in KB1.
+
+Similarly, suppose we pose the query:
+
+\begin{verbatim} 
+   ?-  tatooed(jody).
+\end{verbatim}
+   
+Again Prolog will answer no. Why? Well, this query is about a property (being
+tatooed) that it has no information about, so once again it (correctly)
+concludes that the query cannot be deduced from the information in KB1.
+(Actually, some Prolog implementations will respond to this query with an error
+message, telling you that the predicate or procedure tatooed is not defined; we
+will soon introduce the notion of predicates.)
+
+Needless to say, we can also make queries concerning propositions. For example,
+if we pose the query
+
+\begin{verbatim} 
+   ?-  party.
+\end{verbatim}
+
+then Prolog will respond
+
+\begin{verbatim} 
+   yes
+\end{verbatim}
+
+and if we pose the query
+
+\begin{verbatim} 
+   ?-  rockConcert.
+\end{verbatim}
+
+then Prolog will respond
+
+\begin{verbatim} 
+   no
+\end{verbatim}
+
+exactly as we would expect.
+   
+\secrel{   Knowledge Base 2} 
+\secrel{   Knowledge Base 3} 
+\secrel{   Knowledge Base 4} 
+\secrel{   Knowledge Base 5} 
+\secup

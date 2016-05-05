@@ -92,7 +92,8 @@ TEX += prolog/dcg/6implement.tex prolog/dcg/7error.tex prolog/dcg/8few.tex
 TEX += prolog/dcg/9hints.tex
 
 TEX += prolog/lpn/lpn.tex
-TEX += prolog/lpn/1facts.tex
+TEX += prolog/lpn/1facts.tex prolog/lpn/11ssex.tex prolog/lpn/12syntax.tex
+ETX += prolog/lpn/13exer.tex prolog/lpn/14session.tex
 TEX += prolog/lpn/2unification.tex
 TEX += prolog/lpn/3recustion.tex
 TEX += prolog/lpn/4lists.tex
