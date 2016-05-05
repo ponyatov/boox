@@ -91,6 +91,8 @@ TEX += prolog/dcg/4impli.tex prolog/dcg/5parsing.tex
 TEX += prolog/dcg/6implement.tex prolog/dcg/7error.tex prolog/dcg/8few.tex
 TEX += prolog/dcg/9hints.tex
 
+TEX += prolog/lpn/lpn.tex
+
 TEX += tree/papegaij/papegaij.tex tree/papegaij/intro.tex
 
 TEX += skelex/skelex.tex skelex/mkproject.rc skelex/bat.bat
