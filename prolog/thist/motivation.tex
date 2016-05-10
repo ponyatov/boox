@@ -1,1 +1,55 @@
 \secrel{Motivation}
+
+If you are used to imperative programming languages and then learn a functional
+or logic programming language, you may first work successfully through a few
+easy exercises and then suddenly find yourself unable to solve apparently simple
+tasks in the declarative language. You may for example find yourself asking:
+``How do I even increase the value of a variable\,?'', or ``How do I even remove
+an element from a list\,?'', or more generally ``How do I even apply a simple
+transformation to this data structure\,?'' etc.
+
+Invariably, the solution to such problems is to think in terms of
+\term{relations} between different entities. Examples of such entities are
+variables, lists, trees, \term{states} etc.
+
+For instance, when you find yourself asking ``How do I even remove an element
+\var{E} from a list\,?'', think declaratively and describe a \term{relation}
+between two lists: One list may contain the element \var{E}, and the second list
+contains all elements of the first list which are not equal to \var{E}.
+Actually, as you already see, we are describing a relation between \emph{three}
+entities in this case: Two lists, and an element. You can express this relation
+in \prolog\ by stating the conditions that make the relation \term{hold}:
+\begin{lstlisting}[language=prolog]
+        list1_element_list2([], _, []).
+        list1_element_list2([E|Ls1], E, Ls2) :-
+                list1_element_list2(Ls1, E, Ls2).
+        list1_element_list2([L|Ls1], E, [L|Ls2]) :-
+                dif(L, E),
+                list1_element_list2(Ls1, E, Ls2).
+\end{lstlisting}
+                
+This relation has one argument for each of these entities, and is usable in all
+directions: It can answer much more general questions than just ``What does a
+list look like if we remove all occurrences of the element \var{E}\,?''. You can
+also use it to answer for example: ``Which element, if any, \emph{has been}
+removed in a given example\,?'', or to answer the most general query: ``For
+which 3 entities does this relation even hold\,?''. This generality is the
+reason why an imperative name like \verb"remove/3" would not be a good fit in
+this case.
+
+As another example, when you find yourself asking: ``How do I even apply a
+transformation to a tree\,?'', again think declaratively and describe a
+\term{relation} between two trees: one tree \emph{before} the transformation and
+one tree \emph{after} the transformation.
+
+Notice that \term{functions} are a special kind of relations, so most of the
+things below hold for functional as well as logic programming languages. Logic
+programming languages typically allow for more general solutions with less
+effort, since predicates can often be used in several directions.
+
+In this text, I give several examples of relations between states: states in
+puzzles, states in programs, states in compilers etc., so that you see how
+various tasks can be expressed in declarative languages. The core idea is the
+same in all these examples: We think in terms of relations between states. This
+is in contrast to imperative languages, where we often think in terms of
+destructive modifications to a state.
