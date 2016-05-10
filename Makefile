@@ -12,7 +12,9 @@ TEX += bi/scalar.tex bi/composite.tex bi/functional.tex
 TEX += bi/DLR.tex
 TEX += linux/build.tex linux/struc.tex
 
-TEX += prolog/thist/thist.tex
+TEX += prolog/thist/thist.tex prolog/thist/motivation.tex
+TEX += prolog/thist/puzzles.tex prolog/thist/programs.tex
+TEX += prolog/thist/elsewere.tex prolog/thist/sources.tex
 
 TEX += prolog/fisher/fisher.tex prolog/fisher/intro.tex
 TEX += prolog/fisher/running.tex prolog/fisher/running.pl
